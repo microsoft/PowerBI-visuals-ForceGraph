@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "ES5",
+    "sourceMap": true,
+    "out": "./.tmp/build/visual.js"
+  },
+  "files": [
+    "typings/index.d.ts",
+    ".api/v1.2.0/PowerBI-visuals.d.ts",
+    "node_modules/@powerbi-visuals-utils/imargin/lib/index.d.ts",
+    "node_modules/@powerbi-visuals-utils/pixelconverter/lib/index.d.ts",
+    "node_modules/@powerbi-visuals-utils/dataviewobjects/lib/index.d.ts",
+    "node_modules/@powerbi-visuals-utils/valueformatter/lib/index.d.ts",
+    "node_modules/@powerbi-visuals-utils/datarolehelper/lib/index.d.ts",
+    "node_modules/@powerbi-visuals-utils/displayunitsystemtype/lib/index.d.ts",
+    "node_modules/@powerbi-visuals-utils/formattingservice/lib/index.d.ts",
+    "node_modules/@powerbi-visuals-utils/displayunitsystem/lib/index.d.ts",
+    "src/visual.ts"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "powerbi-visuals-forcegraph",
+  "version": "1.3.4",
+  "author": {
+    "name": "Microsoft",
+    "email": "pbicvsupport@microsoft.com"
+  },
+  "scripts": {
+    "postinstall": "typings install && pbiviz update 1.2.0",
+    "typings": "node node_modules/typings/dist/bin.js i"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/PowerBI-visuals-ForceGraph.git"
+  },
+  "devDependencies": {
+    "@powerbi-visuals-utils/datarolehelper": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-datarolehelper.git",
+    "@powerbi-visuals-utils/dataviewobjects": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-dataviewobjects.git",
+    "@powerbi-visuals-utils/displayunitsystem": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-displayunitsystem.git",
+    "@powerbi-visuals-utils/displayunitsystemtype": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-displayunitsystemtype.git",
+    "@powerbi-visuals-utils/external-loader": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-external-loader.git",
+    "@powerbi-visuals-utils/formattingservice": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-formattingservice.git",
+    "@powerbi-visuals-utils/imargin": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-imargin.git",
+    "@powerbi-visuals-utils/pixelconverter": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-pixelconverter.git",
+    "@powerbi-visuals-utils/valueformatter": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-valueformatter.git",
+    "d3": "^3.5.5",
+    "globalize": "0.1.0-a2",
+    "jquery": "^3.1.1",
+    "lodash": "^4.16.2",
+    "typings": "^1.4.0"
+  }
+}
