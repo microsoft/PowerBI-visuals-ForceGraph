@@ -66,7 +66,7 @@
                     "displayName": "Show",
                     "type": { "bool": true }
                 },
-                "color": {
+                "fillColor": {
                     "displayName": "Fill",
                     "type": { "fill": { "solid": { "color": true } } }
                 },

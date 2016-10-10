@@ -84,7 +84,6 @@ module powerbi.extensibility.visual {
 
     // powerbi.visuals
     import IMargin = powerbi.visuals.IMargin;
-    // import DataViewObjectPropertyTypeDescriptor = powerbi.data.DataViewObjectPropertyTypeDescriptor;
 
     // import ObjectEnumerationBuilder = powerbi.visuals.ObjectEnumerationBuilder;
     import valueFormatter = powerbi.visuals.valueFormatter;
@@ -97,135 +96,7 @@ module powerbi.extensibility.visual {
         getColorByIndex: (d: any) => any
     }; 
 
-    declare type DataViewObjectPropertyTypeDescriptor = {};
-
-    export class ForceGraphSettings {
-        public static get Default() {
-            return new this();
-        }
-
-        public static parse(dataView: DataView, capabilities: any) {
-            var settings = new this();
-            if (!dataView || !dataView.metadata || !dataView.metadata.objects) {
-                return settings;
-            }
-
-            var properties = this.getProperties(capabilities);
-            for (var objectKey in capabilities.objects) {
-                for (var propKey in capabilities.objects[objectKey].properties) {
-                    if (!settings[objectKey] || !_.has(settings[objectKey], propKey)) {
-                        continue;
-                    }
-
-                    var type = capabilities.objects[objectKey].properties[propKey].type;
-                    var getValueFn = this.getValueFnByType(type);
-                    settings[objectKey][propKey] = getValueFn(
-                        dataView.metadata.objects,
-                        properties[objectKey][propKey],
-                        settings[objectKey][propKey]);
-                }
-            }
-
-            return settings;
-        }
-
-        public static getProperties(capabilities: any)
-            : { [i: string]: { [i: string]: DataViewObjectPropertyIdentifier } } {
-            var properties = <any>{};
-
-            if (capabilities) { // TODO: check it
-
-                for (var objectKey in capabilities.objects) {
-                    properties[objectKey] = {};
-                    for (var propKey in capabilities.objects[objectKey].properties) {
-                        properties[objectKey][propKey] = <DataViewObjectPropertyIdentifier>{
-                            objectName: objectKey,
-                            propertyName: propKey
-                        };
-                    }
-                }
-            }
-
-            return properties;
-        }
-
-        private static getValueFnByType(type: DataViewObjectPropertyTypeDescriptor) {
-            switch (_.keys(type)[0]) {
-                case 'fill':
-                    return DataViewObjects.getFillColor;
-                default:
-                    return DataViewObjects.getValue;
-            }
-        }
-
-        public static enumerateObjectInstances(
-            settings: any,
-            options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-
-            // var enumeration = new ObjectEnumerationBuilder();
-
-            var object = settings && settings[options.objectName];
-
-            if (!object) {
-                // return enumeration.complete();
-                return [];
-            }
-
-            var instance: VisualObjectInstance = {
-                objectName: options.objectName,
-                selector: null,
-                properties: {}
-            };
-
-            for (var key in object) {
-                if (_.has(object, key)) {
-                    instance.properties[key] = object[key];
-                }
-            }
-
-            // enumeration.pushInstance(instance);
-
-            // return enumeration.complete();
-            return {
-                instances: [instance]
-            }
-        }
-
-        public labels = {
-            show: true,
-            // color: dataLabelUtils.defaultLabelColor,
-            color: "#777777", // TODO: check it
-            // fontSize: dataLabelUtils.DefaultFontSizeInPt
-            fontSize: 9 // TODO: check it
-        };
-
-        public links = {
-            showArrow: false,
-            showLabel: false,
-            colorLink: LinkColorType.Interactive,
-            thickenLink: true,
-            displayUnits: 0,
-            decimalPlaces: <number>null
-        };
-
-        public nodes = {
-            displayImage: false,
-            defaultImage: "Home",
-            imageUrl: "",
-            imageExt: ".png",
-            nameMaxLength: 10,
-            highlightReachableLinks: false,
-        };
-
-        public size = {
-            charge: -15
-        };
-    }
-
     export class ForceGraphColumns<T> {
-        // public static Roles = Object.freeze(
-        //     _.mapValues(new ForceGraphColumns<string>(), (x, i) => i));
-
         public static getMetadataColumns(dataView: DataView): ForceGraphColumns<DataViewMetadataColumn> {
             var columns = dataView && dataView.metadata && dataView.metadata.columns;
             return columns && _.mapValues(
@@ -288,9 +159,9 @@ module powerbi.extensibility.visual {
                 value = inputObject[propertyName];
 
                 if (formatStringProperties && !_.isNumber(value)) {
-                    value = /*valueFormatter.format(*/
-                        value/*,
-                        valueFormatter.getFormatString(column, formatStringProperties))*/;
+                    value = valueFormatter.format(
+                        value,
+                        valueFormatter.getFormatString(column, formatStringProperties));
                 }
 
                 tooltips.push({
@@ -320,12 +191,6 @@ module powerbi.extensibility.visual {
 
             return null;
         }
-    }
-
-    export enum LinkColorType {
-        ByWeight = <any>"By Weight",
-        ByLinkType = <any>"By Link Type",
-        Interactive = <any>"Interactive"
     }
 
     export interface ForceGraphLink {
@@ -442,19 +307,21 @@ module powerbi.extensibility.visual {
 
         private getLinkColor(d: ForceGraphLink): string {
             switch (this.settings.links.colorLink) {
-                case LinkColorType.ByWeight:
+                case LinkColorType.ByWeight: {
                     return this.colors.getColorByIndex(this.scale1to10(d.weight)).value;
-                case LinkColorType.ByLinkType:
+                }
+                case LinkColorType.ByLinkType: {
                     return d.type && this.data.linkTypes[d.type]
                         ? this.data.linkTypes[d.type].color
                         : ForceGraph.DefaultValues.defaultLinkColor;
+                }
             };
 
             return ForceGraph.DefaultValues.defaultLinkColor;
         }
 
-        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-            debugger;
+        public enumerateObjectInstances(
+            options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
 
             return ForceGraphSettings.enumerateObjectInstances(this.settings, options);
         }
@@ -489,19 +356,19 @@ module powerbi.extensibility.visual {
                 value: settings.links.displayUnits || _.maxBy(tableRows, x => x.Weight).Weight
             });
 
-            // var sourceFormatter: IValueFormatter = valueFormatter.create({
-            //     format: valueFormatter.getFormatString(metadata.Source, formatStringProp, true),
-            // });
+            var sourceFormatter: IValueFormatter = valueFormatter.create({
+                format: valueFormatter.getFormatString(metadata.Source, formatStringProp, true),
+            });
 
-            // var targetFormatter: IValueFormatter = valueFormatter.create({
-            //     format: valueFormatter.getFormatString(metadata.Target, formatStringProp, true),
-            // });
+            var targetFormatter: IValueFormatter = valueFormatter.create({
+                format: valueFormatter.getFormatString(metadata.Target, formatStringProp, true),
+            });
 
             tableRows.forEach((tableRow: ForceGraphColumns<any>) => {
                 linkedByName[tableRow.Source + "," + tableRow.Target] = 1;
 
-                var source = nodes[tableRow.Source] || (nodes[tableRow.Source] = { name: /*sourceFormatter.format(*/tableRow.Source/*)*/, image: tableRow.SourceType || "", adj: {} });
-                var target = nodes[tableRow.Target] || (nodes[tableRow.Target] = { name: /*targetFormatter.format(*/tableRow.Target/*)*/, image: tableRow.TargetType || "", adj: {} });
+                var source = nodes[tableRow.Source] || (nodes[tableRow.Source] = { name: sourceFormatter.format(tableRow.Source), image: tableRow.SourceType || "", adj: {} });
+                var target = nodes[tableRow.Target] || (nodes[tableRow.Target] = { name: targetFormatter.format(tableRow.Target), image: tableRow.TargetType || "", adj: {} });
 
                 source.adj[target.name] = 1;
                 target.adj[source.name] = 1;
@@ -550,8 +417,7 @@ module powerbi.extensibility.visual {
         }
 
         private static parseSettings(dataView: DataView): ForceGraphSettings {
-            // var settings = ForceGraphSettings.parse(dataView, ForceGraph.capabilities);
-            var settings = ForceGraphSettings.parse(dataView, null);
+            let settings = ForceGraphSettings.parse<ForceGraphSettings>(dataView);
 
             settings.size.charge = Math.min(Math.max(settings.size.charge, -100), -0.1);
             settings.links.decimalPlaces = settings.links.decimalPlaces && Math.min(Math.max(settings.links.decimalPlaces, 0), 5);
@@ -560,14 +426,12 @@ module powerbi.extensibility.visual {
         }
 
         constructor(options: VisualConstructorOptions) {
-            console.log('Visual constructor', options);
-
-            debugger;
+            console.log('Visual constructor: ', options);
 
             this.init(options);
         }
 
-        public init(options: VisualConstructorOptions): void {
+        private init(options: VisualConstructorOptions): void {
             this.root = d3.select(options.element);
 
             this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
@@ -713,7 +577,7 @@ module powerbi.extensibility.visual {
                         dy: ".35em"
                     })
                     .style({
-                        fill: this.settings.labels.color,
+                        fill: this.settings.labels.fillColor,
                         'font-size': PixelConverter.fromPoint(this.settings.labels.fontSize)
                     })
                     .text((d: ForceGraphNode) => d.name ? (d.name.length > this.settings.nodes.nameMaxLength
