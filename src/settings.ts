@@ -22,8 +22,8 @@ module powerbi.extensibility.visual {
     }
 
     export enum LinkColorType {
-        ByWeight = <any>"By Weight",
-        ByLinkType = <any>"By Link Type",
+        ByWeight = <any>"ByWeight",
+        ByLinkType = <any>"ByLinkType",
         Interactive = <any>"Interactive"
     }
 

@@ -73,7 +73,6 @@ module powerbi.extensibility.visual {
     import IEnumType = powerbi.IEnumType;
     import VisualObjectInstance = powerbi.VisualObjectInstance;
     import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
-    // import IDataColorPalette = powerbi.IDataColorPalette;
     import IEnumMember = powerbi.IEnumMember;
     import DataViewObjects = powerbi.DataViewObjects;
     import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
@@ -82,19 +81,22 @@ module powerbi.extensibility.visual {
     // powerbi.data
     import hasRole = powerbi.data.DataRoleHelper.hasRole;
 
+    // powerbi.extensibility
+    import IColorPalette = powerbi.extensibility.IColorPalette;
+
+    // powerbi.extensibility.visual
+    import IVisual = powerbi.extensibility.visual.IVisual;
+    import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
+    import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
+
     // powerbi.visuals
     import IMargin = powerbi.visuals.IMargin;
 
-    // import ObjectEnumerationBuilder = powerbi.visuals.ObjectEnumerationBuilder;
     import valueFormatter = powerbi.visuals.valueFormatter;
     import IValueFormatter = powerbi.visuals.IValueFormatter;
     // import TooltipManager = powerbi.visuals.TooltipManager;
     // import TooltipEvent = powerbi.visuals.TooltipEvent;
     // import TooltipDataItem = powerbi.visuals.TooltipDataItem;
-
-    declare type IDataColorPalette = {
-        getColorByIndex: (d: any) => any
-    }; 
 
     export class ForceGraphColumns<T> {
         public static getMetadataColumns(dataView: DataView): ForceGraphColumns<DataViewMetadataColumn> {
@@ -255,7 +257,7 @@ module powerbi.extensibility.visual {
         private nodes: d3.Selection<ForceGraphNode>;
         private forceLayout: d3.layout.Force<ForceGraphLink, ForceGraphNode>;
 
-        private colors: IDataColorPalette;
+        private colorPalette: IColorPalette;
         private uniqieId: string = "_" + (ForceGraph.Count++) + "_";
 
         private marginValue: IMargin;
@@ -293,7 +295,7 @@ module powerbi.extensibility.visual {
             };
         }
 
-        private scale1to10(d) {
+        private scale1to10(value: number): number {
             var scale = d3.scale.linear()
                 .domain([
                     this.data.minFiles,
@@ -302,20 +304,20 @@ module powerbi.extensibility.visual {
                 .rangeRound([1, 10])
                 .clamp(true);
 
-            return scale(d);
+            return scale(value);
         }
 
-        private getLinkColor(d: ForceGraphLink): string {
+        private getLinkColor(link: ForceGraphLink): string {
             switch (this.settings.links.colorLink) {
                 case LinkColorType.ByWeight: {
-                    return this.colors.getColorByIndex(this.scale1to10(d.weight)).value;
+                    return this.colorPalette.getColor(this.scale1to10(link.weight).toString()).value;
                 }
                 case LinkColorType.ByLinkType: {
-                    return d.type && this.data.linkTypes[d.type]
-                        ? this.data.linkTypes[d.type].color
+                    return link.type && this.data.linkTypes[link.type]
+                        ? this.data.linkTypes[link.type].color
                         : ForceGraph.DefaultValues.defaultLinkColor;
                 }
-            };
+            }
 
             return ForceGraph.DefaultValues.defaultLinkColor;
         }
@@ -326,7 +328,7 @@ module powerbi.extensibility.visual {
             return ForceGraphSettings.enumerateObjectInstances(this.settings, options);
         }
 
-        public static converter(dataView: DataView, colors: IDataColorPalette): ForceGraphData {
+        public static converter(dataView: DataView, colors: IColorPalette): ForceGraphData {
             var settings: ForceGraphSettings = ForceGraph.parseSettings(dataView),
                 nodes: ForceGraphNodes = {},
                 minFiles: number = Number.MAX_VALUE,
@@ -390,7 +392,7 @@ module powerbi.extensibility.visual {
                 if (metadata.LinkType && !linkDataPoints[tableRow.LinkType]) {
                     linkDataPoints[tableRow.LinkType] = {
                         label: tableRow.LinkType,
-                        color: colors.getColorByIndex(linkTypeCount++).value,
+                        color: colors.getColor((linkTypeCount++).toString()).value,
                     };
                 };
 
@@ -417,10 +419,11 @@ module powerbi.extensibility.visual {
         }
 
         private static parseSettings(dataView: DataView): ForceGraphSettings {
-            let settings = ForceGraphSettings.parse<ForceGraphSettings>(dataView);
+            let settings: ForceGraphSettings = ForceGraphSettings.parse<ForceGraphSettings>(dataView);
 
             settings.size.charge = Math.min(Math.max(settings.size.charge, -100), -0.1);
-            settings.links.decimalPlaces = settings.links.decimalPlaces && Math.min(Math.max(settings.links.decimalPlaces, 0), 5);
+            settings.links.decimalPlaces = settings.links.decimalPlaces
+                && Math.min(Math.max(settings.links.decimalPlaces, 0), 5);
 
             return settings;
         }
@@ -447,7 +450,7 @@ module powerbi.extensibility.visual {
                 }))
                 .on("drag", ((d: ForceGraphNode) => this.fadeNode(d)));
 
-            // this.colors = options.style.colorPalette.dataColors; // TODO: fix it
+            this.colorPalette = options.host.colorPalette;
         }
 
         public update(options: VisualUpdateOptions): void {
@@ -455,7 +458,7 @@ module powerbi.extensibility.visual {
                 return;
             }
 
-            this.data = ForceGraph.converter(options.dataViews[0], this.colors);
+            this.data = ForceGraph.converter(options.dataViews[0], this.colorPalette);
 
             if (!this.data) {
                 this.removeElements();
@@ -496,7 +499,9 @@ module powerbi.extensibility.visual {
                         ? this.scale1to10(d.weight)
                         : ForceGraph.DefaultValues.defaultLinkThickness;
                 })
-                .style("stroke", (d: ForceGraphLink) => this.getLinkColor(d))
+                .style("stroke", (d: ForceGraphLink) => {
+                    return this.getLinkColor(d);
+                })
                 .style("fill", (d: ForceGraphLink) => {
                     if (this.settings.links.showArrow) {
                         return this.getLinkColor(d);
@@ -596,21 +601,21 @@ module powerbi.extensibility.visual {
                 .remove();
         }
 
-        private updateNodes() {
-            var oldNodes = this.forceLayout.nodes();
+        private updateNodes(): void {
+            var thePreviousNodes: ForceGraphNode[] = this.forceLayout.nodes();
 
             this.forceLayout.nodes(d3.values(this.data.nodes));
 
             this.forceLayout.nodes().forEach((node: ForceGraphNode, i: number) => {
-                if (!oldNodes[i]) {
+                if (!thePreviousNodes[i]) {
                     return;
                 }
 
-                node.x = oldNodes[i].x;
-                node.y = oldNodes[i].y;
-                node.px = oldNodes[i].px;
-                node.py = oldNodes[i].py;
-                node.weight = oldNodes[i].weight;
+                node.x = thePreviousNodes[i].x;
+                node.y = thePreviousNodes[i].y;
+                node.px = thePreviousNodes[i].px;
+                node.py = thePreviousNodes[i].py;
+                node.weight = thePreviousNodes[i].weight;
             });
         }
 
@@ -684,16 +689,22 @@ module powerbi.extensibility.visual {
         }
 
         private isReachable(a: ForceGraphNode, b: ForceGraphNode): boolean {
-            if (a.name === b.name) return true;
-            if (this.data.linkedByName[a.name + "," + b.name]) return true;
+            if (a.name === b.name || this.data.linkedByName[a.name + "," + b.name]) {
+                return true;
+            }
+
             var visited = {};
+
             for (var name in this.data.nodes) {
                 visited[name] = false;
             };
+
             visited[a.name] = true;
 
             var stack = [];
+
             stack.push(a.name);
+
             while (stack.length > 0) {
                 var cur = stack.pop();
                 var node = this.data.nodes[cur];
@@ -706,6 +717,7 @@ module powerbi.extensibility.visual {
                     }
                 }
             };
+
             return false;
         }
 
