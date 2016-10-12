@@ -238,12 +238,12 @@ module powerbi.extensibility.visual {
         private static Count: number = 0;
 
         private static DefaultValues = {
-            defaultLinkColor: "#bbb",
-            defaultLinkHighlightColor: "#f00",
-            defaultLinkThickness: "1.5px",
+            defaultLinkColor: '#bbb',
+            defaultLinkHighlightColor: '#f00',
+            defaultLinkThickness: '1.5px',
         };
         private static get Href(): string {
-            return window.location.href.replace(window.location.hash, "");
+            return window.location.href.replace(window.location.hash, '');
         }
 
         private data: ForceGraphData;
@@ -258,7 +258,7 @@ module powerbi.extensibility.visual {
         private forceLayout: d3.layout.Force<ForceGraphLink, ForceGraphNode>;
 
         private colorPalette: IColorPalette;
-        private uniqieId: string = "_" + (ForceGraph.Count++) + "_";
+        private uniqieId: string = '_' + (ForceGraph.Count++) + '_';
 
         private marginValue: IMargin;
 
@@ -348,8 +348,8 @@ module powerbi.extensibility.visual {
             var tableRows = ForceGraphColumns.getTableRows(dataView),
                 // formatStringProp = ForceGraphSettings.getProperties(ForceGraph.capabilities)['general']['formatString'];
                 formatStringProp: DataViewObjectPropertyIdentifier = <DataViewObjectPropertyIdentifier>{
-                    objectName: "general",
-                    propertyName: "formatString"
+                    objectName: 'general',
+                    propertyName: 'formatString'
                 }; // TODO: check it.
 
             var weightFormatter: IValueFormatter = metadata.Weight && valueFormatter.create({
@@ -367,10 +367,10 @@ module powerbi.extensibility.visual {
             });
 
             tableRows.forEach((tableRow: ForceGraphColumns<any>) => {
-                linkedByName[tableRow.Source + "," + tableRow.Target] = 1;
+                linkedByName[tableRow.Source + ',' + tableRow.Target] = 1;
 
-                var source = nodes[tableRow.Source] || (nodes[tableRow.Source] = { name: sourceFormatter.format(tableRow.Source), image: tableRow.SourceType || "", adj: {} });
-                var target = nodes[tableRow.Target] || (nodes[tableRow.Target] = { name: targetFormatter.format(tableRow.Target), image: tableRow.TargetType || "", adj: {} });
+                var source = nodes[tableRow.Source] || (nodes[tableRow.Source] = { name: sourceFormatter.format(tableRow.Source), image: tableRow.SourceType || '', adj: {} });
+                var target = nodes[tableRow.Target] || (nodes[tableRow.Target] = { name: targetFormatter.format(tableRow.Target), image: tableRow.TargetType || '', adj: {} });
 
                 source.adj[target.name] = 1;
                 target.adj[source.name] = 1;
@@ -385,7 +385,7 @@ module powerbi.extensibility.visual {
                     target: target,
                     weight: Math.max(metadata.Weight ? (tableRow.Weight || 0) : 1, 0),
                     formattedWeight: tableRow.Weight && weightFormatter.format(tableRow.Weight),
-                    type: tableRow.LinkType || "",
+                    type: tableRow.LinkType || '',
                     tooltipInfo: tooltipInfo,
                 };
 
@@ -440,15 +440,15 @@ module powerbi.extensibility.visual {
             this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
 
             this.forceLayout.drag()
-                .on("dragstart", ((d: ForceGraphNode) => {
+                .on('dragstart', ((d: ForceGraphNode) => {
                     d.isDrag = true;
                     this.fadeNode(d);
                 }))
-                .on("dragend", ((d: ForceGraphNode) => {
+                .on('dragend', ((d: ForceGraphNode) => {
                     d.isDrag = false;
                     this.fadeNode(d);
                 }))
-                .on("drag", ((d: ForceGraphNode) => this.fadeNode(d)));
+                .on('drag', ((d: ForceGraphNode) => this.fadeNode(d)));
 
             this.colorPalette = options.host.colorPalette;
         }
@@ -473,9 +473,9 @@ module powerbi.extensibility.visual {
             this.removeElements();
 
             var svg = this.root
-                .append("svg")
-                .attr("width", this.viewport.width)
-                .attr("height", this.viewport.height)
+                .append('svg')
+                .attr('width', this.viewport.width)
+                .attr('height', this.viewport.height)
                 .classed(ForceGraph.VisualClassName, true);
 
             this.forceLayout
@@ -484,31 +484,31 @@ module powerbi.extensibility.visual {
                 .size([this.viewport.width, this.viewport.height])
                 .linkDistance(100)
                 .charge(this.settings.size.charge / k)
-                .on("tick", this.tick());
+                .on('tick', this.tick());
 
             this.updateNodes();
             this.forceLayout.start();
 
-            this.paths = svg.selectAll(".link")
+            this.paths = svg.selectAll('.link')
                 .data(this.forceLayout.links())
-                .enter().append("path")
-                .attr("class", "link")
-                .attr("id", (d, i) => "linkid_" + this.uniqieId + i)
-                .attr("stroke-width", (d: ForceGraphLink) => {
+                .enter().append('path')
+                .attr('class', 'link')
+                .attr('id', (d, i) => 'linkid_' + this.uniqieId + i)
+                .attr('stroke-width', (d: ForceGraphLink) => {
                     return this.settings.links.thickenLink
                         ? this.scale1to10(d.weight)
                         : ForceGraph.DefaultValues.defaultLinkThickness;
                 })
-                .style("stroke", (d: ForceGraphLink) => {
+                .style('stroke', (d: ForceGraphLink) => {
                     return this.getLinkColor(d);
                 })
-                .style("fill", (d: ForceGraphLink) => {
+                .style('fill', (d: ForceGraphLink) => {
                     if (this.settings.links.showArrow) {
                         return this.getLinkColor(d);
                     }
                 })
-                .on("mouseover", this.fadePath(.3, ForceGraph.DefaultValues.defaultLinkHighlightColor))
-                .on("mouseout", this.fadePath(1, ForceGraph.DefaultValues.defaultLinkColor));
+                .on('mouseover', this.fadePath(.3, ForceGraph.DefaultValues.defaultLinkHighlightColor))
+                .on('mouseout', this.fadePath(1, ForceGraph.DefaultValues.defaultLinkColor));
 
             // TooltipManager.addTooltip(this.paths, (tooltipEvent: TooltipEvent) => {
             //     return tooltipEvent.data.tooltipInfo;
@@ -516,20 +516,20 @@ module powerbi.extensibility.visual {
 
             if (this.settings.links.showLabel) {
                 var linklabelholderUpdate = svg
-                    .selectAll(".linklabelholder")
+                    .selectAll('.linklabelholder')
                     .data(this.forceLayout.links());
 
                 linklabelholderUpdate.enter()
-                    .append("g")
-                    .attr("class", "linklabelholder")
-                    .append("text")
-                    .attr("class", "linklabel")
-                    .attr("y", "-12")
-                    .attr("text-anchor", "middle")
-                    .style("fill", "#000")
-                    .append("textPath")
-                    .attr("xlink:href", (d, i) => ForceGraph.Href + "#linkid_" + this.uniqieId + i)
-                    .attr("startOffset", "25%")
+                    .append('g')
+                    .attr('class', 'linklabelholder')
+                    .append('text')
+                    .attr('class', 'linklabel')
+                    .attr('y', '-12')
+                    .attr('text-anchor', 'middle')
+                    .style('fill', '#000')
+                    .append('textPath')
+                    .attr('xlink:href', (d, i) => ForceGraph.Href + '#linkid_' + this.uniqieId + i)
+                    .attr('startOffset', '25%')
                     .text((d: ForceGraphLink) => {
                         return this.settings.links.colorLink === LinkColorType.ByLinkType
                             ? d.type
@@ -542,20 +542,20 @@ module powerbi.extensibility.visual {
             }
 
             // define the nodes
-            this.nodes = svg.selectAll(".node")
+            this.nodes = svg.selectAll('.node')
                 .data(this.forceLayout.nodes())
-                .enter().append("g")
-                .attr("class", "node")
+                .enter().append('g')
+                .attr('class', 'node')
                 .call(this.forceLayout.drag)
-                .on("mouseover", (d: ForceGraphNode) => { d.isOver = true; this.fadeNode(d); })
-                .on("mouseout", (d: ForceGraphNode) => { d.isOver = false; this.fadeNode(d); })
-                .on("mousedown", () => (<Event>d3.event).stopPropagation())
-                .attr("drag-resize-disabled", true);
+                .on('mouseover', (d: ForceGraphNode) => { d.isOver = true; this.fadeNode(d); })
+                .on('mouseout', (d: ForceGraphNode) => { d.isOver = false; this.fadeNode(d); })
+                .on('mousedown', () => (<Event>d3.event).stopPropagation())
+                .attr('drag-resize-disabled', true);
 
             // add the nodes
             if (this.settings.nodes.displayImage) {
-                this.nodes.append("image")
-                    .attr("xlink:href", (d: ForceGraphNode) =>
+                this.nodes.append('image')
+                    .attr('xlink:href', (d: ForceGraphNode) =>
                         d.image && d.image !== '' ?
                             this.settings.nodes.imageUrl + d.image + this.settings.nodes.imageExt :
                             (
@@ -564,22 +564,22 @@ module powerbi.extensibility.visual {
                                     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAMAAAHNDTTxAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACuUExURQAAAMbGxvLy8sfHx/Hx8fLy8vHx8cnJycrKyvHx8fHx8cvLy/Ly8szMzM3NzfHx8dDQ0PHx8fLy8vHx8e/v79LS0tPT0/Ly8tTU1NXV1dbW1vHx8fHx8fDw8NjY2PT09PLy8vLy8vHx8fLy8vHx8fHx8enp6fDw8PLy8uPj4+Tk5OXl5fHx8b+/v/Pz8+bm5vHx8ejo6PLy8vHx8fLy8sTExPLy8vLy8sXFxfHx8YCtMbUAAAA6dFJOUwD/k/+b7/f///+r/////0z/w1RcEP//ZP///4fj/v8Yj3yXn/unDEhQ////YP9Y/8//aIMU/9+L/+fzC4s1AAAACXBIWXMAABcRAAAXEQHKJvM/AAABQElEQVQoU5WS61LCMBCFFymlwSPKVdACIgWkuNyL+P4v5ibZ0jKjP/xm0uw5ySa7mRItAhnMoIC5TwQZdCZiZjcoC8WU6EVsmZgzoqGdxafgvJAvjUXCb2M+0cXNsd/GDarZqSf7av3M2P1E3xhfLkPUvLD5joEYwVVJQXM6+9McWUwLf4nDTCQZAy96UoDjNI/jhl3xPLbQamu8xD7iaIsPKw7GJ7KZEnWLY3Gi8EFj5nqibXnwD5VEGjJXk5sbpLppfvvo1RazQVrhSopPK4TODrtnjS3dY4ic8KurruWQYF+UG60BacexTMyT2jlNg41dOmKvTpkUd/Jevy7ZxQ61ULRUpoododx8GeDPvIrktbFVdUsK6f8Na5VlVpjZJtowTXVy7kfXF5wCaV1tqXAFuIdWJu+JviaQzNzfQvQDGKRXXEmy83cAAAAASUVORK5CYII='
                             )
                     )
-                    .attr("x", "-12px")
-                    .attr("y", "-12px")
-                    .attr("width", "24px")
-                    .attr("height", "24px");
+                    .attr('x', '-12px')
+                    .attr('y', '-12px')
+                    .attr('width', '24px')
+                    .attr('height', '24px');
             } else {
                 this.nodes
-                    .append("circle")
-                    .attr("r", (d: ForceGraphNode) => d.weight < 5 ? 5 : d.weight);
+                    .append('circle')
+                    .attr('r', (d: ForceGraphNode) => d.weight < 5 ? 5 : d.weight);
             }
 
             // add the text
             if (this.settings.labels.show) {
-                this.nodes.append("text")
+                this.nodes.append('text')
                     .attr({
                         x: 12,
-                        dy: ".35em"
+                        dy: '.35em'
                     })
                     .style({
                         fill: this.settings.labels.fillColor,
@@ -597,7 +597,7 @@ module powerbi.extensibility.visual {
             }
 
             this.root
-                .selectAll("svg")
+                .selectAll('svg')
                 .remove();
         }
 
@@ -622,7 +622,7 @@ module powerbi.extensibility.visual {
         private tick() {
             var viewport = this.viewportIn;
             // limitX and limitY is necessary when you minimize the graph and then resize it to normal.
-            //"width/height * 20" seems enough to move nodes freely by force layout.
+            //'width/height * 20' seems enough to move nodes freely by force layout.
             var maxWidth = viewport.width * 20;
             var maxHeight = viewport.height * 20;
             var limitX = x => Math.max((viewport.width - maxWidth) / 2, Math.min((viewport.width + maxWidth) / 2, x));
@@ -643,13 +643,13 @@ module powerbi.extensibility.visual {
                         dtxs = d.target.x - 6 * Math.cos(theta),
                         dtys = d.target.y - 6 * Math.sin(theta);
 
-                    return "M" +
-                        d.source.x + "," +
-                        d.source.y + "A" +
-                        dr + "," + dr + " 0 0 1," +
-                        d.target.x + "," +
+                    return 'M' +
+                        d.source.x + ',' +
+                        d.source.y + 'A' +
+                        dr + ',' + dr + ' 0 0 1,' +
+                        d.target.x + ',' +
                         d.target.y +
-                        "A" + dr + "," + dr + " 0 0 0," + d.source.x + "," + d.source.y + "M" + dtxs + "," + dtys + "l" + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "L" + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + "," + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + "z";
+                        'A' + dr + ',' + dr + ' 0 0 0,' + d.source.x + ',' + d.source.y + 'M' + dtxs + ',' + dtys + 'l' + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + ',' + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + 'L' + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + ',' + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + 'z';
                 }
                 : (d: ForceGraphLink) => {
                     d.source.x = limitX(d.source.x);
@@ -659,11 +659,11 @@ module powerbi.extensibility.visual {
                     var dx = d.target.x - d.source.x,
                         dy = d.target.y - d.source.y,
                         dr = Math.sqrt(dx * dx + dy * dy);
-                    return "M" +
-                        d.source.x + "," +
-                        d.source.y + "A" +
-                        dr + "," + dr + " 0 0,1 " +
-                        d.target.x + "," +
+                    return 'M' +
+                        d.source.x + ',' +
+                        d.source.y + 'A' +
+                        dr + ',' + dr + ' 0 0,1 ' +
+                        d.target.x + ',' +
                         d.target.y;
                 };
 
@@ -672,8 +672,8 @@ module powerbi.extensibility.visual {
                     this.parentNode.insertBefore(this, this);
                 });
 
-                this.paths.attr("d", getPath);
-                this.nodes.attr("transform", d => "translate(" + limitX(d.x) + "," + limitY(d.y) + ")");
+                this.paths.attr('d', getPath);
+                this.nodes.attr('transform', d => 'translate(' + limitX(d.x) + ',' + limitY(d.y) + ')');
             };
         }
 
@@ -683,13 +683,13 @@ module powerbi.extensibility.visual {
             }
 
             return (d: ForceGraphLink) => {
-                this.paths.style("stroke-opacity", (o: ForceGraphLink) => o.source === d.source && o.target === d.target ? 1 : opacity);
-                this.paths.style("stroke", (o: ForceGraphLink) => o.source === d.source && o.target === d.target ? highlight : ForceGraph.DefaultValues.defaultLinkColor);
+                this.paths.style('stroke-opacity', (o: ForceGraphLink) => o.source === d.source && o.target === d.target ? 1 : opacity);
+                this.paths.style('stroke', (o: ForceGraphLink) => o.source === d.source && o.target === d.target ? highlight : ForceGraph.DefaultValues.defaultLinkColor);
             };
         }
 
         private isReachable(a: ForceGraphNode, b: ForceGraphNode): boolean {
-            if (a.name === b.name || this.data.linkedByName[a.name + "," + b.name]) {
+            if (a.name === b.name || this.data.linkedByName[a.name + ',' + b.name]) {
                 return true;
             }
 
@@ -726,8 +726,8 @@ module powerbi.extensibility.visual {
                 return;
             }
 
-            var isConnected = (a: ForceGraphNode, b: ForceGraphNode) => this.data.linkedByName[a.name + "," + b.name]
-                || this.data.linkedByName[b.name + "," + a.name] || a.name === b.name;
+            var isConnected = (a: ForceGraphNode, b: ForceGraphNode) => this.data.linkedByName[a.name + ',' + b.name]
+                || this.data.linkedByName[b.name + ',' + a.name] || a.name === b.name;
 
             var isHighlight = node.isOver || node.isDrag;
 
@@ -738,17 +738,17 @@ module powerbi.extensibility.visual {
                 : ForceGraph.DefaultValues.defaultLinkColor;
 
             var that = this;
-            this.nodes.style("stroke-opacity", function (o: ForceGraphNode) {
+            this.nodes.style('stroke-opacity', function (o: ForceGraphNode) {
                 var thisOpacity = (that.settings.nodes.highlightReachableLinks ? that.isReachable(node, o) : isConnected(node, o)) ? 1 : opacity;
                 this.setAttribute('fill-opacity', thisOpacity);
                 return thisOpacity;
             });
 
-            this.paths.style("stroke-opacity", (o: ForceGraphLink) =>
+            this.paths.style('stroke-opacity', (o: ForceGraphLink) =>
                 (this.settings.nodes.highlightReachableLinks ? this.isReachable(node, o.source) :
                     (o.source === node || o.target === node)) ? 1 : opacity);
 
-            this.paths.style("stroke", (o: ForceGraphLink) =>
+            this.paths.style('stroke', (o: ForceGraphLink) =>
                 (this.settings.nodes.highlightReachableLinks ? this.isReachable(node, o.source) :
                     (o.source === node || o.target === node)) ? highlight : ForceGraph.DefaultValues.defaultLinkColor);
         }

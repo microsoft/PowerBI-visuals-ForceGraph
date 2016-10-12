@@ -8,7 +8,7 @@ module powerbi.extensibility.visual {
 
     export class LabelsSettings {
         public show: boolean = true;
-        public fillColor: string = "#777777";
+        public fillColor: string = '#777777';
         public fontSize: number = 9;
     }
 
@@ -22,16 +22,16 @@ module powerbi.extensibility.visual {
     }
 
     export enum LinkColorType {
-        ByWeight = <any>"ByWeight",
-        ByLinkType = <any>"ByLinkType",
-        Interactive = <any>"Interactive"
+        ByWeight = <any>'ByWeight',
+        ByLinkType = <any>'ByLinkType',
+        Interactive = <any>'Interactive'
     }
 
     export class NodesSettings {
         public displayImage: boolean = false;
-        public defaultImage: string = "Home";
-        public imageUrl: string = "";
-        public imageExt: string = ".png";
+        public defaultImage: string = 'Home';
+        public imageUrl: string = '';
+        public imageExt: string = '.png';
         public nameMaxLength: number = 10;
         public highlightReachableLinks: boolean = false;
     }
