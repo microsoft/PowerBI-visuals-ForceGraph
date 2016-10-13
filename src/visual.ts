@@ -97,43 +97,6 @@ module powerbi.extensibility.visual {
 
     declare type TooltipDataItem = any; // TODO: implement a NPM package
 
-    export interface ForceGraphLink {
-        source: ForceGraphNode;
-        target: ForceGraphNode;
-        weight: number;
-        formattedWeight: string;
-        type: string;
-        tooltipInfo: TooltipDataItem[];
-    }
-
-    export interface ForceGraphNode extends d3.layout.force.Node {
-        name: string;
-        image: string;
-        adj: { [i: string]: number };
-        x?: number;
-        y?: number;
-        isDrag?: boolean;
-        isOver?: boolean;
-    }
-
-    export interface ForceGraphNodes {
-        [i: string]: ForceGraphNode;
-    }
-
-    export interface LinkedByName {
-        [linkName: string]: number;
-    }
-
-    export interface ForceGraphData {
-        nodes: ForceGraphNodes;
-        links: ForceGraphLink[];
-        minFiles: number;
-        maxFiles: number;
-        linkedByName: LinkedByName;
-        linkTypes: {};
-        settings: ForceGraphSettings;
-    }
-
     export class ForceGraph implements IVisual {
         public static VisualClassName = 'forceGraph';
         private static Count: number = 0;
@@ -143,6 +106,7 @@ module powerbi.extensibility.visual {
             defaultLinkHighlightColor: '#f00',
             defaultLinkThickness: '1.5px',
         };
+
         private static get Href(): string {
             return window.location.href.replace(window.location.hash, '');
         }
@@ -413,19 +377,21 @@ module powerbi.extensibility.visual {
 
                 linklabelholderUpdate.enter()
                     .append('g')
-                    .attr('class', 'linklabelholder')
+                    .classed('linklabelholder', true)
                     .append('text')
-                    .attr('class', 'linklabel')
+                    .classed('linklabel', true)
                     .attr('y', '-12')
                     .attr('text-anchor', 'middle')
                     .style('fill', '#000')
                     .append('textPath')
-                    .attr('xlink:href', (d, i) => ForceGraph.Href + '#linkid_' + this.uniqieId + i)
-                    .attr('startOffset', '25%')
-                    .text((d: ForceGraphLink) => {
+                    .attr({
+                        'xlink:href': (d, i) => ForceGraph.Href + '#linkid_' + this.uniqieId + i,
+                        'startOffset': '25%'
+                    })
+                    .text((link: ForceGraphLink) => {
                         return this.settings.links.colorLink === LinkColorType.ByLinkType
-                            ? d.type
-                            : d.formattedWeight;
+                            ? link.type
+                            : link.formattedWeight;
                     });
 
                 linklabelholderUpdate
@@ -436,11 +402,18 @@ module powerbi.extensibility.visual {
             // define the nodes
             this.nodes = svg.selectAll('.node')
                 .data(this.forceLayout.nodes())
-                .enter().append('g')
+                .enter()
+                .append('g')
                 .attr('class', 'node')
                 .call(this.forceLayout.drag)
-                .on('mouseover', (d: ForceGraphNode) => { d.isOver = true; this.fadeNode(d); })
-                .on('mouseout', (d: ForceGraphNode) => { d.isOver = false; this.fadeNode(d); })
+                .on('mouseover', (node: ForceGraphNode) => {
+                    node.isOver = true;
+                    this.fadeNode(node);
+                })
+                .on('mouseout', (node: ForceGraphNode) => {
+                    node.isOver = false;
+                    this.fadeNode(node);
+                })
                 .on('mousedown', () => (<Event>d3.event).stopPropagation())
                 .attr('drag-resize-disabled', true);
 
