@@ -78,9 +78,6 @@ module powerbi.extensibility.visual {
     import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
     import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
 
-    // powerbi.data
-    import hasRole = powerbi.data.DataRoleHelper.hasRole;
-
     // powerbi.extensibility
     import IColorPalette = powerbi.extensibility.IColorPalette;
 
@@ -98,102 +95,7 @@ module powerbi.extensibility.visual {
     // import TooltipEvent = powerbi.visuals.TooltipEvent;
     // import TooltipDataItem = powerbi.visuals.TooltipDataItem;
 
-    export class ForceGraphColumns<T> {
-        public static getMetadataColumns(dataView: DataView): ForceGraphColumns<DataViewMetadataColumn> {
-            var columns = dataView && dataView.metadata && dataView.metadata.columns;
-            return columns && _.mapValues(
-                new ForceGraphColumns<DataViewMetadataColumn>(),
-                (n, i) => columns.filter(x => x.roles && x.roles[i])[0]);
-        }
-
-        public static getTableValues(dataView: DataView): ForceGraphColumns<any[]> {
-            var table = dataView && dataView.table;
-            var columns = this.getMetadataColumns(dataView);
-            return columns && table && <any>_.mapValues(
-                columns, (n: DataViewMetadataColumn, i) => n && table.rows.map(row => row[n.index]));
-        }
-
-        public static getTableRows(dataView: DataView): ForceGraphColumns<any>[] {
-            var table = dataView && dataView.table;
-            var columns = this.getMetadataColumns(dataView);
-            return columns && table && table.rows.map(row =>
-                _.mapValues(columns, (n: DataViewMetadataColumn, i) => n && row[n.index]));
-        }
-
-        public Source: T = null;
-        public Target: T = null;
-        public Weight: T = null;
-        public LinkType: T = null;
-        public SourceType: T = null;
-        public TargetType: T = null;
-    }
-
-    export interface ForceGraphTooltipInputObject {
-        [propertyName: string]: any;
-    }
-
-    export class ForceGraphTooltipsFactory {
-        public static build(
-            inputObject: ForceGraphTooltipInputObject,
-            dataViewMetadataColumns: DataViewMetadataColumn[],
-            // formatStringProperties?: DataViewObjectPropertyIdentifier): TooltipDataItem[] {
-            formatStringProperties?: DataViewObjectPropertyIdentifier): any[] { // TODO: check it
-
-            // var tooltips: TooltipDataItem[] = [];
-            var tooltips: any[] = []; // TODO: check it
-
-            if (!inputObject) {
-                return tooltips;
-            }
-
-            for (var propertyName in inputObject) {
-                var column: DataViewMetadataColumn,
-                    value: string;
-
-                column = ForceGraphMetadataRoleHelper.getColumnByRoleName(
-                    dataViewMetadataColumns,
-                    propertyName);
-
-                if (!column || !column.displayName) {
-                    continue;
-                }
-
-                value = inputObject[propertyName];
-
-                if (formatStringProperties && !_.isNumber(value)) {
-                    value = valueFormatter.format(
-                        value,
-                        valueFormatter.getFormatString(column, formatStringProperties));
-                }
-
-                tooltips.push({
-                    displayName: column.displayName,
-                    value: value
-                });
-            }
-
-            return tooltips;
-        }
-    }
-
-    export class ForceGraphMetadataRoleHelper {
-        public static getColumnByRoleName(
-            dataViewMetadataColumns: DataViewMetadataColumn[],
-            roleName: string): DataViewMetadataColumn {
-
-            if (!_.isEmpty(dataViewMetadataColumns) && roleName) {
-                for (var i = 0, length = dataViewMetadataColumns.length; i < length; i++) {
-                    var column: DataViewMetadataColumn = dataViewMetadataColumns[i];
-
-                    if (column && hasRole(column, roleName)) {
-                        return column;
-                    }
-                }
-            }
-
-            return null;
-        }
-    }
+    declare type TooltipDataItem = any; // TODO: implement a NPM package
 
     export interface ForceGraphLink {
         source: ForceGraphNode;
@@ -201,8 +103,7 @@ module powerbi.extensibility.visual {
         weight: number;
         formattedWeight: string;
         type: string;
-        // tooltipInfo: TooltipDataItem[];
-        tooltipInfo?: any[]; // TODO: check it
+        tooltipInfo: TooltipDataItem[];
     }
 
     export interface ForceGraphNode extends d3.layout.force.Node {
@@ -337,33 +238,27 @@ module powerbi.extensibility.visual {
                 links: ForceGraphLink[] = [],
                 linkDataPoints = {},
                 linkTypeCount: number = 0,
-                // tooltipInfo: TooltipDataItem[] = [],
-                tooltipInfo: any[] = [], // TODO: check it
+                tooltipInfo: TooltipDataItem[] = [],
                 metadata = ForceGraphColumns.getMetadataColumns(dataView);
 
             if (!metadata || !metadata.Source || !metadata.Target) {
                 return null;
             }
 
-            var tableRows = ForceGraphColumns.getTableRows(dataView),
-                // formatStringProp = ForceGraphSettings.getProperties(ForceGraph.capabilities)['general']['formatString'];
-                formatStringProp: DataViewObjectPropertyIdentifier = <DataViewObjectPropertyIdentifier>{
-                    objectName: 'general',
-                    propertyName: 'formatString'
-                }; // TODO: check it.
+            var tableRows = ForceGraphColumns.getTableRows(dataView);
 
             var weightFormatter: IValueFormatter = metadata.Weight && valueFormatter.create({
-                format: valueFormatter.getFormatString(metadata.Weight, formatStringProp, true),
+                format: valueFormatter.getFormatStringByColumn(metadata.Weight, true),
                 precision: settings.links.decimalPlaces,
                 value: settings.links.displayUnits || _.maxBy(tableRows, x => x.Weight).Weight
             });
 
             var sourceFormatter: IValueFormatter = valueFormatter.create({
-                format: valueFormatter.getFormatString(metadata.Source, formatStringProp, true),
+                format: valueFormatter.getFormatStringByColumn(metadata.Source, true),
             });
 
             var targetFormatter: IValueFormatter = valueFormatter.create({
-                format: valueFormatter.getFormatString(metadata.Target, formatStringProp, true),
+                format: valueFormatter.getFormatStringByColumn(metadata.Target, true),
             });
 
             tableRows.forEach((tableRow: ForceGraphColumns<any>) => {
@@ -375,10 +270,7 @@ module powerbi.extensibility.visual {
                 source.adj[target.name] = 1;
                 target.adj[source.name] = 1;
 
-                // tooltipInfo = ForceGraphTooltipsFactory.build(
-                //     tableRow,
-                //     dataView.metadata.columns,
-                //     formatStringProp); // TODO: check it
+                tooltipInfo = ForceGraphTooltipsFactory.build(tableRow, dataView.metadata.columns);
 
                 var link: ForceGraphLink = {
                     source: source,

@@ -18,6 +18,8 @@
     "node_modules/@powerbi-visuals-utils/displayunitsystemtype/lib/index.d.ts",
     "node_modules/@powerbi-visuals-utils/formattingservice/lib/index.d.ts",
     "node_modules/@powerbi-visuals-utils/displayunitsystem/lib/index.d.ts",
+    "src/columns.ts",
+    "src/tooltipsFactory.ts",
     "src/settingsParser.ts",
     "src/settings.ts",
     "src/visual.ts"

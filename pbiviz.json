@@ -19,6 +19,7 @@
   },
   "externalJS": [
     "node_modules/@powerbi-visuals-utils/external-loader/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/valueformatter/lib/index.js",
     "node_modules/jquery/dist/jquery.min.js",
     "node_modules/lodash/lodash.min.js",
     "node_modules/d3/d3.js",
