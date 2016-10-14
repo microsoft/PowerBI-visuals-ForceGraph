@@ -88,18 +88,16 @@ module powerbi.extensibility.visual {
 
     // powerbi.visuals
     import IMargin = powerbi.visuals.IMargin;
-
     import valueFormatter = powerbi.visuals.valueFormatter;
     import IValueFormatter = powerbi.visuals.IValueFormatter;
-    // import TooltipManager = powerbi.visuals.TooltipManager;
-    // import TooltipEvent = powerbi.visuals.TooltipEvent;
-    // import TooltipDataItem = powerbi.visuals.TooltipDataItem;
-
-    declare type TooltipDataItem = any; // TODO: implement a NPM package
+    import ITooltipService = powerbi.visuals.ITooltipService;
+    import VisualTooltipDataItem = powerbi.visuals.VisualTooltipDataItem;
+    import TooltipEventArgs = powerbi.visuals.TooltipEventArgs;
+    import createTooltipService = powerbi.visuals.createTooltipService;
 
     export class ForceGraph implements IVisual {
-        public static VisualClassName = 'forceGraph';
         private static Count: number = 0;
+        private static VisualClassName = 'forceGraph';
 
         private static DefaultValues = {
             defaultLinkColor: '#bbb',
@@ -111,7 +109,12 @@ module powerbi.extensibility.visual {
             return window.location.href.replace(window.location.hash, '');
         }
 
-        private data: ForceGraphData;
+        private static substractMargin(viewport: IViewport, margin: IMargin): IViewport {
+            return {
+                width: Math.max(viewport.width - (margin.left + margin.right), 0),
+                height: Math.max(viewport.height - (margin.top + margin.bottom), 0)
+            };
+        }
 
         private get settings(): ForceGraphSettings {
             return this.data && this.data.settings;
@@ -153,11 +156,35 @@ module powerbi.extensibility.visual {
             return this.viewportInValue || this.viewport;
         }
 
-        private static substractMargin(viewport: IViewport, margin: IMargin): IViewport {
-            return {
-                width: Math.max(viewport.width - (margin.left + margin.right), 0),
-                height: Math.max(viewport.height - (margin.top + margin.bottom), 0)
-            };
+        private data: ForceGraphData;
+
+        private tooltipService: ITooltipService;
+
+        constructor(options: VisualConstructorOptions) {
+            console.log('Visual constructor: ', options);
+
+            this.init(options);
+        }
+
+        private init(options: VisualConstructorOptions): void {
+            this.root = d3.select(options.element);
+
+            this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
+
+            this.forceLayout.drag()
+                .on('dragstart', ((d: ForceGraphNode) => {
+                    d.isDrag = true;
+                    this.fadeNode(d);
+                }))
+                .on('dragend', ((d: ForceGraphNode) => {
+                    d.isDrag = false;
+                    this.fadeNode(d);
+                }))
+                .on('drag', ((d: ForceGraphNode) => this.fadeNode(d)));
+
+            this.colorPalette = options.host.colorPalette;
+
+            this.tooltipService = createTooltipService(options.host);
         }
 
         private scale1to10(value: number): number {
@@ -202,7 +229,7 @@ module powerbi.extensibility.visual {
                 links: ForceGraphLink[] = [],
                 linkDataPoints = {},
                 linkTypeCount: number = 0,
-                tooltipInfo: TooltipDataItem[] = [],
+                tooltipInfo: VisualTooltipDataItem[] = [],
                 metadata = ForceGraphColumns.getMetadataColumns(dataView);
 
             if (!metadata || !metadata.Source || !metadata.Target) {
@@ -284,31 +311,6 @@ module powerbi.extensibility.visual {
             return settings;
         }
 
-        constructor(options: VisualConstructorOptions) {
-            console.log('Visual constructor: ', options);
-
-            this.init(options);
-        }
-
-        private init(options: VisualConstructorOptions): void {
-            this.root = d3.select(options.element);
-
-            this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
-
-            this.forceLayout.drag()
-                .on('dragstart', ((d: ForceGraphNode) => {
-                    d.isDrag = true;
-                    this.fadeNode(d);
-                }))
-                .on('dragend', ((d: ForceGraphNode) => {
-                    d.isDrag = false;
-                    this.fadeNode(d);
-                }))
-                .on('drag', ((d: ForceGraphNode) => this.fadeNode(d)));
-
-            this.colorPalette = options.host.colorPalette;
-        }
-
         public update(options: VisualUpdateOptions): void {
             if (!options.dataViews || (options.dataViews.length < 1)) {
                 return;
@@ -366,9 +368,9 @@ module powerbi.extensibility.visual {
                 .on('mouseover', this.fadePath(.3, ForceGraph.DefaultValues.defaultLinkHighlightColor))
                 .on('mouseout', this.fadePath(1, ForceGraph.DefaultValues.defaultLinkColor));
 
-            // TooltipManager.addTooltip(this.paths, (tooltipEvent: TooltipEvent) => {
-            //     return tooltipEvent.data.tooltipInfo;
-            // }); // TODO: check it
+            this.tooltipService.addTooltip(this.paths, (eventArgs: TooltipEventArgs<ForceGraphLink>) => {
+                return eventArgs.data.tooltipInfo;
+            });
 
             if (this.settings.links.showLabel) {
                 var linklabelholderUpdate = svg

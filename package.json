@@ -26,6 +26,7 @@
     "@powerbi-visuals-utils/pixelconverter": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-pixelconverter.git",
     "@powerbi-visuals-utils/regexpextensions": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-regexpextensions.git",
     "@powerbi-visuals-utils/stringextensions": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-stringextensions.git",
+    "@powerbi-visuals-utils/tooltipservice": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-tooltipservice.git",
     "@powerbi-visuals-utils/valueformatter": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-valueformatter.git",
     "d3": "^3.5.5",
     "globalize": "0.1.0-a2",

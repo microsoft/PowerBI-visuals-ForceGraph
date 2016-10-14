@@ -30,6 +30,7 @@
     "node_modules/@powerbi-visuals-utils/pixelconverter/lib/index.js",
     "node_modules/@powerbi-visuals-utils/formatting/lib/index.js",
     "node_modules/@powerbi-visuals-utils/formattingservice/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/tooltipservice/lib/index.js",
     "node_modules/@powerbi-visuals-utils/valueformatter/lib/index.js"
   ],
   "style": "style/visual.less",

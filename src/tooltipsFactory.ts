@@ -33,8 +33,7 @@ module powerbi.extensibility.visual {
 
     // powerbi.visuals
     import valueFormatter = powerbi.visuals.valueFormatter;
-
-    declare type TooltipDataItem = any; // TODO: implement a NPM package
+    import VisualTooltipDataItem = powerbi.visuals.VisualTooltipDataItem;
 
     export interface ForceGraphTooltipInputObject {
         [propertyName: string]: any;
@@ -43,9 +42,9 @@ module powerbi.extensibility.visual {
     export class ForceGraphTooltipsFactory {
         public static build(
             inputObject: ForceGraphTooltipInputObject,
-            dataViewMetadataColumns: DataViewMetadataColumn[]): TooltipDataItem[] {
+            dataViewMetadataColumns: DataViewMetadataColumn[]): VisualTooltipDataItem[] {
 
-            var tooltips: TooltipDataItem[] = [];
+            var tooltips: VisualTooltipDataItem[] = [];
 
             if (!inputObject) {
                 return tooltips;

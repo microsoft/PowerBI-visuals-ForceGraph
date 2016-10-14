@@ -25,7 +25,8 @@
  */
 
 module powerbi.extensibility.visual {
-    declare type TooltipDataItem = any; // TODO: implement a NPM package
+    // powerbi.visuals
+    import VisualTooltipDataItem = powerbi.visuals.VisualTooltipDataItem;
 
     export interface ForceGraphNode extends d3.layout.force.Node {
         name: string;
@@ -47,7 +48,7 @@ module powerbi.extensibility.visual {
         weight: number;
         formattedWeight: string;
         type: string;
-        tooltipInfo: TooltipDataItem[];
+        tooltipInfo: VisualTooltipDataItem[];
     }
 
     export interface ForceGraphData {
