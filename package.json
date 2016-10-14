@@ -20,14 +20,18 @@
     "@powerbi-visuals-utils/displayunitsystem": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-displayunitsystem.git",
     "@powerbi-visuals-utils/displayunitsystemtype": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-displayunitsystemtype.git",
     "@powerbi-visuals-utils/external-loader": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-external-loader.git",
+    "@powerbi-visuals-utils/formatting": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-formatting.git",
     "@powerbi-visuals-utils/formattingservice": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-formattingservice.git",
     "@powerbi-visuals-utils/imargin": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-imargin.git",
     "@powerbi-visuals-utils/pixelconverter": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-pixelconverter.git",
+    "@powerbi-visuals-utils/regexpextensions": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-regexpextensions.git",
+    "@powerbi-visuals-utils/stringextensions": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-stringextensions.git",
     "@powerbi-visuals-utils/valueformatter": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-valueformatter.git",
     "d3": "^3.5.5",
     "globalize": "0.1.0-a2",
     "jquery": "^3.1.1",
     "lodash": "^4.16.2",
+    "moment": "^2.15.1",
     "typings": "^1.4.0"
   }
 }
