@@ -163,6 +163,8 @@ module powerbi.extensibility.visual {
         constructor(options: VisualConstructorOptions) {
             console.log('Visual constructor: ', options);
 
+            debugger;
+
             this.init(options);
         }
 

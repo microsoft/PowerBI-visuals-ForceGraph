@@ -31,6 +31,11 @@
     "node_modules/@powerbi-visuals-utils/formatting/lib/index.js",
     "node_modules/@powerbi-visuals-utils/formattingservice/lib/index.js",
     "node_modules/@powerbi-visuals-utils/tooltipservice/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/cssconstants/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/rect/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/pointerutils/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/controls-touchutils/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/tooltipmanager/lib/index.js",
     "node_modules/@powerbi-visuals-utils/valueformatter/lib/index.js"
   ],
   "style": "style/visual.less",
