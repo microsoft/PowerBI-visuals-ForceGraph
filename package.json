@@ -30,6 +30,7 @@
     "@powerbi-visuals-utils/pointerutils": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-pointerutils.git",
     "@powerbi-visuals-utils/rect": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-rect.git",
     "@powerbi-visuals-utils/regexpextensions": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-regexpextensions.git",
+    "@powerbi-visuals-utils/settingsparser": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-settingsparser.git",
     "@powerbi-visuals-utils/stringextensions": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-stringextensions.git",
     "@powerbi-visuals-utils/tooltipmanager": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-tooltipmanager.git",
     "@powerbi-visuals-utils/tooltipservice": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-tooltipservice.git",

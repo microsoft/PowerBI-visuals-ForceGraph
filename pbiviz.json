@@ -36,7 +36,8 @@
     "node_modules/@powerbi-visuals-utils/pointerutils/lib/index.js",
     "node_modules/@powerbi-visuals-utils/controls-touchutils/lib/index.js",
     "node_modules/@powerbi-visuals-utils/tooltipmanager/lib/index.js",
-    "node_modules/@powerbi-visuals-utils/valueformatter/lib/index.js"
+    "node_modules/@powerbi-visuals-utils/valueformatter/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/settingsparser/lib/index.js"
   ],
   "style": "style/visual.less",
   "capabilities": "capabilities.json"

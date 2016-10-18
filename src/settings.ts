@@ -25,6 +25,8 @@
  */
 
 module powerbi.extensibility.visual {
+    import SettingsParser = powerbi.extensibility.visual.settingsParser.SettingsParser;
+
     export class ForceGraphSettings extends SettingsParser {
         public labels: LabelsSettings = new LabelsSettings();
         public links: LinksSettings = new LinksSettings();

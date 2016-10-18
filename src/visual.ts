@@ -219,7 +219,7 @@ module powerbi.extensibility.visual {
         public enumerateObjectInstances(
             options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
 
-            return ForceGraphSettings.enumerateObjectInstances(this.settings, options);
+            return this.settings.enumerateObjectInstances(options);
         }
 
         public static converter(dataView: DataView, colors: IColorPalette): ForceGraphData {
