@@ -106,7 +106,7 @@ module powerbi.extensibility.visual {
         private static MinViewport: IViewport = {
             width: 1,
             height: 1
-        }
+        };
 
         private static ImageViewport: IViewport = {
             width: 24,
@@ -216,7 +216,7 @@ module powerbi.extensibility.visual {
         };
 
         private scale1to10(value: number): number {
-            var scale = d3.scale.linear()
+            let scale: d3.scale.Linear<number, number> = d3.scale.linear()
                 .domain([
                     this.data.minFiles,
                     this.data.maxFiles
@@ -556,54 +556,54 @@ module powerbi.extensibility.visual {
             const viewport: IViewport = this.viewportIn;
 
             // limitX and limitY is necessary when you minimize the graph and then resize it to normal.
-            //'width/height * 20' seems enough to move nodes freely by force layout.
+            // 'width/height * 20' seems enough to move nodes freely by force layout.
             let maxWidth: number = viewport.width * 20,
                 maxHeight: number = viewport.height * 20,
                 limitX = x => Math.max((viewport.width - maxWidth) / 2, Math.min((viewport.width + maxWidth) / 2, x)),
                 limitY = y => Math.max((viewport.height - maxHeight) / 2, Math.min((viewport.height + maxHeight) / 2, y));
 
-            var getPath = this.settings.links.showArrow
-                ? (d: ForceGraphLink) => {
-                    d.source.x = limitX(d.source.x);
-                    d.source.y = limitY(d.source.y);
-                    d.target.x = limitX(d.target.x);
-                    d.target.y = limitY(d.target.y);
+            let getPath = this.settings.links.showArrow
+                ? (link: ForceGraphLink) => {
+                    link.source.x = limitX(link.source.x);
+                    link.source.y = limitY(link.source.y);
+                    link.target.x = limitX(link.target.x);
+                    link.target.y = limitY(link.target.y);
 
-                    var dx: number = d.target.x - d.source.x,
-                        dy: number = d.target.y - d.source.y,
+                    let dx: number = link.target.x - link.source.x,
+                        dy: number = link.target.y - link.source.y,
                         dr: number = Math.sqrt(dx * dx + dy * dy),
                         theta: number = Math.atan2(dy, dx) + Math.PI / 7.85,
                         d90: number = Math.PI / 2,
-                        dtxs: number = d.target.x - 6 * Math.cos(theta),
-                        dtys: number = d.target.y - 6 * Math.sin(theta);
+                        dtxs: number = link.target.x - 6 * Math.cos(theta),
+                        dtys: number = link.target.y - 6 * Math.sin(theta);
 
                     return 'M' +
-                        d.source.x + ',' +
-                        d.source.y + 'A' +
+                        link.source.x + ',' +
+                        link.source.y + 'A' +
                         dr + ',' + dr + ' 0 0 1,' +
-                        d.target.x + ',' +
-                        d.target.y +
-                        'A' + dr + ',' + dr + ' 0 0 0,' + d.source.x + ',' + d.source.y +
+                        link.target.x + ',' +
+                        link.target.y +
+                        'A' + dr + ',' + dr + ' 0 0 0,' + link.source.x + ',' + link.source.y +
                         'M' + dtxs + ',' + dtys +
                         'l' + (3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + ',' + (-3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) +
                         'L' + (dtxs - 3.5 * Math.cos(d90 - theta) - 10 * Math.cos(theta)) + ',' + (dtys + 3.5 * Math.sin(d90 - theta) - 10 * Math.sin(theta)) + 'z';
                 }
-                : (d: ForceGraphLink) => {
-                    d.source.x = limitX(d.source.x);
-                    d.source.y = limitY(d.source.y);
-                    d.target.x = limitX(d.target.x);
-                    d.target.y = limitY(d.target.y);
+                : (link: ForceGraphLink) => {
+                    link.source.x = limitX(link.source.x);
+                    link.source.y = limitY(link.source.y);
+                    link.target.x = limitX(link.target.x);
+                    link.target.y = limitY(link.target.y);
 
-                    let dx: number = d.target.x - d.source.x,
-                        dy: number = d.target.y - d.source.y,
+                    let dx: number = link.target.x - link.source.x,
+                        dy: number = link.target.y - link.source.y,
                         dr: number = Math.sqrt(dx * dx + dy * dy);
 
                     return 'M' +
-                        d.source.x + ',' +
-                        d.source.y + 'A' +
+                        link.source.x + ',' +
+                        link.source.y + 'A' +
                         dr + ',' + dr + ' 0 0,1 ' +
-                        d.target.x + ',' +
-                        d.target.y;
+                        link.target.x + ',' +
+                        link.target.y;
                 };
 
             return () => {
@@ -646,7 +646,7 @@ module powerbi.extensibility.visual {
 
             let visited = {};
 
-            for (var name in this.data.nodes) {
+            for (let name in this.data.nodes) {
                 visited[name] = false;
             };
 
@@ -660,7 +660,7 @@ module powerbi.extensibility.visual {
                 let cur = stack.pop(),
                     node = this.data.nodes[cur];
 
-                for (var nb in node.adj) {
+                for (let nb in node.adj) {
                     if (nb === b.name) {
                         return true;
                     }

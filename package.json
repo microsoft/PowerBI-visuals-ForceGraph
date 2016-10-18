@@ -8,7 +8,8 @@
   "scripts": {
     "postinstall": "typings install && pbiviz update 1.2.0",
     "typings": "node node_modules/typings/dist/bin.js i",
-    "pbiviz": "node node_modules/powerbi-visuals-tools/bin/pbiviz.js"
+    "pbiviz": "node node_modules/powerbi-visuals-tools/bin/pbiviz.js",
+    "lint": "node node_modules/tslint/bin/tslint \"src/**/*.ts\""
   },
   "license": "MIT",
   "repository": {
@@ -41,6 +42,7 @@
     "lodash": "4.16.2",
     "moment": "2.15.1",
     "powerbi-visuals-tools": "git+https://github.com/Microsoft/PowerBI-visuals-tools.git",
+    "tslint": "3.15.1",
     "typings": "1.4.0"
   }
 }

@@ -44,14 +44,14 @@ module powerbi.extensibility.visual {
             inputObject: ForceGraphTooltipInputObject,
             dataViewMetadataColumns: DataViewMetadataColumn[]): VisualTooltipDataItem[] {
 
-            var tooltips: VisualTooltipDataItem[] = [];
+            let tooltips: VisualTooltipDataItem[] = [];
 
             if (!inputObject) {
                 return tooltips;
             }
 
-            for (var propertyName in inputObject) {
-                var column: DataViewMetadataColumn,
+            for (let propertyName in inputObject) {
+                let column: DataViewMetadataColumn,
                     value: string;
 
                 column = ForceGraphMetadataRoleHelper.getColumnByRoleName(
@@ -84,8 +84,8 @@ module powerbi.extensibility.visual {
             roleName: string): DataViewMetadataColumn {
 
             if (!_.isEmpty(dataViewMetadataColumns) && roleName) {
-                for (var i = 0, length = dataViewMetadataColumns.length; i < length; i++) {
-                    var column: DataViewMetadataColumn = dataViewMetadataColumns[i];
+                for (let i = 0, length = dataViewMetadataColumns.length; i < length; i++) {
+                    let column: DataViewMetadataColumn = dataViewMetadataColumns[i];
 
                     if (column && hasRole(column, roleName)) {
                         return column;
