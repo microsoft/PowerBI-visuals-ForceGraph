@@ -103,6 +103,11 @@ module powerbi.extensibility.visual {
 
         private static DefaulOpacity: number = 1;
 
+        private static MinViewport: IViewport = {
+            width: 1,
+            height: 1
+        }
+
         private static ImageViewport: IViewport = {
             width: 24,
             height: 24
@@ -155,12 +160,13 @@ module powerbi.extensibility.visual {
         private viewportValue: IViewport;
 
         private get viewport(): IViewport {
-            return this.viewportValue || { width: 0, height: 0 };
+            return this.viewportValue || $.extend({}, ForceGraph.MinViewport);
         }
 
-        private set viewport(value: IViewport) {
-            this.viewportValue = $.extend({}, value);
-            this.viewportInValue = ForceGraph.substractMargin(this.viewport, this.margin);
+        private set viewport(viewport: IViewport) {
+            this.viewportValue = ForceGraph.getViewport(viewport);
+            this.viewportInValue = ForceGraph.getViewport(
+                ForceGraph.substractMargin(this.viewport, this.margin));
         }
 
         private viewportInValue: IViewport;
@@ -199,6 +205,15 @@ module powerbi.extensibility.visual {
 
             this.tooltipService = createTooltipService(options.host);
         }
+
+        private static getViewport(viewport: IViewport): IViewport {
+            const { width, height } = viewport;
+
+            return {
+                width: Math.max(ForceGraph.MinViewport.width, width),
+                height: Math.max(ForceGraph.MinViewport.height, height)
+            };
+        };
 
         private scale1to10(value: number): number {
             var scale = d3.scale.linear()
@@ -496,7 +511,7 @@ module powerbi.extensibility.visual {
                             if (node.name.length > this.settings.nodes.nameMaxLength) {
                                 return node.name.substr(0, this.settings.nodes.nameMaxLength);
                             } else {
-                                node.name;
+                                return node.name;
                             }
                         } else {
                             return '';
