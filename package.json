@@ -6,9 +6,9 @@
     "email": "pbicvsupport@microsoft.com"
   },
   "scripts": {
-    "preinstall": "npm install -g https://github.com/Microsoft/PowerBI-visuals-tools",
     "postinstall": "typings install && pbiviz update 1.2.0",
-    "typings": "node node_modules/typings/dist/bin.js i"
+    "typings": "node node_modules/typings/dist/bin.js i",
+    "pbiviz": "node node_modules/powerbi-visuals-tools/bin/pbiviz.js"
   },
   "license": "MIT",
   "repository": {
@@ -40,6 +40,7 @@
     "jquery": "3.1.1",
     "lodash": "4.16.2",
     "moment": "2.15.1",
+    "powerbi-visuals-tools": "git+https://github.com/Microsoft/PowerBI-visuals-tools.git",
     "typings": "1.4.0"
   }
 }
