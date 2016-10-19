@@ -264,13 +264,22 @@ module powerbi.extensibility.visual {
                 return null;
             }
 
-            let tableRows: ForceGraphColumns<any>[] = ForceGraphColumns.getTableRows(dataView);
+            let tableRows: ForceGraphColumns<any>[] = ForceGraphColumns.getTableRows(dataView),
+                weightFormatter: IValueFormatter = null;
 
-            let weightFormatter: IValueFormatter = metadata.Weight && valueFormatter.create({
-                format: valueFormatter.getFormatStringByColumn(metadata.Weight, true),
-                precision: settings.links.decimalPlaces,
-                value: settings.links.displayUnits || _.maxBy(tableRows, x => x.Weight).Weight
-            });
+            if (metadata.Weight) {
+                let weightValue: number = settings.links.displayUnits;
+
+                if (!weightValue && tableRows.length) {
+                    weightValue = _.maxBy(tableRows, x => x.Weight).Weight;
+                }
+
+                weightFormatter = valueFormatter.create({
+                    format: valueFormatter.getFormatStringByColumn(metadata.Weight, true),
+                    precision: settings.links.decimalPlaces,
+                    value: weightValue
+                });
+            }
 
             let sourceFormatter: IValueFormatter = valueFormatter.create({
                 format: valueFormatter.getFormatStringByColumn(metadata.Source, true),
