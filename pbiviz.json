@@ -2,7 +2,7 @@
   "visual": {
     "name": "forceGraph",
     "displayName": "Force-Directed Graph",
-    "guid": "PBI_CV_1E7B0C03_9462_40C2_B30C_1BB1F3E638D9",
+    "guid": "ForceGraph1449359463895",
     "visualClassName": "ForceGraph",
     "version": "1.3.5",
     "description": "This custom visual implements a D3 force layout diagram with curved path. The thickness of the path also represents the weight of the relationship between the nodes.",
