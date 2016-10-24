@@ -42,6 +42,7 @@
     "node_modules/@powerbi-visuals-utils/formattingservice/lib/index.js",
     "node_modules/@powerbi-visuals-utils/tooltipservice/lib/index.js",
     "node_modules/@powerbi-visuals-utils/cssconstants/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/svgutil/lib/index.js",
     "node_modules/@powerbi-visuals-utils/rect/lib/index.js",
     "node_modules/@powerbi-visuals-utils/pointerutils/lib/index.js",
     "node_modules/@powerbi-visuals-utils/touchutils/lib/index.js",

@@ -84,11 +84,9 @@ module powerbi.extensibility.visual {
             roleName: string): DataViewMetadataColumn {
 
             if (!_.isEmpty(dataViewMetadataColumns) && roleName) {
-                for (let i = 0, length = dataViewMetadataColumns.length; i < length; i++) {
-                    let column: DataViewMetadataColumn = dataViewMetadataColumns[i];
-
-                    if (column && hasRole(column, roleName)) {
-                        return column;
+                for (const metadataColumn of dataViewMetadataColumns) {
+                    if (metadataColumn && hasRole(metadataColumn, roleName)) {
+                        return metadataColumn;
                     }
                 }
             }

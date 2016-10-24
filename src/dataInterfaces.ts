@@ -25,10 +25,13 @@
  */
 
 module powerbi.extensibility.visual {
+    // External libraries
+    import Node = d3.layout.force.Node;
+
     // powerbi.visuals
     import VisualTooltipDataItem = powerbi.visuals.VisualTooltipDataItem;
 
-    export interface ForceGraphNode extends d3.layout.force.Node {
+    export interface ForceGraphNode extends Node {
         name: string;
         image: string;
         adj: { [i: string]: number };
