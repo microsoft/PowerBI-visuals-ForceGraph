@@ -1,0 +1,56 @@
+{
+  "visual": {
+    "name": "forceGraph",
+    "displayName": "Force-Directed Graph",
+    "guid": "ForceGraph1449359463895",
+    "visualClassName": "ForceGraph",
+    "version": "1.3.5",
+    "description": "This custom visual implements a D3 force layout diagram with curved path. The thickness of the path also represents the weight of the relationship between the nodes.",
+    "supportUrl": "http://community.powerbi.com",
+    "gitHubUrl": "https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
+  },
+  "apiVersion": "1.2.0",
+  "author": {
+    "name": "Microsoft",
+    "email": "pbicvsupport@microsoft.com"
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [
+    "node_modules/@powerbi-visuals-utils/external-loader/lib/index.js",
+    "node_modules/jquery/dist/jquery.min.js",
+    "node_modules/lodash/lodash.min.js",
+    "node_modules/d3/d3.js",
+    "node_modules/moment/min/moment.min.js",
+    "node_modules/globalize/lib/globalize.js",
+    "node_modules/globalize/lib/cultures/globalize.culture.en-US.js",
+    "node_modules/@powerbi-visuals-utils/stringextensions/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/regexpextensions/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/datarolehelper/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/dataviewobjects/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/displayunitsystem/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/displayunitsystemtype/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/enumextensions/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/valuetype/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/double/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/numericsequence/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/numericsequencerange/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/datetimesequence/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/pixelconverter/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/formatting/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/formattingservice/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/tooltipservice/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/cssconstants/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/svgutil/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/rect/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/pointerutils/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/touchutils/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/controls-touchutils/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/tooltipmanager/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/valueformatter/lib/index.js",
+    "node_modules/@powerbi-visuals-utils/settingsparser/lib/index.js"
+  ],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json"
+}

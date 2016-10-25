@@ -1,0 +1,51 @@
+{
+  "name": "powerbi-visuals-forcegraph",
+  "version": "1.3.5",
+  "author": {
+    "name": "Microsoft",
+    "email": "pbicvsupport@microsoft.com"
+  },
+  "scripts": {
+    "postinstall": "typings install && pbiviz update 1.2.0",
+    "typings": "node node_modules/typings/dist/bin.js i",
+    "pbiviz": "node node_modules/powerbi-visuals-tools/bin/pbiviz.js",
+    "lint": "node node_modules/tslint/bin/tslint \"src/**/*.ts\""
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/PowerBI-visuals-ForceGraph.git"
+  },
+  "devDependencies": {
+    "@powerbi-visuals-utils/controls-touchutils": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-controls-touchutils.git",
+    "@powerbi-visuals-utils/cssconstants": "git+https://github.com/uve/powerbi-visuals-utils-cssconstants.git",
+    "@powerbi-visuals-utils/datarolehelper": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-datarolehelper.git",
+    "@powerbi-visuals-utils/dataviewobjects": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-dataviewobjects.git",
+    "@powerbi-visuals-utils/displayunitsystem": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-displayunitsystem.git",
+    "@powerbi-visuals-utils/displayunitsystemtype": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-displayunitsystemtype.git",
+    "@powerbi-visuals-utils/external-loader": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-external-loader.git",
+    "@powerbi-visuals-utils/formatting": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-formatting.git",
+    "@powerbi-visuals-utils/formattingservice": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-formattingservice.git",
+    "@powerbi-visuals-utils/imargin": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-imargin.git",
+    "@powerbi-visuals-utils/pixelconverter": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-pixelconverter.git",
+    "@powerbi-visuals-utils/point": "git+https://github.com/vtkalek/powerbi-visuals-utils-point.git",
+    "@powerbi-visuals-utils/pointerutils": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-pointerutils.git",
+    "@powerbi-visuals-utils/rect": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-rect.git",
+    "@powerbi-visuals-utils/regexpextensions": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-regexpextensions.git",
+    "@powerbi-visuals-utils/settingsparser": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-settingsparser.git",
+    "@powerbi-visuals-utils/shapes": "git+https://github.com/vtkalek/powerbi-visuals-utils-shapes.git",
+    "@powerbi-visuals-utils/stringextensions": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-stringextensions.git",
+    "@powerbi-visuals-utils/svgutil": "git+https://github.com/vtkalek/powerbi-visuals-utils-svgutil.git",
+    "@powerbi-visuals-utils/tooltipmanager": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-tooltipmanager.git",
+    "@powerbi-visuals-utils/tooltipservice": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-tooltipservice.git",
+    "@powerbi-visuals-utils/valueformatter": "git+https://github.com/ignatvilesov/powerbi-visuals-utils-valueformatter.git",
+    "d3": "3.5.5",
+    "globalize": "0.1.0-a2",
+    "jquery": "3.1.1",
+    "lodash": "4.16.2",
+    "moment": "2.15.1",
+    "powerbi-visuals-tools": "git+https://github.com/Microsoft/PowerBI-visuals-tools.git",
+    "tslint": "3.15.1",
+    "typings": "1.4.0"
+  }
+}
