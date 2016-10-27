@@ -31,48 +31,100 @@
             "displayName": "Target Type"
         }
     ],
-    "dataViewMappings": [{
-        "conditions": [
-            {
-                "Source": { "max": 1 },
-                "Target": { "max": 1 },
-                "Weight": { "max": 1 },
-                "LinkType": { "max": 1 },
-                "SourceType": { "max": 1 },
-                "TargetType": { "max": 1 }
-            }
-        ],
-        "categorical": {
-            "categories": {
-                "for": { "in": "Source" },
-                "dataReductionAlgorithm": { "top": { "count": 10000 } }
-            },
-            "values": {
-                "select": [
-                    { "bind": { "to": "Target" } },
-                    { "bind": { "to": "Weight" } },
-                    { "bind": { "to": "LinkType" } },
-                    { "bind": { "to": "SourceType" } },
-                    { "bind": { "to": "TargetType" } }
-                ]
+    "dataViewMappings": [
+        {
+            "conditions": [
+                {
+                    "Source": {
+                        "max": 1
+                    },
+                    "Target": {
+                        "max": 1
+                    },
+                    "Weight": {
+                        "max": 1
+                    },
+                    "LinkType": {
+                        "max": 1
+                    },
+                    "SourceType": {
+                        "max": 1
+                    },
+                    "TargetType": {
+                        "max": 1
+                    }
+                }
+            ],
+            "categorical": {
+                "categories": {
+                    "for": {
+                        "in": "Source"
+                    },
+                    "dataReductionAlgorithm": {
+                        "top": {
+                            "count": 10000
+                        }
+                    }
+                },
+                "values": {
+                    "select": [
+                        {
+                            "bind": {
+                                "to": "Target"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "Weight"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "LinkType"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "SourceType"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "TargetType"
+                            }
+                        }
+                    ]
+                }
             }
         }
-    }],
+    ],
     "objects": {
         "labels": {
             "displayName": "Data labels",
             "properties": {
                 "show": {
                     "displayName": "Show",
-                    "type": { "bool": true }
+                    "type": {
+                        "bool": true
+                    }
                 },
-                "fillColor": {
+                "color": {
                     "displayName": "Fill",
-                    "type": { "fill": { "solid": { "color": true } } }
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
                 },
                 "fontSize": {
                     "displayName": "Text Size",
-                    "type": { "formatting": { "fontSize": true } }
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
                 }
             }
         },
@@ -80,37 +132,58 @@
             "displayName": "Links",
             "properties": {
                 "showArrow": {
-                    "type": { "bool": true },
+                    "type": {
+                        "bool": true
+                    },
                     "displayName": "Arrow"
                 },
                 "showLabel": {
-                    "type": { "bool": true },
+                    "type": {
+                        "bool": true
+                    },
                     "displayName": "Label",
                     "description": "Displays weight on links"
                 },
                 "colorLink": {
                     "type": {
                         "enumeration": [
-                            { "value": "ByWeight", "displayName": "By Weight" },
-                            { "value": "ByLinkType", "displayName": "By Link Type" },
-                            { "value": "Interactive", "displayName": "Interactive" }
+                            {
+                                "value": "By Weight",
+                                "displayName": "By Weight"
+                            },
+                            {
+                                "value": "By Link Type",
+                                "displayName": "By Link Type"
+                            },
+                            {
+                                "value": "Interactive",
+                                "displayName": "Interactive"
+                            }
                         ]
                     },
                     "displayName": "Color"
                 },
                 "thickenLink": {
-                    "type": { "bool": true },
+                    "type": {
+                        "bool": true
+                    },
                     "displayName": "Thickness",
                     "description": "Thickenss of links represents weight"
                 },
                 "displayUnits": {
                     "displayName": "Display Units",
-                    "type": { "formatting": { "labelDisplayUnits": true } }
+                    "type": {
+                        "formatting": {
+                            "labelDisplayUnits": true
+                        }
+                    }
                 },
                 "decimalPlaces": {
                     "displayName": "Decimal Places",
                     "placeHolderText": "Auto",
-                    "type": { "numeric": true }
+                    "type": {
+                        "numeric": true
+                    }
                 }
             }
         },
@@ -118,27 +191,39 @@
             "displayName": "Nodes",
             "properties": {
                 "displayImage": {
-                    "type": { "bool": true },
+                    "type": {
+                        "bool": true
+                    },
                     "displayName": "Image"
                 },
                 "defaultImage": {
-                    "type": { "text": true },
+                    "type": {
+                        "text": true
+                    },
                     "displayName": "Default image"
                 },
                 "imageUrl": {
-                    "type": { "text": true },
+                    "type": {
+                        "text": true
+                    },
                     "displayName": "Image url"
                 },
                 "imageExt": {
-                    "type": { "text": true },
+                    "type": {
+                        "text": true
+                    },
                     "displayName": "Image extension"
                 },
                 "nameMaxLength": {
-                    "type": { "numeric": true },
+                    "type": {
+                        "numeric": true
+                    },
                     "displayName": "Max name length"
                 },
                 "highlightReachableLinks": {
-                    "type": { "bool": true },
+                    "type": {
+                        "bool": true
+                    },
                     "displayName": "Highlight all reachable links"
                 }
             }
@@ -147,7 +232,9 @@
             "displayName": "Size",
             "properties": {
                 "charge": {
-                    "type": { "numeric": true },
+                    "type": {
+                        "numeric": true
+                    },
                     "displayName": "Charge"
                 }
             }
