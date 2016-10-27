@@ -579,7 +579,7 @@ module powerbi.extensibility.visual {
                         dy: ForceGraph.DefaultLabelDy
                     })
                     .style({
-                        fill: this.settings.labels.fillColor,
+                        fill: this.settings.labels.color,
                         'font-size': PixelConverter.fromPoint(this.settings.labels.fontSize)
                     })
                     .text((node: ForceGraphNode) => {

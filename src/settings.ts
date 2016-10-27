@@ -36,7 +36,7 @@ module powerbi.extensibility.visual {
 
     export class LabelsSettings {
         public show: boolean = true;
-        public fillColor: string = '#777777';
+        public color: string = '#777777';
         public fontSize: number = 9;
     }
 
@@ -50,8 +50,8 @@ module powerbi.extensibility.visual {
     }
 
     export enum LinkColorType {
-        ByWeight = <any>'ByWeight',
-        ByLinkType = <any>'ByLinkType',
+        ByWeight = <any>'By Weight',
+        ByLinkType = <any>'By Link Type',
         Interactive = <any>'Interactive'
     }
 
