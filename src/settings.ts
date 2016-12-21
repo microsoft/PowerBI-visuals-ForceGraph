@@ -25,9 +25,10 @@
  */
 
 module powerbi.extensibility.visual {
-    import SettingsParser = powerbi.extensibility.visual.settingsParser.SettingsParser;
+    // powerbi.extensibility.utils.dataview
+    import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
 
-    export class ForceGraphSettings extends SettingsParser {
+    export class ForceGraphSettings extends DataViewObjectsParser {
         public labels: LabelsSettings = new LabelsSettings();
         public links: LinksSettings = new LinksSettings();
         public nodes: NodesSettings = new NodesSettings();

@@ -62,11 +62,6 @@
  */
 
 module powerbi.extensibility.visual {
-    // jsCommon
-    import PixelConverter = jsCommon.PixelConverter;
-    import ClassAndSelector = jsCommon.CssConstants.ClassAndSelector;
-    import createClassAndSelector = jsCommon.CssConstants.createClassAndSelector;
-
     // powerbi
     import DataView = powerbi.DataView;
     import IViewport = powerbi.IViewport;
@@ -88,15 +83,23 @@ module powerbi.extensibility.visual {
     import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
     import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 
-    // powerbi.visuals
-    import IMargin = powerbi.visuals.IMargin;
-    import valueFormatter = powerbi.visuals.valueFormatter;
-    import IValueFormatter = powerbi.visuals.IValueFormatter;
-    import ITooltipService = powerbi.visuals.ITooltipService;
-    import VisualTooltipDataItem = powerbi.visuals.VisualTooltipDataItem;
-    import TooltipEventArgs = powerbi.visuals.TooltipEventArgs;
-    import createTooltipService = powerbi.visuals.createTooltipService;
-    import SVGUtil = powerbi.visuals.SVGUtil;
+    // powerbi.extensibility.utils.type
+    import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
+
+    // powerbi.extensibility.utils.svg
+    import IMargin = powerbi.extensibility.utils.svg.IMargin;
+    import translate = powerbi.extensibility.utils.svg.translate;
+    import ClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.ClassAndSelector;
+    import createClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.createClassAndSelector;
+
+    // powerbi.extensibility.utils.formatting
+    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+    import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
+
+    // powerbi.extensibility.utils.tooltip
+    import TooltipEventArgs = powerbi.extensibility.utils.tooltip.TooltipEventArgs;
+    import ITooltipServiceWrapper = powerbi.extensibility.utils.tooltip.ITooltipServiceWrapper;
+    import createTooltipServiceWrapper = powerbi.extensibility.utils.tooltip.createTooltipServiceWrapper;
 
     interface ValueLimitation {
         (x: any): number;
@@ -223,7 +226,7 @@ module powerbi.extensibility.visual {
 
         private data: ForceGraphData;
 
-        private tooltipService: ITooltipService;
+        private tooltipServiceWrapper: ITooltipServiceWrapper;
 
         constructor(options: VisualConstructorOptions) {
             this.init(options);
@@ -247,7 +250,9 @@ module powerbi.extensibility.visual {
 
             this.colorPalette = options.host.colorPalette;
 
-            this.tooltipService = createTooltipService(options.host);
+            this.tooltipServiceWrapper = createTooltipServiceWrapper(
+                options.host.tooltipService,
+                options.element);
         }
 
         private static getViewport(viewport: IViewport): IViewport {
@@ -490,7 +495,7 @@ module powerbi.extensibility.visual {
                         ForceGraph.DefaultLinkColor);
                 });
 
-            this.tooltipService.addTooltip(this.paths, (eventArgs: TooltipEventArgs<ForceGraphLink>) => {
+            this.tooltipServiceWrapper.addTooltip(this.paths, (eventArgs: TooltipEventArgs<ForceGraphLink>) => {
                 return eventArgs.data.tooltipInfo;
             });
 
@@ -657,8 +662,9 @@ module powerbi.extensibility.visual {
                         ? this.getPathWithArrow(link)
                         : this.getPathWithoutArrow(link);
                 });
+
                 this.nodes.attr('transform', (node: ForceGraphNode) => {
-                    return SVGUtil.translate(limitX(node.x), limitY(node.y));
+                    return translate(limitX(node.x), limitY(node.y));
                 });
             };
         }

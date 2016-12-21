@@ -28,12 +28,11 @@ module powerbi.extensibility.visual {
     // powerbi
     import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 
-    // powerbi.data
-    import hasRole = powerbi.data.DataRoleHelper.hasRole;
+    // powerbi.extensibility.utils.dataview
+    import hasRole = powerbi.extensibility.utils.dataview.DataRoleHelper.hasRole;
 
-    // powerbi.visuals
-    import valueFormatter = powerbi.visuals.valueFormatter;
-    import VisualTooltipDataItem = powerbi.visuals.VisualTooltipDataItem;
+    // powerbi.extensibility.utils.formatting
+    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
 
     export interface ForceGraphTooltipInputObject {
         [propertyName: string]: any;

@@ -28,8 +28,8 @@ module powerbi.extensibility.visual {
     // External libraries
     import Node = d3.layout.force.Node;
 
-    // powerbi.visuals
-    import VisualTooltipDataItem = powerbi.visuals.VisualTooltipDataItem;
+    // powerbi.extensibility.utils.tooltip
+    import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
 
     export interface ForceGraphNode extends Node {
         name: string;
@@ -45,13 +45,12 @@ module powerbi.extensibility.visual {
         [i: string]: ForceGraphNode;
     }
 
-    export interface ForceGraphLink {
+    export interface ForceGraphLink extends TooltipEnabledDataPoint {
         source: ForceGraphNode;
         target: ForceGraphNode;
         weight: number;
         formattedWeight: string;
         type: string;
-        tooltipInfo: VisualTooltipDataItem[];
     }
 
     export interface ForceGraphData {
