@@ -166,6 +166,7 @@ module powerbi.extensibility.visual {
         private static DefaultLabelText: string = '';
 
         private static ResolutionFactor: number = 20;
+        private static ResolutionFactorBoundByBox: number = 0.9;
 
         private static LinkSelector: ClassAndSelector = createClassAndSelector('link');
         private static LinkLabelHolderSelector: ClassAndSelector = createClassAndSelector('linklabelholder');
@@ -640,10 +641,15 @@ module powerbi.extensibility.visual {
         private tick(): () => void {
             const viewport: IViewport = this.viewportIn;
 
+            let resolutionFactor: number = ForceGraph.ResolutionFactor;
+            if(this.settings.size.boundedByBox){
+                resolutionFactor = ForceGraph.ResolutionFactorBoundByBox;
+            }
+
             // limitX and limitY is necessary when you minimize the graph and then resize it to normal.
             // 'width/height * 20' seems enough to move nodes freely by force layout.
-            let maxWidth: number = viewport.width * ForceGraph.ResolutionFactor,
-                maxHeight: number = viewport.height * ForceGraph.ResolutionFactor,
+            let maxWidth: number = viewport.width * resolutionFactor,
+                maxHeight: number = viewport.height * resolutionFactor,
                 limitX = x => Math.max((viewport.width - maxWidth) / 2, Math.min((viewport.width + maxWidth) / 2, x)),
                 limitY = y => Math.max((viewport.height - maxHeight) / 2, Math.min((viewport.height + maxHeight) / 2, y));
 

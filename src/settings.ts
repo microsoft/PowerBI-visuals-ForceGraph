@@ -67,5 +67,6 @@ module powerbi.extensibility.visual {
 
     export class SizeSettings {
         public charge: number = -15;
+        public boundedByBox: boolean = false;
     }
 }

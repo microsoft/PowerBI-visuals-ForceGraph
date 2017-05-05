@@ -236,6 +236,12 @@
                         "numeric": true
                     },
                     "displayName": "Charge"
+                },
+                "boundedByBox": {
+                    "type": {
+                        "bool": true
+                    },
+                    "displayName": "Bound by box"
                 }
             }
         }
