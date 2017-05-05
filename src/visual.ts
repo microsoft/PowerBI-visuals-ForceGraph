@@ -100,6 +100,11 @@ module powerbi.extensibility.visual {
     import TooltipEventArgs = powerbi.extensibility.utils.tooltip.TooltipEventArgs;
     import ITooltipServiceWrapper = powerbi.extensibility.utils.tooltip.ITooltipServiceWrapper;
     import createTooltipServiceWrapper = powerbi.extensibility.utils.tooltip.createTooltipServiceWrapper;
+    import DataLabelManager = powerbi.extensibility.utils.chart.dataLabel.DataLabelManager;
+    import ILabelLayout = powerbi.extensibility.utils.chart.dataLabel.ILabelLayout;
+    import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
+    import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
+    import IRect = powerbi.extensibility.utils.svg.IRect;
 
     interface ValueLimitation {
         (x: any): number;
@@ -142,6 +147,7 @@ module powerbi.extensibility.visual {
         private static DefaultLinkColor: string = '#bbb';
         private static DefaultLinkHighlightColor: string = '#f00';
         private static DefaultLinkThickness: string = '1.5px';
+        private static LabelsFontFamily: string = 'sans-serif';
 
         private static MinRangeValue: number = 1;
         private static MaxRangeValue: number = 10;
@@ -350,6 +356,7 @@ module powerbi.extensibility.visual {
                 if (!nodes[tableRow.Source]) {
                     nodes[tableRow.Source] = {
                         name: sourceFormatter.format(tableRow.Source),
+                        hideLabel: false,
                         image: tableRow.SourceType || ForceGraph.DefaultSourceType,
                         adj: {}
                     };
@@ -358,6 +365,7 @@ module powerbi.extensibility.visual {
                 if (!nodes[tableRow.Target]) {
                     nodes[tableRow.Target] = {
                         name: targetFormatter.format(tableRow.Target),
+                        hideLabel: false,
                         image: tableRow.TargetType || ForceGraph.DefaultTargetType,
                         adj: {}
                     };
@@ -408,9 +416,12 @@ module powerbi.extensibility.visual {
                 maxFiles,
                 linkedByName,
                 settings,
-                linkTypes: linkDataPoints
+                linkTypes: linkDataPoints,
+                formatter: targetFormatter
             };
         }
+
+
 
         private static parseSettings(dataView: DataView): ForceGraphSettings {
             let settings: ForceGraphSettings = ForceGraphSettings.parse<ForceGraphSettings>(dataView);
@@ -425,6 +436,39 @@ module powerbi.extensibility.visual {
                     ForceGraph.MaxDecimalPlaces);
 
             return settings;
+        }
+
+        private isIntersect(textRect1: ITextRect, textRect2: ITextRect): boolean {
+            let intersectY: boolean = false;
+            let intersectX: boolean = false;
+
+            if (textRect1.y1 <= textRect2.y1 && textRect2.y1 <= textRect1.y2) {
+                intersectY = true;
+            }
+            if (textRect1.y1 <= textRect2.y2 && textRect2.y2 <= textRect1.y2) {
+                intersectY = true;
+            }
+            if (textRect2.y2 <= textRect1.y1 && textRect1.y1 <= textRect2.y1) {
+                intersectY = true;
+            }
+            if (textRect2.y2 <= textRect1.y2 && textRect1.y2 <= textRect2.y1) {
+                intersectY = true;
+            }
+
+            if (textRect1.x1 <= textRect2.x1 && textRect2.x1 <= textRect1.x2) {
+                intersectX = true;
+            }
+            if (textRect1.x1 <= textRect2.x2 && textRect2.x2 <= textRect1.x2) {
+                intersectX = true;
+            }
+            if (textRect2.x2 <= textRect1.x1 && textRect1.x1 <= textRect2.x1) {
+                intersectX = true;
+            }
+            if (textRect2.x2 <= textRect1.x2 && textRect1.x2 <= textRect2.x1) {
+                intersectX = true;
+            }
+
+            return intersectX && intersectY;
         }
 
         public update(options: VisualUpdateOptions): void {
@@ -640,9 +684,14 @@ module powerbi.extensibility.visual {
 
         private tick(): () => void {
             const viewport: IViewport = this.viewportIn;
+            let properties: TextProperties = {
+                fontFamily: ForceGraph.LabelsFontFamily,
+                fontSize: PixelConverter.fromPoint(this.settings.labels.fontSize),
+                text: this.data.formatter.format('')
+            };
 
             let resolutionFactor: number = ForceGraph.ResolutionFactor;
-            if(this.settings.size.boundedByBox){
+            if (this.settings.size.boundedByBox) {
                 resolutionFactor = ForceGraph.ResolutionFactorBoundByBox;
             }
 
@@ -672,6 +721,39 @@ module powerbi.extensibility.visual {
                 this.nodes.attr('transform', (node: ForceGraphNode) => {
                     return translate(limitX(node.x), limitY(node.y));
                 });
+
+                if (!this.settings.labels.allowIntersection)
+                    this.nodes
+                        .classed('hiddenLabel', (node: ForceGraphNode) => {
+                            properties.text = this.data.formatter.format(node.name);
+                            let curNodeTextRect: ITextRect = this.getTextRect(properties, node.x, node.y);
+
+                            node.hideLabel = false;
+                            this.nodes.each((otherNode: ForceGraphNode) => {
+                                properties.text = this.data.formatter.format(otherNode.name);
+                                let otherNodeTextRect: ITextRect = this.getTextRect(properties, otherNode.x, otherNode.y);
+                                if (!otherNode.hideLabel && node.name !== otherNode.name && this.isIntersect(curNodeTextRect, otherNodeTextRect)) {
+                                    node.hideLabel = true;
+                                    return;
+                                }
+                            });
+
+                            return node.hideLabel;
+                        });
+            };
+        }
+
+        private getTextRect(properties: TextProperties, x: number, y: number): ITextRect {
+            let textHeight: number = textMeasurementService.estimateSvgTextHeight(properties);
+            let textWidth: number = textMeasurementService.measureSvgTextWidth(properties);
+            let curTextUpperPointX: number = x + textWidth;
+            let curTextUpperPointY: number = y - textHeight;
+
+            return <ITextRect>{
+                x1: x,
+                y1: y,
+                x2: curTextUpperPointX,
+                y2: curTextUpperPointY
             };
         }
 

@@ -30,15 +30,24 @@ module powerbi.extensibility.visual {
 
     // powerbi.extensibility.utils.tooltip
     import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
+    import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
 
     export interface ForceGraphNode extends Node {
         name: string;
         image: string;
-        adj: { [i: string]: number };
+        adj: {[i: string]: number};
         x?: number;
         y?: number;
         isDrag?: boolean;
         isOver?: boolean;
+        hideLabel?: boolean;
+    }
+
+    export interface ITextRect {
+        x1: number;
+        y1: number;
+        x2: number;
+        y2: number;
     }
 
     export interface ForceGraphNodes {
@@ -61,6 +70,7 @@ module powerbi.extensibility.visual {
         linkedByName: LinkedByName;
         linkTypes: {};
         settings: ForceGraphSettings;
+        formatter: IValueFormatter;
     }
 
     export interface LinkedByName {

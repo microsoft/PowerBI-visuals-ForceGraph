@@ -125,6 +125,12 @@
                             "fontSize": true
                         }
                     }
+                },
+                "allowIntersection": {
+                    "displayName": "Intersection",
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         },
