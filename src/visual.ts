@@ -475,7 +475,7 @@ module powerbi.extensibility.visual {
         }
 
         private setVisualData(svg: d3.Selection<any>): void {
-            this.paths = svg.selectAll(ForceGraph.LinkSelector.selector)
+            this.paths = svg.selectAll(ForceGraph.LinkSelector.selectorName)
                 .data(this.forceLayout.links())
                 .enter()
                 .append('path')
@@ -485,7 +485,7 @@ module powerbi.extensibility.visual {
                         ? this.scale1to10(link.weight)
                         : ForceGraph.DefaultLinkThickness;
                 })
-                .classed(ForceGraph.LinkSelector.class, true)
+                .classed(ForceGraph.LinkSelector.className, true)
                 .style('stroke', (link: ForceGraphLink) => {
                     return this.getLinkColor(link);
                 })
@@ -511,14 +511,14 @@ module powerbi.extensibility.visual {
 
             if (this.settings.links.showLabel) {
                 let linklabelholderUpdate: d3.selection.Update<ForceGraphLink> = svg
-                    .selectAll(ForceGraph.LinkLabelHolderSelector.selector)
+                    .selectAll(ForceGraph.LinkLabelHolderSelector.selectorName)
                     .data(this.forceLayout.links());
 
                 linklabelholderUpdate.enter()
                     .append('g')
-                    .classed(ForceGraph.LinkLabelHolderSelector.class, true)
+                    .classed(ForceGraph.LinkLabelHolderSelector.className, true)
                     .append('text')
-                    .classed(ForceGraph.LinkLabelSelector.class, true)
+                    .classed(ForceGraph.LinkLabelSelector.className, true)
                     .attr('y', ForceGraph.DefaultYPosition)
                     .attr('text-anchor', ForceGraph.LinkTextAnchor)
                     .style('fill', ForceGraph.DefaultLinkFillColor)
@@ -541,12 +541,12 @@ module powerbi.extensibility.visual {
             }
 
             // define the nodes
-            this.nodes = svg.selectAll(ForceGraph.NodeSelector.selector)
+            this.nodes = svg.selectAll(ForceGraph.NodeSelector.selectorName)
                 .data(this.forceLayout.nodes())
                 .enter()
                 .append('g')
                 .attr('drag-resize-disabled', true)
-                .classed(ForceGraph.NodeSelector.class, true)
+                .classed(ForceGraph.NodeSelector.className, true)
                 .call(this.forceLayout.drag)
                 .on('mouseover', (node: ForceGraphNode) => {
                     node.isOver = true;
