@@ -453,29 +453,39 @@ module powerbi.extensibility.visual {
                     height: this.viewport.height
                 })
                 .classed(ForceGraph.VisualClassName, true);
-
             this.forceLayout
                 .gravity(ForceGraph.GravityFactor * k)
                 .links(this.data.links)
                 .size([this.viewport.width, this.viewport.height])
                 .linkDistance(ForceGraph.LinkDistance)
-                .charge(this.settings.size.charge / k)
-                .on('tick', this.tick());
-
+                .charge(this.settings.size.charge / k);
             this.updateNodes();
-            this.forceLayout.start();
+            if (this.settings.animation.show) {
+                this.forceLayout.on('tick', this.tick());
+                this.forceLayout.start();
+                this.setVisualData(svg);
+            } else {
+                let n: number = Object.keys(this.data.nodes).length;
+                this.forceLayout.start();
+                for (let i = n * n; i > 0; --i) { this.forceLayout.tick(); };
+                this.forceLayout.stop();
+                this.setVisualData(svg);
+                this.forceLayout.on('tick', this.tick());
+            }
+        }
 
+        private setVisualData(svg: d3.Selection<any>): void {
             this.paths = svg.selectAll(ForceGraph.LinkSelector.selector)
                 .data(this.forceLayout.links())
                 .enter()
                 .append('path')
-                .classed(ForceGraph.LinkSelector.class, true)
                 .attr('id', (d, i) => 'linkid_' + this.uniqieId + i)
                 .attr('stroke-width', (link: ForceGraphLink) => {
                     return this.settings.links.thickenLink
                         ? this.scale1to10(link.weight)
                         : ForceGraph.DefaultLinkThickness;
                 })
+                .classed(ForceGraph.LinkSelector.class, true)
                 .style('stroke', (link: ForceGraphLink) => {
                     return this.getLinkColor(link);
                 })
@@ -535,6 +545,7 @@ module powerbi.extensibility.visual {
                 .data(this.forceLayout.nodes())
                 .enter()
                 .append('g')
+                .attr('drag-resize-disabled', true)
                 .classed(ForceGraph.NodeSelector.class, true)
                 .call(this.forceLayout.drag)
                 .on('mouseover', (node: ForceGraphNode) => {
@@ -545,8 +556,27 @@ module powerbi.extensibility.visual {
                     node.isOver = false;
                     this.fadeNode(node);
                 })
-                .on('mousedown', () => (d3.event as MouseEvent).stopPropagation())
-                .attr('drag-resize-disabled', true);
+                .on('mousedown', () => (d3.event as MouseEvent).stopPropagation());
+
+            // render without animation
+            if (!this.settings.animation.show) {
+                const viewport: IViewport = this.viewportIn;
+                let maxWidth: number = viewport.width * ForceGraph.ResolutionFactor,
+                    maxHeight: number = viewport.height * ForceGraph.ResolutionFactor,
+                    limitX = x => Math.max((viewport.width - maxWidth) / 2, Math.min((viewport.width + maxWidth) / 2, x)),
+                    limitY = y => Math.max((viewport.height - maxHeight) / 2, Math.min((viewport.height + maxHeight) / 2, y));
+                this.paths.attr("d", (link: ForceGraphLink) => {
+                    link.source.x = limitX(link.source.x);
+                    link.source.y = limitY(link.source.y);
+                    link.target.x = limitX(link.target.x);
+                    link.target.y = limitY(link.target.y);
+
+                    return this.settings && this.settings.links && this.settings.links.showArrow
+                        ? this.getPathWithArrow(link)
+                        : this.getPathWithoutArrow(link);
+                });
+                this.nodes.attr('transform', (node: ForceGraphNode) => translate(limitX(node.x), limitY(node.y)));
+            }
 
             // add the nodes
             if (this.settings.nodes.displayImage) {
@@ -570,7 +600,7 @@ module powerbi.extensibility.visual {
                 this.nodes
                     .append('circle')
                     .attr('r', (node: ForceGraphNode) => {
-                        return node.weight < ForceGraph.MinNodeWeight
+                        return isNaN(node.weight) || node.weight < ForceGraph.MinNodeWeight
                             ? ForceGraph.MinNodeWeight
                             : node.weight;
                     });
@@ -600,7 +630,6 @@ module powerbi.extensibility.visual {
                     });
             }
         }
-
         private getImage(image: string): string {
             return `${this.settings.nodes.imageUrl}${image}${this.settings.nodes.imageExt}`;
         }
