@@ -262,7 +262,7 @@ module powerbi.extensibility.visual {
                 width: Math.max(ForceGraph.MinViewport.width, width),
                 height: Math.max(ForceGraph.MinViewport.height, height)
             };
-        };
+        }
 
         private scale1to10(value: number): number {
             let scale: d3.scale.Linear<number, number> = d3.scale.linear()
@@ -387,7 +387,7 @@ module powerbi.extensibility.visual {
                         label: tableRow.LinkType,
                         color: colors.getColor((linkTypeCount++).toString()).value,
                     };
-                };
+                }
 
                 if (link.weight < minFiles) {
                     minFiles = link.weight;
@@ -467,7 +467,9 @@ module powerbi.extensibility.visual {
             } else {
                 let n: number = Object.keys(this.data.nodes).length;
                 this.forceLayout.start();
-                for (let i = n * n; i > 0; --i) { this.forceLayout.tick(); };
+                for (let i = n * n; i > 0; --i) {
+                    this.forceLayout.tick();
+                }
                 this.forceLayout.stop();
                 this.setVisualData(svg);
                 this.forceLayout.on('tick', this.tick());
@@ -755,7 +757,7 @@ module powerbi.extensibility.visual {
 
             for (let name in this.data.nodes) {
                 visited[name] = false;
-            };
+            }
 
             visited[a.name] = true;
 
@@ -777,7 +779,7 @@ module powerbi.extensibility.visual {
                         stack.push(nb);
                     }
                 }
-            };
+            }
 
             return false;
         }
