@@ -55,6 +55,8 @@
     "powerbi-visuals-utils-testutils": "^1.0.0",
     "powerbi-visuals-utils-tooltiputils": "^0.3.0",
     "powerbi-visuals-utils-typeutils": "^1.0.0",
+    "powerbi-visuals-utils-chartutils": "0.2.3",
+    "powerbi-visuals-utils-interactivityutils": "0.2.1",
     "tslint": "5.2.0",
     "tslint-microsoft-contrib": "^5.0.0"
   }

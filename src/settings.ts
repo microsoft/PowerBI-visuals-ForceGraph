@@ -44,6 +44,7 @@ module powerbi.extensibility.visual {
         public show: boolean = true;
         public color: string = '#777777';
         public fontSize: number = 9;
+        public allowIntersection: boolean = false;
     }
 
     export class LinksSettings {
@@ -72,5 +73,6 @@ module powerbi.extensibility.visual {
 
     export class SizeSettings {
         public charge: number = -15;
+        public boundedByBox: boolean = false;
     }
 }
