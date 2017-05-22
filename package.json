@@ -1,6 +1,6 @@
 {
   "name": "powerbi-visuals-forcegraph",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "description": "This custom visual implements a D3 force layout diagram with curved path. The thickness of the path also represents the weight of the relationship between the nodes.",
   "repository": {
     "type": "git",
@@ -53,6 +53,8 @@
     "powerbi-visuals-utils-tooltiputils": "^0.3.0",
     "powerbi-visuals-utils-testutils": "^0.2.2",
     "powerbi-visuals-utils-typeutils": "^0.2.1",
+    "powerbi-visuals-utils-chartutils": "0.2.3",
+    "powerbi-visuals-utils-interactivityutils": "0.2.1",
     "tslint": "3.15.1",
     "typings": "1.4.0"
   }
