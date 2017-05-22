@@ -231,6 +231,22 @@ module powerbi.extensibility.visual.test {
                             expect(element.css("font-size")).toBe(expectedFontSize);
                         });
                 });
+
+                it("animation", (done) => {
+                    (dataView.metadata.objects as any).animation = { show: false };
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        let originalTransform = visualBuilder.mainElement
+                            .children("g.node")
+                            .map((item, element) => element.getAttribute("transform"));
+                        setTimeout(() => {
+                            let afterFullRender = visualBuilder.mainElement
+                                .children("g.node")
+                                .map((item, element) => element.getAttribute("transform"));
+                            expect(_.isEqual(afterFullRender, originalTransform)).toBe(true);
+                            done();
+                        }, 1000);
+                    });
+                });
             });
 
             describe("Links", () => {

@@ -421,8 +421,6 @@ module powerbi.extensibility.visual {
             };
         }
 
-
-
         private static parseSettings(dataView: DataView): ForceGraphSettings {
             let settings: ForceGraphSettings = ForceGraphSettings.parse<ForceGraphSettings>(dataView);
 
@@ -510,14 +508,15 @@ module powerbi.extensibility.visual {
                 this.forceLayout.start();
                 this.setVisualData(svg);
             } else {
-                let n: number = Object.keys(this.data.nodes).length;
-                this.forceLayout.start();
-                for (let i = n * n; i > 0; --i) {
-                    this.forceLayout.tick();
-                }
-                this.forceLayout.stop();
-                this.setVisualData(svg);
-                this.forceLayout.on('tick', this.tick());
+                requestAnimationFrame(() => {
+                    this.forceLayout.start();
+                    do {
+                        this.forceLayout.tick();
+                    } while (this.forceLayout.alpha() > 0);
+                    this.forceLayout.stop();
+                    this.setVisualData(svg);
+                    this.forceLayout.on('tick', this.tick());
+                });
             }
         }
 
