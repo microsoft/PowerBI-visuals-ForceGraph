@@ -194,7 +194,7 @@ module powerbi.extensibility.visual {
             return this.data && this.data.settings;
         }
 
-        private root: d3.Selection<any>;
+        private container: d3.Selection<any>;
         private paths: d3.Selection<ForceGraphLink>;
         private nodes: d3.Selection<ForceGraphNode>;
         private forceLayout: d3.layout.Force<ForceGraphLink, ForceGraphNode>;
@@ -240,26 +240,41 @@ module powerbi.extensibility.visual {
         }
 
         private init(options: VisualConstructorOptions): void {
-            this.root = d3.select(options.element);
-
+            const root = d3.select(options.element);
+            this.colorPalette = options.host.colorPalette;
+            this.tooltipServiceWrapper = createTooltipServiceWrapper(
+                options.host.tooltipService,
+                options.element);
             this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
-
             this.forceLayout.drag()
                 .on('dragstart', ((d: ForceGraphNode) => {
+                    this.forceLayout.stop();
                     d.isDrag = true;
                     this.fadeNode(d);
                 }))
                 .on('dragend', ((d: ForceGraphNode) => {
+                    this.forceLayout.tick();
+                    this.forceLayout.resume();
                     d.isDrag = false;
                     this.fadeNode(d);
                 }))
-                .on('drag', ((d: ForceGraphNode) => this.fadeNode(d)));
+                .on('drag', (d: ForceGraphNode) => {
+                    d.px += (d3.event as any).dx;
+                    d.py += (d3.event as any).dy;
+                    d.x += (d3.event as any).dx;
+                    d.y += (d3.event as any).dy;
+                    this.fadeNode(d);
+                    this.forceLayout.tick();
+                });
 
-            this.colorPalette = options.host.colorPalette;
-
-            this.tooltipServiceWrapper = createTooltipServiceWrapper(
-                options.host.tooltipService,
-                options.element);
+            const svg = root
+                .append('svg')
+                .attr({
+                    width: '100%',
+                    height: '100%'
+                })
+                .classed(ForceGraph.VisualClassName, true);
+            this.container = svg.append("g").classed("chartContainer", true);
         }
 
         private static getViewport(viewport: IViewport): IViewport {
@@ -421,8 +436,6 @@ module powerbi.extensibility.visual {
             };
         }
 
-
-
         private static parseSettings(dataView: DataView): ForceGraphSettings {
             let settings: ForceGraphSettings = ForceGraphSettings.parse<ForceGraphSettings>(dataView);
 
@@ -479,8 +492,7 @@ module powerbi.extensibility.visual {
             this.data = ForceGraph.converter(options.dataViews[0], this.colorPalette);
 
             if (!this.data) {
-                this.removeElements();
-
+                this.reset();
                 return;
             }
 
@@ -489,15 +501,8 @@ module powerbi.extensibility.visual {
             let k: number = Math.sqrt(Object.keys(this.data.nodes).length /
                 (this.viewport.width * this.viewport.height));
 
-            this.removeElements();
+            this.reset();
 
-            let svg: d3.Selection<any> = this.root
-                .append('svg')
-                .attr({
-                    width: this.viewport.width,
-                    height: this.viewport.height
-                })
-                .classed(ForceGraph.VisualClassName, true);
             this.forceLayout
                 .gravity(ForceGraph.GravityFactor * k)
                 .links(this.data.links)
@@ -506,18 +511,17 @@ module powerbi.extensibility.visual {
                 .charge(this.settings.size.charge / k);
             this.updateNodes();
             if (this.settings.animation.show) {
-                this.forceLayout.on('tick', this.tick());
+                this.forceLayout.on('tick', this.getForceTick());
                 this.forceLayout.start();
-                this.setVisualData(svg);
+                this.setVisualData(this.container);
             } else {
-                let n: number = Object.keys(this.data.nodes).length;
                 this.forceLayout.start();
-                for (let i = n * n; i > 0; --i) {
+                do {
                     this.forceLayout.tick();
-                }
+                } while (this.forceLayout.alpha() > 0);
                 this.forceLayout.stop();
-                this.setVisualData(svg);
-                this.forceLayout.on('tick', this.tick());
+                this.setVisualData(this.container);
+                this.forceLayout.on('tick', this.getForceTick());
             }
         }
 
@@ -681,13 +685,14 @@ module powerbi.extensibility.visual {
             return `${this.settings.nodes.imageUrl}${image}${this.settings.nodes.imageExt}`;
         }
 
-        private removeElements(): void {
-            if (!this.root) {
+        private reset(): void {
+            if (this.container.empty()) {
                 return;
             }
-
-            this.root
-                .selectAll('svg')
+            this.forceLayout.on('tick', null);
+            this.forceLayout.stop();
+            this.container
+                .selectAll("*")
                 .remove();
         }
 
@@ -713,47 +718,46 @@ module powerbi.extensibility.visual {
             first.weight = second.weight;
         }
 
-        private tick(): () => void {
+        private getForceTick(): () => void {
             const viewport: IViewport = this.viewportIn;
-            let properties: TextProperties = {
+            const properties: TextProperties = {
                 fontFamily: ForceGraph.LabelsFontFamily,
                 fontSize: PixelConverter.fromPoint(this.settings.labels.fontSize),
                 text: this.data.formatter.format('')
             };
 
+            const showArrow: boolean = this.settings && this.settings.links && this.settings.links.showArrow;
+
             let resolutionFactor: number = ForceGraph.ResolutionFactor;
             if (this.settings.size.boundedByBox) {
                 resolutionFactor = ForceGraph.ResolutionFactorBoundByBox;
             }
-
             // limitX and limitY is necessary when you minimize the graph and then resize it to normal.
             // 'width/height * 20' seems enough to move nodes freely by force layout.
-            let maxWidth: number = viewport.width * resolutionFactor,
+            const maxWidth: number = viewport.width * resolutionFactor,
                 maxHeight: number = viewport.height * resolutionFactor,
-                limitX = x => Math.max((viewport.width - maxWidth) / 2, Math.min((viewport.width + maxWidth) / 2, x)),
-                limitY = y => Math.max((viewport.height - maxHeight) / 2, Math.min((viewport.height + maxHeight) / 2, y));
+                viewPortWidthDownLimit = (viewport.width - maxWidth) / 2,
+                viewPortHeightDownLimit = (viewport.height - maxHeight) / 2,
+                viewPortHeightUpLimit = (viewport.height + maxHeight) / 2,
+                viewPortWidthUpLimit = (viewport.height + maxHeight) / 2,
+                limitX = x => Math.max(viewPortWidthDownLimit, Math.min(viewPortWidthUpLimit, x)),
+                limitY = y => Math.max(viewPortHeightDownLimit, Math.min(viewPortWidthUpLimit, y));
 
             return () => {
-                this.paths.each(function () {
-                    this.parentNode.insertBefore(this, this);
-                });
-
                 this.paths.attr('d', (link: ForceGraphLink) => {
                     link.source.x = limitX(link.source.x);
                     link.source.y = limitY(link.source.y);
                     link.target.x = limitX(link.target.x);
                     link.target.y = limitY(link.target.y);
 
-                    return this.settings && this.settings.links && this.settings.links.showArrow
+                    return showArrow
                         ? this.getPathWithArrow(link)
                         : this.getPathWithoutArrow(link);
                 });
 
-                this.nodes.attr('transform', (node: ForceGraphNode) => {
-                    return translate(limitX(node.x), limitY(node.y));
-                });
+                this.nodes.attr('transform', (node: ForceGraphNode) => translate(limitX(node.x), limitY(node.y)));
 
-                if (!this.settings.labels.allowIntersection)
+                if (!this.settings.labels.allowIntersection && this.settings.labels.show) {
                     this.nodes
                         .classed('hiddenLabel', (node: ForceGraphNode) => {
                             properties.text = this.data.formatter.format(node.name);
@@ -771,6 +775,7 @@ module powerbi.extensibility.visual {
 
                             return node.hideLabel;
                         });
+                }
             };
         }
 
@@ -915,7 +920,8 @@ module powerbi.extensibility.visual {
         }
 
         public destroy(): void {
-            this.root = null;
+            this.container.selectAll("*")
+                .remove();
         }
     }
 }
