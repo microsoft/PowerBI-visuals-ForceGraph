@@ -99,6 +99,17 @@
         }
     ],
     "objects": {
+        "animation": {
+            "displayName": "Animations",
+            "properties": {
+                "show": {
+                    "displayName": "Show",
+                    "type": {
+                        "bool": true
+                    }
+                }
+            }
+        },
         "labels": {
             "displayName": "Data labels",
             "properties": {

@@ -241,22 +241,7 @@ module powerbi.extensibility.visual {
 
         private init(options: VisualConstructorOptions): void {
             this.root = d3.select(options.element);
-
-            this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
-
-            this.forceLayout.drag()
-                .on('dragstart', ((d: ForceGraphNode) => {
-                    d.isDrag = true;
-                    this.fadeNode(d);
-                }))
-                .on('dragend', ((d: ForceGraphNode) => {
-                    d.isDrag = false;
-                    this.fadeNode(d);
-                }))
-                .on('drag', ((d: ForceGraphNode) => this.fadeNode(d)));
-
             this.colorPalette = options.host.colorPalette;
-
             this.tooltipServiceWrapper = createTooltipServiceWrapper(
                 options.host.tooltipService,
                 options.element);
@@ -269,7 +254,7 @@ module powerbi.extensibility.visual {
                 width: Math.max(ForceGraph.MinViewport.width, width),
                 height: Math.max(ForceGraph.MinViewport.height, height)
             };
-        };
+        }
 
         private scale1to10(value: number): number {
             let scale: d3.scale.Linear<number, number> = d3.scale.linear()
@@ -396,7 +381,7 @@ module powerbi.extensibility.visual {
                         label: tableRow.LinkType,
                         color: colors.getColor((linkTypeCount++).toString()).value,
                     };
-                };
+                }
 
                 if (link.weight < minFiles) {
                     minFiles = link.weight;
@@ -420,8 +405,6 @@ module powerbi.extensibility.visual {
                 formatter: targetFormatter
             };
         }
-
-
 
         private static parseSettings(dataView: DataView): ForceGraphSettings {
             let settings: ForceGraphSettings = ForceGraphSettings.parse<ForceGraphSettings>(dataView);
@@ -498,29 +481,50 @@ module powerbi.extensibility.visual {
                     height: this.viewport.height
                 })
                 .classed(ForceGraph.VisualClassName, true);
-
+            this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
+            this.forceLayout.drag()
+                .on('dragstart', ((d: ForceGraphNode) => {
+                    d.isDrag = true;
+                    this.fadeNode(d);
+                }))
+                .on('dragend', ((d: ForceGraphNode) => {
+                    d.isDrag = false;
+                    this.fadeNode(d);
+                }))
+                .on('drag', ((d: ForceGraphNode) => this.fadeNode(d)));
             this.forceLayout
                 .gravity(ForceGraph.GravityFactor * k)
                 .links(this.data.links)
                 .size([this.viewport.width, this.viewport.height])
                 .linkDistance(ForceGraph.LinkDistance)
-                .charge(this.settings.size.charge / k)
-                .on('tick', this.tick());
-
+                .charge(this.settings.size.charge / k);
             this.updateNodes();
-            this.forceLayout.start();
+            if (this.settings.animation.show) {
+                this.forceLayout.on('tick', this.tick());
+                this.forceLayout.start();
+                this.setVisualData(svg);
+            } else {
+                this.forceLayout.start();
+                do {
+                    this.forceLayout.tick();
+                } while (this.forceLayout.alpha() > 0);
+                this.forceLayout.stop();
+                this.setVisualData(svg);
+            }
+        }
 
-            this.paths = svg.selectAll(ForceGraph.LinkSelector.selector)
+        private setVisualData(svg: d3.Selection<any>): void {
+            this.paths = svg.selectAll(ForceGraph.LinkSelector.selectorName)
                 .data(this.forceLayout.links())
                 .enter()
                 .append('path')
-                .classed(ForceGraph.LinkSelector.class, true)
                 .attr('id', (d, i) => 'linkid_' + this.uniqieId + i)
                 .attr('stroke-width', (link: ForceGraphLink) => {
                     return this.settings.links.thickenLink
                         ? this.scale1to10(link.weight)
                         : ForceGraph.DefaultLinkThickness;
                 })
+                .classed(ForceGraph.LinkSelector.className, true)
                 .style('stroke', (link: ForceGraphLink) => {
                     return this.getLinkColor(link);
                 })
@@ -546,14 +550,14 @@ module powerbi.extensibility.visual {
 
             if (this.settings.links.showLabel) {
                 let linklabelholderUpdate: d3.selection.Update<ForceGraphLink> = svg
-                    .selectAll(ForceGraph.LinkLabelHolderSelector.selector)
+                    .selectAll(ForceGraph.LinkLabelHolderSelector.selectorName)
                     .data(this.forceLayout.links());
 
                 linklabelholderUpdate.enter()
                     .append('g')
-                    .classed(ForceGraph.LinkLabelHolderSelector.class, true)
+                    .classed(ForceGraph.LinkLabelHolderSelector.className, true)
                     .append('text')
-                    .classed(ForceGraph.LinkLabelSelector.class, true)
+                    .classed(ForceGraph.LinkLabelSelector.className, true)
                     .attr('y', ForceGraph.DefaultYPosition)
                     .attr('text-anchor', ForceGraph.LinkTextAnchor)
                     .style('fill', ForceGraph.DefaultLinkFillColor)
@@ -576,11 +580,12 @@ module powerbi.extensibility.visual {
             }
 
             // define the nodes
-            this.nodes = svg.selectAll(ForceGraph.NodeSelector.selector)
+            this.nodes = svg.selectAll(ForceGraph.NodeSelector.selectorName)
                 .data(this.forceLayout.nodes())
                 .enter()
                 .append('g')
-                .classed(ForceGraph.NodeSelector.class, true)
+                .attr('drag-resize-disabled', true)
+                .classed(ForceGraph.NodeSelector.className, true)
                 .call(this.forceLayout.drag)
                 .on('mouseover', (node: ForceGraphNode) => {
                     node.isOver = true;
@@ -590,8 +595,27 @@ module powerbi.extensibility.visual {
                     node.isOver = false;
                     this.fadeNode(node);
                 })
-                .on('mousedown', () => (d3.event as MouseEvent).stopPropagation())
-                .attr('drag-resize-disabled', true);
+                .on('mousedown', () => (d3.event as MouseEvent).stopPropagation());
+
+            // render without animation
+            if (!this.settings.animation.show) {
+                const viewport: IViewport = this.viewportIn;
+                let maxWidth: number = viewport.width * ForceGraph.ResolutionFactor,
+                    maxHeight: number = viewport.height * ForceGraph.ResolutionFactor,
+                    limitX = x => Math.max((viewport.width - maxWidth) / 2, Math.min((viewport.width + maxWidth) / 2, x)),
+                    limitY = y => Math.max((viewport.height - maxHeight) / 2, Math.min((viewport.height + maxHeight) / 2, y));
+                this.paths.attr("d", (link: ForceGraphLink) => {
+                    link.source.x = limitX(link.source.x);
+                    link.source.y = limitY(link.source.y);
+                    link.target.x = limitX(link.target.x);
+                    link.target.y = limitY(link.target.y);
+
+                    return this.settings && this.settings.links && this.settings.links.showArrow
+                        ? this.getPathWithArrow(link)
+                        : this.getPathWithoutArrow(link);
+                });
+                this.nodes.attr('transform', (node: ForceGraphNode) => translate(limitX(node.x), limitY(node.y)));
+            }
 
             // add the nodes
             if (this.settings.nodes.displayImage) {
@@ -615,7 +639,7 @@ module powerbi.extensibility.visual {
                 this.nodes
                     .append('circle')
                     .attr('r', (node: ForceGraphNode) => {
-                        return node.weight < ForceGraph.MinNodeWeight
+                        return isNaN(node.weight) || node.weight < ForceGraph.MinNodeWeight
                             ? ForceGraph.MinNodeWeight
                             : node.weight;
                     });
@@ -645,7 +669,6 @@ module powerbi.extensibility.visual {
                     });
             }
         }
-
         private getImage(image: string): string {
             return `${this.settings.nodes.imageUrl}${image}${this.settings.nodes.imageExt}`;
         }
@@ -814,7 +837,7 @@ module powerbi.extensibility.visual {
 
             for (let name in this.data.nodes) {
                 visited[name] = false;
-            };
+            }
 
             visited[a.name] = true;
 
@@ -836,7 +859,7 @@ module powerbi.extensibility.visual {
                         stack.push(nb);
                     }
                 }
-            };
+            }
 
             return false;
         }
