@@ -241,22 +241,7 @@ module powerbi.extensibility.visual {
 
         private init(options: VisualConstructorOptions): void {
             this.root = d3.select(options.element);
-
-            this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
-
-            this.forceLayout.drag()
-                .on('dragstart', ((d: ForceGraphNode) => {
-                    d.isDrag = true;
-                    this.fadeNode(d);
-                }))
-                .on('dragend', ((d: ForceGraphNode) => {
-                    d.isDrag = false;
-                    this.fadeNode(d);
-                }))
-                .on('drag', ((d: ForceGraphNode) => this.fadeNode(d)));
-
             this.colorPalette = options.host.colorPalette;
-
             this.tooltipServiceWrapper = createTooltipServiceWrapper(
                 options.host.tooltipService,
                 options.element);
@@ -496,6 +481,17 @@ module powerbi.extensibility.visual {
                     height: this.viewport.height
                 })
                 .classed(ForceGraph.VisualClassName, true);
+            this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
+            this.forceLayout.drag()
+                .on('dragstart', ((d: ForceGraphNode) => {
+                    d.isDrag = true;
+                    this.fadeNode(d);
+                }))
+                .on('dragend', ((d: ForceGraphNode) => {
+                    d.isDrag = false;
+                    this.fadeNode(d);
+                }))
+                .on('drag', ((d: ForceGraphNode) => this.fadeNode(d)));
             this.forceLayout
                 .gravity(ForceGraph.GravityFactor * k)
                 .links(this.data.links)
@@ -508,15 +504,12 @@ module powerbi.extensibility.visual {
                 this.forceLayout.start();
                 this.setVisualData(svg);
             } else {
-                requestAnimationFrame(() => {
-                    this.forceLayout.start();
-                    do {
-                        this.forceLayout.tick();
-                    } while (this.forceLayout.alpha() > 0);
-                    this.forceLayout.stop();
-                    this.setVisualData(svg);
-                    this.forceLayout.on('tick', this.tick());
-                });
+                this.forceLayout.start();
+                do {
+                    this.forceLayout.tick();
+                } while (this.forceLayout.alpha() > 0);
+                this.forceLayout.stop();
+                this.setVisualData(svg);
             }
         }
 
