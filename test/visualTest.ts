@@ -235,11 +235,11 @@ module powerbi.extensibility.visual.test {
                 it("animation is turned off", (done) => {
                     (dataView.metadata.objects as any).animation = { show: false };
                     visualBuilder.updateRenderTimeout(dataView, () => {
-                        let originalTransform = visualBuilder.mainElement
+                        let originalTransform: JQuery = visualBuilder.mainElement
                             .children("g.node")
                             .map((item, element) => element.getAttribute("transform"));
                         setTimeout(() => {
-                            let afterFullRender = visualBuilder.mainElement
+                            let afterFullRender: JQuery = visualBuilder.mainElement
                                 .children("g.node")
                                 .map((item, element) => element.getAttribute("transform"));
                             expect(_.isEqual(afterFullRender, originalTransform)).toBe(true);
