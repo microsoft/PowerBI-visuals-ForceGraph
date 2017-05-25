@@ -240,7 +240,7 @@ module powerbi.extensibility.visual {
         }
 
         private init(options: VisualConstructorOptions): void {
-            const root = d3.select(options.element);
+            const root: d3.Selection<any> = d3.select(options.element);
             this.colorPalette = options.host.colorPalette;
             this.tooltipServiceWrapper = createTooltipServiceWrapper(
                 options.host.tooltipService,
@@ -267,7 +267,7 @@ module powerbi.extensibility.visual {
                     this.forceLayout.tick();
                 });
 
-            const svg = root
+            const svg: d3.Selection<any> = root
                 .append('svg')
                 .attr({
                     width: '100%',
@@ -736,12 +736,12 @@ module powerbi.extensibility.visual {
             // 'width/height * 20' seems enough to move nodes freely by force layout.
             const maxWidth: number = viewport.width * resolutionFactor,
                 maxHeight: number = viewport.height * resolutionFactor,
-                viewPortWidthDownLimit = (viewport.width - maxWidth) / 2,
-                viewPortHeightDownLimit = (viewport.height - maxHeight) / 2,
-                viewPortHeightUpLimit = (viewport.height + maxHeight) / 2,
-                viewPortWidthUpLimit = (viewport.height + maxHeight) / 2,
-                limitX = x => Math.max(viewPortWidthDownLimit, Math.min(viewPortWidthUpLimit, x)),
-                limitY = y => Math.max(viewPortHeightDownLimit, Math.min(viewPortWidthUpLimit, y));
+                viewPortWidthDownLimit: number = (viewport.width - maxWidth) / 2,
+                viewPortHeightDownLimit: number = (viewport.height - maxHeight) / 2,
+                viewPortHeightUpLimit: number = (viewport.height + maxHeight) / 2,
+                viewPortWidthUpLimit: number = (viewport.height + maxHeight) / 2,
+                limitX: (x: number) => number = x => Math.max(viewPortWidthDownLimit, Math.min(viewPortWidthUpLimit, x)),
+                limitY: (y: number) => number = y => Math.max(viewPortHeightDownLimit, Math.min(viewPortWidthUpLimit, y));
 
             return () => {
                 this.paths.attr('d', (link: ForceGraphLink) => {

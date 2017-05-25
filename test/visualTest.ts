@@ -232,7 +232,7 @@ module powerbi.extensibility.visual.test {
                         });
                 });
 
-                it("animation turn off", (done) => {
+                it("animation is turned off", (done) => {
                     (dataView.metadata.objects as any).animation = { show: false };
                     visualBuilder.updateRenderTimeout(dataView, () => {
                         let originalTransform = visualBuilder.mainElement
