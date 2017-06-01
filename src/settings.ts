@@ -29,10 +29,15 @@ module powerbi.extensibility.visual {
     import DataViewObjectsParser = powerbi.extensibility.utils.dataview.DataViewObjectsParser;
 
     export class ForceGraphSettings extends DataViewObjectsParser {
+        public animation: Animation = new Animation();
         public labels: LabelsSettings = new LabelsSettings();
         public links: LinksSettings = new LinksSettings();
         public nodes: NodesSettings = new NodesSettings();
         public size: SizeSettings = new SizeSettings();
+    }
+
+    export class Animation {
+        public show: boolean = true;
     }
 
     export class LabelsSettings {

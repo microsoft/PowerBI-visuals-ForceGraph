@@ -43,7 +43,7 @@ module powerbi.extensibility.visual.test {
         }
 
         public get mainElement() {
-            return this.element.children("svg.forceGraph");
+            return this.element.find("g.chartContainer");
         }
 
         public get linkLabels() {
