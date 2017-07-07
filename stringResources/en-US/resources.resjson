@@ -1,4 +1,10 @@
 {
+    "Visual_Source": "Source",
+    "Visual_Target": "Target",
+    "Visual_Weight": "Weight",
+    "Visual_SourceType": "Source Type",
+    "Visual_LinkType": "Link Type",
+    "Visual_TargetType": "Target Type",
     "Visual_Animations": "Animations",
     "Visual_Show": "Show",
     "Visual_DataLabels": "Data Labels",
