@@ -1,31 +1,37 @@
 {
     "dataRoles": [
         {
+            "displayNameKey": "Visual_Source",
             "name": "Source",
             "kind": "Grouping",
             "displayName": "Source"
         },
         {
+            "displayNameKey": "Visual_Target",
             "name": "Target",
             "kind": "Grouping",
             "displayName": "Target"
         },
         {
+            "displayNameKey": "Visual_Weight",
             "name": "Weight",
             "kind": "Measure",
             "displayName": "Weight"
         },
         {
+            "displayNameKey": "Visual_LinkType",
             "name": "LinkType",
             "kind": "Grouping",
             "displayName": "Link Type"
         },
         {
+            "displayNameKey": "Visual_SourceType",
             "name": "SourceType",
             "kind": "Grouping",
             "displayName": "Source Type"
         },
         {
+            "displayNameKey": "Visual_TargetType",
             "name": "TargetType",
             "kind": "Grouping",
             "displayName": "Target Type"
