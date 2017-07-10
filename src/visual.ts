@@ -62,26 +62,6 @@
  */
 
 module powerbi.extensibility.visual {
-    // powerbi
-    import DataView = powerbi.DataView;
-    import IViewport = powerbi.IViewport;
-    import VisualDataRoleKind = powerbi.VisualDataRoleKind;
-    import DataViewObjectPropertyIdentifier = powerbi.DataViewObjectPropertyIdentifier;
-    import IEnumType = powerbi.IEnumType;
-    import VisualObjectInstance = powerbi.VisualObjectInstance;
-    import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
-    import IEnumMember = powerbi.IEnumMember;
-    import DataViewObjects = powerbi.DataViewObjects;
-    import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
-    import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
-
-    // powerbi.extensibility
-    import IColorPalette = powerbi.extensibility.IColorPalette;
-
-    // powerbi.extensibility.visual
-    import IVisual = powerbi.extensibility.visual.IVisual;
-    import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
-    import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 
     // powerbi.extensibility.utils.type
     import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
@@ -100,15 +80,9 @@ module powerbi.extensibility.visual {
     import TooltipEventArgs = powerbi.extensibility.utils.tooltip.TooltipEventArgs;
     import ITooltipServiceWrapper = powerbi.extensibility.utils.tooltip.ITooltipServiceWrapper;
     import createTooltipServiceWrapper = powerbi.extensibility.utils.tooltip.createTooltipServiceWrapper;
-    import DataLabelManager = powerbi.extensibility.utils.chart.dataLabel.DataLabelManager;
-    import ILabelLayout = powerbi.extensibility.utils.chart.dataLabel.ILabelLayout;
     import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
     import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
-    import IRect = powerbi.extensibility.utils.svg.IRect;
 
-    interface ValueLimitation {
-        (x: any): number;
-    }
 
     export class ForceGraph implements IVisual {
         private static Count: number = 0;
@@ -127,53 +101,37 @@ module powerbi.extensibility.visual {
         };
 
         private static MinAmountOfDataViews: number = 1;
-
         private static ImagePosition: number = -12;
-
         private static MinNodeWeight: number = 5;
-
         private static MinCharge: number = -100;
         private static MaxCharge: number = -0.1;
-
         private static MinDecimalPlaces: number = 0;
         private static MaxDecimalPlaces: number = 5;
-
         private static GravityFactor: number = 100;
         private static LinkDistance: number = 100;
-
         private static HoverOpacity: number = 0.3;
         private static DefaultOpacity: number = 1;
-
         private static DefaultLinkColor: string = '#bbb';
         private static DefaultLinkHighlightColor: string = '#f00';
         private static DefaultLinkThickness: string = '1.5px';
         private static LabelsFontFamily: string = 'sans-serif';
-
         private static MinRangeValue: number = 1;
         private static MaxRangeValue: number = 10;
-
         private static DefaultValueOfExistingLink: number = 1;
         private static DefaultLinkType: string = '';
-
         private static MinWeight: number = 0;
         private static MaxWeight: number = 0;
-
         private static DefaultSourceType: string = '';
         private static DefaultTargetType: string = '';
-
         private static StartOffset: string = '25%';
         private static DefaultYPosition: number = -12;
         private static DefaultLinkFillColor: string = '#000';
         private static LinkTextAnchor: string = 'middle';
-
         private static DefaultLabelX: number = 12;
         private static DefaultLabelDy: string = '.35em';
-
         private static DefaultLabelText: string = '';
-
         private static ResolutionFactor: number = 20;
         private static ResolutionFactorBoundByBox: number = 0.9;
-
         private static LinkSelector: ClassAndSelector = createClassAndSelector('link');
         private static LinkLabelHolderSelector: ClassAndSelector = createClassAndSelector('linklabelholder');
         private static LinkLabelSelector: ClassAndSelector = createClassAndSelector('linklabel');
@@ -209,14 +167,14 @@ module powerbi.extensibility.visual {
         }
 
         private set margin(value: IMargin) {
-            this.marginValue = $.extend({}, value);
+            this.marginValue = { ...value };
             this.viewportInValue = ForceGraph.substractMargin(this.viewport, this.margin);
         }
 
         private viewportValue: IViewport;
 
         private get viewport(): IViewport {
-            return this.viewportValue || $.extend({}, ForceGraph.MinViewport);
+            return this.viewportValue || { ...ForceGraph.MinViewport };
         }
 
         private set viewport(viewport: IViewport) {
@@ -347,7 +305,7 @@ module powerbi.extensibility.visual {
                 let weightValue: number = settings.links.displayUnits;
 
                 if (!weightValue && tableRows.length) {
-                    weightValue = _.maxBy(tableRows, x => x.Weight).Weight;
+                    weightValue = Math.max(...tableRows.map(x => x.Weight));
                 }
 
                 weightFormatter = valueFormatter.create({
