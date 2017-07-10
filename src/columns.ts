@@ -39,14 +39,6 @@ module powerbi.extensibility.visual {
                 (n, i) => columns.filter(x => x.roles && x.roles[i])[0]);
         }
 
-        public static getTableValues(dataView: DataView): ForceGraphColumns<any[]> {
-            let table: DataViewTable = dataView && dataView.table,
-                columns: ForceGraphColumns<DataViewMetadataColumn> = this.getMetadataColumns(dataView);
-
-            return columns && table && <any>_.mapValues(
-                columns, (n: DataViewMetadataColumn, i) => n && table.rows.map(row => row[n.index]));
-        }
-
         public static getTableRows(dataView: DataView): ForceGraphColumns<any>[] {
             let table: DataViewTable = dataView && dataView.table,
                 columns: ForceGraphColumns<DataViewMetadataColumn> = this.getMetadataColumns(dataView);
