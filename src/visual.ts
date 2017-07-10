@@ -209,14 +209,14 @@ module powerbi.extensibility.visual {
         }
 
         private set margin(value: IMargin) {
-            this.marginValue = $.extend({}, value);
+            this.marginValue = { ...value };
             this.viewportInValue = ForceGraph.substractMargin(this.viewport, this.margin);
         }
 
         private viewportValue: IViewport;
 
         private get viewport(): IViewport {
-            return this.viewportValue || $.extend({}, ForceGraph.MinViewport);
+            return this.viewportValue || { ...ForceGraph.MinViewport };
         }
 
         private set viewport(viewport: IViewport) {
@@ -347,7 +347,7 @@ module powerbi.extensibility.visual {
                 let weightValue: number = settings.links.displayUnits;
 
                 if (!weightValue && tableRows.length) {
-                    weightValue = _.maxBy(tableRows, x => x.Weight).Weight;
+                    weightValue = Math.max(...tableRows.map(x => x.Weight));
                 }
 
                 weightFormatter = valueFormatter.create({

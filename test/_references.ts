@@ -24,12 +24,8 @@
  *  THE SOFTWARE.
  */
 
-// External
-/// <reference path="../node_modules/@types/jasmine/index.d.ts" />
-/// <reference path="../node_modules/@types/jasmine-jquery/index.d.ts" />
-
 // Power BI API
-/// <reference path="../.api/v1.6.0/PowerBI-visuals.d.ts" />
+/// <reference path="../.api/v1.7.0/PowerBI-visuals.d.ts" />
 
 // Power BI Extensibility
 /// <reference path="../node_modules/powerbi-visuals-utils-dataviewutils/lib/index.d.ts" />

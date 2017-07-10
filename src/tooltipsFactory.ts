@@ -63,7 +63,7 @@ module powerbi.extensibility.visual {
 
                 value = inputObject[propertyName];
 
-                if (!_.isNumber(value)) {
+                if (!(typeof value === "number")) {
                     value = valueFormatter.format(value, valueFormatter.getFormatStringByColumn(column));
                 }
 
@@ -82,7 +82,7 @@ module powerbi.extensibility.visual {
             dataViewMetadataColumns: DataViewMetadataColumn[],
             roleName: string): DataViewMetadataColumn {
 
-            if (!_.isEmpty(dataViewMetadataColumns) && roleName) {
+            if (dataViewMetadataColumns && dataViewMetadataColumns.length && roleName) {
                 for (const metadataColumn of dataViewMetadataColumns) {
                     if (metadataColumn && hasRole(metadataColumn, roleName)) {
                         return metadataColumn;
