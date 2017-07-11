@@ -1,7 +1,9 @@
+## 1.5.0
+* Added drill-down support
+
 ## 1.4.0
 * Updated dependencies
 * Updated API version
-* Added drill-down support
 
 ## 1.3.8
 * New property "Intersection" in "Data labels" option of "Format" panel to hide overlaped labels in visual.
