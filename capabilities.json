@@ -37,6 +37,12 @@
             "displayName": "Target Type"
         }
     ],
+    "drilldown": {
+        "roles": [
+            "Source",
+            "Target"
+        ]
+    },
     "dataViewMappings": [
         {
             "conditions": [

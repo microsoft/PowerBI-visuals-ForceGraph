@@ -1,3 +1,6 @@
+## 1.5.0
+* Added drill-down support
+
 ## 1.4.0
 * Updated dependencies
 * Updated API version
