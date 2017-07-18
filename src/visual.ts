@@ -267,8 +267,8 @@ module powerbi.extensibility.visual {
                         .value;
                 }
                 case LinkColorType.ByLinkType: {
-                    return link.type && this.data.linkTypes[link.type]
-                        ? this.data.linkTypes[link.type].color
+                    return link.linkType && this.data.linkTypes[link.linkType]
+                        ? this.data.linkTypes[link.linkType].color
                         : ForceGraph.DefaultLinkColor;
                 }
             }
@@ -360,7 +360,7 @@ module powerbi.extensibility.visual {
                         : ForceGraph.MaxWeight,
                         ForceGraph.MinWeight),
                     formattedWeight: tableRow.Weight && weightFormatter.format(tableRow.Weight),
-                    type: tableRow.LinkType || ForceGraph.DefaultLinkType,
+                    linkType: tableRow.LinkType || ForceGraph.DefaultLinkType,
                     tooltipInfo: tooltipInfo,
                 };
 
@@ -540,7 +540,7 @@ module powerbi.extensibility.visual {
                     })
                     .text((link: ForceGraphLink) => {
                         return this.settings.links.colorLink === LinkColorType.ByLinkType
-                            ? link.type
+                            ? link.linkType
                             : link.formattedWeight;
                     });
 

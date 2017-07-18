@@ -59,7 +59,7 @@ module powerbi.extensibility.visual {
         target: ForceGraphNode;
         weight: number;
         formattedWeight: string;
-        type: string;
+        linkType: string;
     }
 
     export interface ForceGraphData {
