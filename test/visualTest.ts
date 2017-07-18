@@ -312,9 +312,10 @@ module powerbi.extensibility.visual.test {
                 });
 
                 it("nodes labels format", () => {
-                    const dates: Date[] = _.range(defaultDataViewBuilder.valuesSourceTarget.length)
-                        .map(x => new Date(Math.random() * 10000000000000));
-
+                    const rand = new Uint32Array(defaultDataViewBuilder.valuesSourceTarget.length);
+                    window.crypto.getRandomValues(rand);
+                    const dates: Date[] = [];
+                    rand.forEach((value: number) => dates.push(new Date(value)));
                     defaultDataViewBuilder.valuesSourceTarget.forEach((x, i) => x[1] = <any>dates[i]);
                     dataView = defaultDataViewBuilder.getDataView();
                     visualBuilder.updateFlushAllD3Transitions(dataView);
