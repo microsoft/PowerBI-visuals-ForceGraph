@@ -172,7 +172,8 @@
                     "type": {
                         "bool": true
                     },
-                    "displayName": "Arrow"
+                    "displayName": "Arrow",
+                    "displayNameKey": "Visual_Arrow"
                 },
                 "showLabel": {
                     "type": {
