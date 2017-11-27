@@ -760,6 +760,11 @@ module powerbi.extensibility.visual {
                 dtxs: number = link.target.x - 6 * Math.cos(theta),
                 dtys: number = link.target.y - 6 * Math.sin(theta);
 
+            if (dr == 0) {
+                return 'M' + link.source.x + ',' + link.source.y
+                    + 'A' + dr + ',' + dr + ' 0 0,1 ' + link.target.x + ',' + link.target.y;
+            }
+
             return 'M' + link.source.x + ',' + link.source.y
                 + 'A' + dr + ',' + dr + ' 0 0 1,' + link.target.x + ',' + link.target.y
                 + 'A' + dr + ',' + dr + ' 0 0 0,' + link.source.x + ',' + link.source.y
