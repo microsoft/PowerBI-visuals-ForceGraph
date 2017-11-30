@@ -499,7 +499,7 @@ module powerbi.extensibility.visual {
                     return this.getLinkColor(link);
                 })
                 .style('fill', (link: ForceGraphLink) => {
-                    if (this.settings.links.showArrow && link.source != link.target) {
+                    if (this.settings.links.showArrow && link.source !== link.target) {
                         return this.getLinkColor(link);
                     }
                 })
@@ -760,9 +760,9 @@ module powerbi.extensibility.visual {
                 dtxs: number = link.target.x - 6 * Math.cos(theta),
                 dtys: number = link.target.y - 6 * Math.sin(theta);
 
-            if (dr == 0) {
-                return  `M ${link.source.x-10} ${link.source.y-10}
-                C ${link.source.x-50} ${link.source.y-50}, ${link.source.x+50} ${link.source.y-50}, ${link.source.x+10} ${link.source.y-10}`;
+            if (dr === 0) {
+                return  `M ${link.source.x - 10} ${link.source.y - 10}
+                C ${link.source.x - 50} ${link.source.y - 50}, ${link.source.x + 50} ${link.source.y - 50}, ${link.source.x + 10} ${link.source.y - 10}`;
             }
 
             return 'M' + link.source.x + ',' + link.source.y
@@ -779,9 +779,9 @@ module powerbi.extensibility.visual {
                 dy: number = link.target.y - link.source.y,
                 dr: number = Math.sqrt(dx * dx + dy * dy);
 
-            if (dr == 0) {
-                return  `M ${link.source.x-10} ${link.source.y-10}
-                C ${link.source.x-50} ${link.source.y-50}, ${link.source.x+50} ${link.source.y-50}, ${link.source.x+10} ${link.source.y-10}`;
+            if (dr === 0) {
+                return  `M ${link.source.x - 10} ${link.source.y - 10}
+                C ${link.source.x - 50} ${link.source.y - 50}, ${link.source.x + 50} ${link.source.y - 50}, ${link.source.x + 10} ${link.source.y - 10}`;
             }
 
             return 'M' + link.source.x + ',' + link.source.y
