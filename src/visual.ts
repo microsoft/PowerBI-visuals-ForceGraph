@@ -499,7 +499,7 @@ module powerbi.extensibility.visual {
                     return this.getLinkColor(link);
                 })
                 .style('fill', (link: ForceGraphLink) => {
-                    if (this.settings.links.showArrow) {
+                    if (this.settings.links.showArrow && link.source != link.target) {
                         return this.getLinkColor(link);
                     }
                 })
@@ -761,8 +761,8 @@ module powerbi.extensibility.visual {
                 dtys: number = link.target.y - 6 * Math.sin(theta);
 
             if (dr == 0) {
-                return 'M' + link.source.x + ',' + link.source.y
-                    + 'A' + dr + ',' + dr + ' 0 0,1 ' + link.target.x + ',' + link.target.y;
+                return  `M ${link.source.x-10} ${link.source.y-10}
+                C ${link.source.x-50} ${link.source.y-50}, ${link.source.x+50} ${link.source.y-50}, ${link.source.x+10} ${link.source.y-10}`;
             }
 
             return 'M' + link.source.x + ',' + link.source.y
@@ -778,6 +778,11 @@ module powerbi.extensibility.visual {
             let dx: number = link.target.x - link.source.x,
                 dy: number = link.target.y - link.source.y,
                 dr: number = Math.sqrt(dx * dx + dy * dy);
+
+            if (dr == 0) {
+                return  `M ${link.source.x-10} ${link.source.y-10}
+                C ${link.source.x-50} ${link.source.y-50}, ${link.source.x+50} ${link.source.y-50}, ${link.source.x+10} ${link.source.y-10}`;
+            }
 
             return 'M' + link.source.x + ',' + link.source.y
                 + 'A' + dr + ',' + dr + ' 0 0,1 ' + link.target.x + ',' + link.target.y;
