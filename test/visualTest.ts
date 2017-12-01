@@ -171,10 +171,10 @@ module powerbi.extensibility.visual.test {
             it("curved arrows", () => {
                 visualBuilder.updateRenderTimeout(dataView, () => {
                     visualBuilder.mainElement.children("path.link").each((i) => {
-                        var child = visualBuilder.mainElement.children("path.link").eq(i);
-                        if (child.get()[0]["__data__"].source.name == child.get()[0]["__data__"].target.name) {
-                            var path = child.get()[0].getAttribute("d");
-                            var curvedPath = /M \d*\.?\d* \d*\.?\d* C \d*\.?\d* \d*\.?\d*, \d*\.?\d* \d*\.?\d*, \d*\.?\d* \d*\.?\d*/;
+                        let child = visualBuilder.mainElement.children("path.link").eq(i);
+                        if (child.get()[0]["__data__"].source.name === child.get()[0]["__data__"].target.name) {
+                            let path = child.get()[0].getAttribute("d");
+                            let curvedPath = /M \d*\.?\d* \d*\.?\d* C \d*\.?\d* \d*\.?\d*, \d*\.?\d* \d*\.?\d*, \d*\.?\d* \d*\.?\d*/;
                             expect(curvedPath.test(path))
                                 .toBe(true);
                         }
