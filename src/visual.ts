@@ -761,8 +761,7 @@ module powerbi.extensibility.visual {
                 dtys: number = link.target.y - 6 * Math.sin(theta);
 
             if (dr === 0) {
-                return  `M ${link.source.x - 10} ${link.source.y - 10}
-                C ${link.source.x - 50} ${link.source.y - 50}, ${link.source.x + 50} ${link.source.y - 50}, ${link.source.x + 10} ${link.source.y - 10}`;
+                return  `M ${link.source.x - 10} ${link.source.y - 10} C ${link.source.x - 50} ${link.source.y - 50}, ${link.source.x + 50} ${link.source.y - 50}, ${link.source.x + 10} ${link.source.y - 10}`;
             }
 
             return 'M' + link.source.x + ',' + link.source.y
@@ -780,8 +779,7 @@ module powerbi.extensibility.visual {
                 dr: number = Math.sqrt(dx * dx + dy * dy);
 
             if (dr === 0) {
-                return  `M ${link.source.x - 10} ${link.source.y - 10}
-                C ${link.source.x - 50} ${link.source.y - 50}, ${link.source.x + 50} ${link.source.y - 50}, ${link.source.x + 10} ${link.source.y - 10}`;
+                return  `M ${link.source.x - 10} ${link.source.y - 10} C ${link.source.x - 50} ${link.source.y - 50}, ${link.source.x + 50} ${link.source.y - 50}, ${link.source.x + 10} ${link.source.y - 10}`;
             }
 
             return 'M' + link.source.x + ',' + link.source.y

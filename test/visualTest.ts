@@ -155,15 +155,30 @@ module powerbi.extensibility.visual.test {
             it("update", (done) => {
                 visualBuilder.updateRenderTimeout(dataView, () => {
                     const categorySourceLength: number = _.uniq(dataView.categorical.categories[0].values).length,
-                        categoryTargetLength: number = _.uniq(dataView.categorical.categories[1].values).length;
+                        categoryTargetLength: number = _.uniq(dataView.categorical.categories[1].values).length,
+                        categorySourceTargetOverlapLength: number = _.intersection(_.uniq(dataView.categorical.categories[0].values), _.uniq(dataView.categorical.categories[1].values)).length;
 
                     expect(visualBuilder.mainElement.children("path.link").length)
                         .toBe(Math.max(categorySourceLength, categoryTargetLength));
 
                     expect(visualBuilder.mainElement.children("g.node").length)
-                        .toBe(categorySourceLength + categoryTargetLength);
+                        .toBe(categorySourceLength + categoryTargetLength - categorySourceTargetOverlapLength);
 
                     done();
+                });
+            });
+
+            it("curved arrows", () => {
+                visualBuilder.updateRenderTimeout(dataView, () => {
+                    visualBuilder.mainElement.children("path.link").each((i) => {
+                        var child = visualBuilder.mainElement.children("path.link").eq(i);
+                        if (child.get()[0]["__data__"].source.name == child.get()[0]["__data__"].target.name) {
+                            var path = child.get()[0].getAttribute("d");
+                            var curvedPath = /M \d*\.?\d* \d*\.?\d* C \d*\.?\d* \d*\.?\d*, \d*\.?\d* \d*\.?\d*, \d*\.?\d* \d*\.?\d*/;
+                            expect(curvedPath.test(path))
+                                .toBe(true);
+                        }
+                    });
                 });
             });
         });
