@@ -1,3 +1,6 @@
+## 1.6.0
+* Added support for edges with same source and target
+
 ## 1.5.0
 * Added drill-down support
 
