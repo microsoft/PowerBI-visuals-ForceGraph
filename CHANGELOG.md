@@ -1,3 +1,6 @@
+## 1.6.1
+* UPD: the nodes rendering algorithm (alpha) was changed to more optimal algorith (theta) 
+
 ## 1.6.0
 * Added support for edges with same source and target
 
