@@ -470,13 +470,16 @@ module powerbi.extensibility.visual {
             this.updateNodes();
             if (this.settings.animation.show) {
                 this.forceLayout.on('tick', this.getForceTick());
-                this.forceLayout.start();
+                this.forceLayout.theta(1.6).start();
                 this.setVisualData(this.container);
             } else {
-                this.forceLayout.start();
-                do {
+                this.forceLayout.theta(1.6).start();
+                let nodesNum: number = Object.keys(this.data.nodes).length;
+
+                for (let i = 0; i < nodesNum; ++i) {
                     this.forceLayout.tick();
-                } while (this.forceLayout.alpha() > 0);
+                }
+
                 this.forceLayout.stop();
                 this.setVisualData(this.container);
                 this.forceLayout.on('tick', this.getForceTick());
@@ -761,7 +764,7 @@ module powerbi.extensibility.visual {
                 dtys: number = link.target.y - 6 * Math.sin(theta);
 
             if (dr === 0) {
-                return  `M ${link.source.x - 10} ${link.source.y - 10} C ${link.source.x - 50} ${link.source.y - 50}, ${link.source.x + 50} ${link.source.y - 50}, ${link.source.x + 10} ${link.source.y - 10}`;
+                return `M ${link.source.x - 10} ${link.source.y - 10} C ${link.source.x - 50} ${link.source.y - 50}, ${link.source.x + 50} ${link.source.y - 50}, ${link.source.x + 10} ${link.source.y - 10}`;
             }
 
             return 'M' + link.source.x + ',' + link.source.y
@@ -779,7 +782,7 @@ module powerbi.extensibility.visual {
                 dr: number = Math.sqrt(dx * dx + dy * dy);
 
             if (dr === 0) {
-                return  `M ${link.source.x - 10} ${link.source.y - 10} C ${link.source.x - 50} ${link.source.y - 50}, ${link.source.x + 50} ${link.source.y - 50}, ${link.source.x + 10} ${link.source.y - 10}`;
+                return `M ${link.source.x - 10} ${link.source.y - 10} C ${link.source.x - 50} ${link.source.y - 50}, ${link.source.x + 50} ${link.source.y - 50}, ${link.source.x + 10} ${link.source.y - 10}`;
             }
 
             return 'M' + link.source.x + ',' + link.source.y
@@ -828,14 +831,16 @@ module powerbi.extensibility.visual {
                 let cur = stack.pop(),
                     node = this.data.nodes[cur];
 
-                for (let nb in node.adj) {
-                    if (nb === b.name) {
-                        return true;
-                    }
+                if (node && node.adj) {
+                    for (let nb in node.adj) {
+                        if (nb === b.name) {
+                            return true;
+                        }
 
-                    if (!visited[nb]) {
-                        visited[nb] = true;
-                        stack.push(nb);
+                        if (!visited[nb]) {
+                            visited[nb] = true;
+                            stack.push(nb);
+                        }
                     }
                 }
             }
