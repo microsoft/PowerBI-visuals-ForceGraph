@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Độ dày",
 	"Visual_ForceGraph_DecimalPlaces": "Dấu Thập phân",
 	"Visual_ForceGraph_MaxNameLength": "Độ dài tên tối đa",
-	"Visual_ForceGraph_HighlightLinks": "Đánh dấu tất cả các liên kết có thể truy cập"
+	"Visual_ForceGraph_HighlightLinks": "Đánh dấu tất cả các liên kết có thể truy cập",
+	"Visual_Description_Label": "Trọng số hiển thị trên các liên kết",
+	"Visual_Description_Thickness": "Trọng số thể hiện độ dày liên kết"
 }

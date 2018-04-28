@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Spessore bordo",
 	"Visual_ForceGraph_DecimalPlaces": "Cifre decimali",
 	"Visual_ForceGraph_MaxNameLength": "Lunghezza massima del nome",
-	"Visual_ForceGraph_HighlightLinks": "Evidenzia tutti i collegamenti raggiungibili"
+	"Visual_ForceGraph_HighlightLinks": "Evidenzia tutti i collegamenti raggiungibili",
+	"Visual_Description_Label": "Visualizza peso nei collegamenti",
+	"Visual_Description_Thickness": "Lo spessore dei collegamenti rappresenta il peso"
 }

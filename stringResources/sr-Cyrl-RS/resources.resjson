@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Дебљина",
 	"Visual_ForceGraph_DecimalPlaces": "Децимална места",
 	"Visual_ForceGraph_MaxNameLength": "Максимална дужина имена",
-	"Visual_ForceGraph_HighlightLinks": "Истакни све доступне везе"
+	"Visual_ForceGraph_HighlightLinks": "Истакни све доступне везе",
+	"Visual_Description_Label": "Приказује степен важности у везама",
+	"Visual_Description_Thickness": "Дебљина веза представља степен важности"
 }

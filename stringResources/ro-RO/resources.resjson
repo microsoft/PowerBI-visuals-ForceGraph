@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Grosime",
 	"Visual_ForceGraph_DecimalPlaces": "Zecimale",
 	"Visual_ForceGraph_MaxNameLength": "Lungime maximă nume",
-	"Visual_ForceGraph_HighlightLinks": "Se evidențiază toate linkurile accesibile"
+	"Visual_ForceGraph_HighlightLinks": "Se evidențiază toate linkurile accesibile",
+	"Visual_Description_Label": "Afișează ponderea pe legături",
+	"Visual_Description_Thickness": "Grosimea legăturilor reprezintă ponderea"
 }

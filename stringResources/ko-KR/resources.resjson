@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "두께",
 	"Visual_ForceGraph_DecimalPlaces": "소수 자릿수",
 	"Visual_ForceGraph_MaxNameLength": "최대 이름 길이",
-	"Visual_ForceGraph_HighlightLinks": "연결 가능한 모든 링크 강조 표시"
+	"Visual_ForceGraph_HighlightLinks": "연결 가능한 모든 링크 강조 표시",
+	"Visual_Description_Label": "링크에 대한 가중치 표시",
+	"Visual_Description_Thickness": "링크의 두께는 가중치를 나타냄"
 }

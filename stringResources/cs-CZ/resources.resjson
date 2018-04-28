@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Tloušťka",
 	"Visual_ForceGraph_DecimalPlaces": "Počet des. míst",
 	"Visual_ForceGraph_MaxNameLength": "Maximální délka názvu",
-	"Visual_ForceGraph_HighlightLinks": "Zvýraznit všechny dostupné odkazy"
+	"Visual_ForceGraph_HighlightLinks": "Zvýraznit všechny dostupné odkazy",
+	"Visual_Description_Label": "Ukazuje váhu na propojeních",
+	"Visual_Description_Thickness": "Tloušťka propojení představuje váhu"
 }

@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "粗細",
 	"Visual_ForceGraph_DecimalPlaces": "小數位數",
 	"Visual_ForceGraph_MaxNameLength": "名稱長度上限",
-	"Visual_ForceGraph_HighlightLinks": "將所有可連線的連結反白顯示"
+	"Visual_ForceGraph_HighlightLinks": "將所有可連線的連結反白顯示",
+	"Visual_Description_Label": "顯示連結寬度",
+	"Visual_Description_Thickness": "表示寬度的連結寬度"
 }

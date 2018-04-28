@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "السُمك",
 	"Visual_ForceGraph_DecimalPlaces": "المنازل العشرية",
 	"Visual_ForceGraph_MaxNameLength": "الحد الأقصى لطول الاسم",
-	"Visual_ForceGraph_HighlightLinks": "تمييز كل الارتباطات التي يمكن الوصول إليها"
+	"Visual_ForceGraph_HighlightLinks": "تمييز كل الارتباطات التي يمكن الوصول إليها",
+	"Visual_Description_Label": "عرض الوزن على الارتباطات",
+	"Visual_Description_Thickness": "يمثل سُمك الارتباطات الوزن"
 }

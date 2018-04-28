@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Storis",
 	"Visual_ForceGraph_DecimalPlaces": "Skaitmenys po kablelio",
 	"Visual_ForceGraph_MaxNameLength": "Maksimalus pavadinimo ilgis",
-	"Visual_ForceGraph_HighlightLinks": "Žymėti visus pasiekiamus saitus"
+	"Visual_ForceGraph_HighlightLinks": "Žymėti visus pasiekiamus saitus",
+	"Visual_Description_Label": "Rodoma saitų svertinė vertė",
+	"Visual_Description_Thickness": "Saitų storis nurodo svertinę vertę"
 }

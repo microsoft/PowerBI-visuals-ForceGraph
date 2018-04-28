@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Ketebalan",
 	"Visual_ForceGraph_DecimalPlaces": "Tempat Perpuluhan",
 	"Visual_ForceGraph_MaxNameLength": "Panjang nama maks",
-	"Visual_ForceGraph_HighlightLinks": "Serlahkan semua pautan boleh dicapai"
+	"Visual_ForceGraph_HighlightLinks": "Serlahkan semua pautan boleh dicapai",
+	"Visual_Description_Label": "Memaparkan berat pada pautan",
+	"Visual_Description_Thickness": "Ketebalan pautan mewakili berat"
 }

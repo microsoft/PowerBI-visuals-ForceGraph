@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "עובי",
 	"Visual_ForceGraph_DecimalPlaces": "‏‏מקומות עשרוניים",
 	"Visual_ForceGraph_MaxNameLength": "אורך שם מקסימלי",
-	"Visual_ForceGraph_HighlightLinks": "הדגשת כל הקישורים הנגישים"
+	"Visual_ForceGraph_HighlightLinks": "הדגשת כל הקישורים הנגישים",
+	"Visual_Description_Label": "הצגת משקל בקישורים",
+	"Visual_Description_Thickness": "עובי הקישורים מייצג משקל"
 }

@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Gruix",
 	"Visual_ForceGraph_DecimalPlaces": "Posicions decimals",
 	"Visual_ForceGraph_MaxNameLength": "Longitud màxima del nom",
-	"Visual_ForceGraph_HighlightLinks": "Ressalta els enllaços accessibles"
+	"Visual_ForceGraph_HighlightLinks": "Ressalta els enllaços accessibles",
+	"Visual_Description_Label": "Mostra el pes als enllaços",
+	"Visual_Description_Thickness": "El gruix dels enllaços representa el pes."
 }

@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Vastagság",
 	"Visual_ForceGraph_DecimalPlaces": "Tizedeshelyek",
 	"Visual_ForceGraph_MaxNameLength": "Név max. hossza",
-	"Visual_ForceGraph_HighlightLinks": "Az összes elérhető hivatkozás kiemelése"
+	"Visual_ForceGraph_HighlightLinks": "Az összes elérhető hivatkozás kiemelése",
+	"Visual_Description_Label": "A hivatkozásokon megjeleníti a súlyozást",
+	"Visual_Description_Thickness": "A hivatkozások vékonysága a súlyozást jelöli"
 }

@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Tjocklek",
 	"Visual_ForceGraph_DecimalPlaces": "Decimaler",
 	"Visual_ForceGraph_MaxNameLength": "Maxlängd för namnet",
-	"Visual_ForceGraph_HighlightLinks": "Markera alla länkar som är nåbara"
+	"Visual_ForceGraph_HighlightLinks": "Markera alla länkar som är nåbara",
+	"Visual_Description_Label": "Visar vikten för länkar",
+	"Visual_Description_Thickness": "Länkarnas tjocklek representerar vikt"
 }

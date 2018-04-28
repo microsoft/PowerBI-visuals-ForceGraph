@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Paksuus",
 	"Visual_ForceGraph_DecimalPlaces": "Desimaalit",
 	"Visual_ForceGraph_MaxNameLength": "Suurin nimen pituus",
-	"Visual_ForceGraph_HighlightLinks": "Korosta kaikki tavoitettavissa olevat linkit"
+	"Visual_ForceGraph_HighlightLinks": "Korosta kaikki tavoitettavissa olevat linkit",
+	"Visual_Description_Label": "Näyttää painotuksen linkeissä",
+	"Visual_Description_Thickness": "Linkkien paksuus edustaa painotusta"
 }

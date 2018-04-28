@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Товщина",
 	"Visual_ForceGraph_DecimalPlaces": "Кількість знаків після десяткової коми",
 	"Visual_ForceGraph_MaxNameLength": "Макс. довжина імені",
-	"Visual_ForceGraph_HighlightLinks": "Виділити всі досяжні зв’язки"
+	"Visual_ForceGraph_HighlightLinks": "Виділити всі досяжні зв’язки",
+	"Visual_Description_Label": "Відображає значимість для зв’язків",
+	"Visual_Description_Thickness": "Товщина ліній зв’язків відповідає значимості"
 }

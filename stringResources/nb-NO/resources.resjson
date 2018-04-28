@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Tykkelse",
 	"Visual_ForceGraph_DecimalPlaces": "Desimaler",
 	"Visual_ForceGraph_MaxNameLength": "Maks navnelengde",
-	"Visual_ForceGraph_HighlightLinks": "Merk alle koblinger som kan nås"
+	"Visual_ForceGraph_HighlightLinks": "Merk alle koblinger som kan nås",
+	"Visual_Description_Label": "Viser vekten på koblinger",
+	"Visual_Description_Thickness": "Tykkelse på koblinger representerer vekt"
 }

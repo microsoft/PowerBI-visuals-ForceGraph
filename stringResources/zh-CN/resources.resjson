@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "粗细",
 	"Visual_ForceGraph_DecimalPlaces": "小数位数",
 	"Visual_ForceGraph_MaxNameLength": "最大名称长度",
-	"Visual_ForceGraph_HighlightLinks": "突出显示所有可以访问的链接"
+	"Visual_ForceGraph_HighlightLinks": "突出显示所有可以访问的链接",
+	"Visual_Description_Label": "对链接显示权重",
+	"Visual_Description_Thickness": "链接厚度表示权重"
 }

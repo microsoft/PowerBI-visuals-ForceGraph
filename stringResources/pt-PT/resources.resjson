@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Espessura",
 	"Visual_ForceGraph_DecimalPlaces": "Casas Decimais",
 	"Visual_ForceGraph_MaxNameLength": "Comprimento máximo do nome",
-	"Visual_ForceGraph_HighlightLinks": "Realçar todas as ligações acessíveis"
+	"Visual_ForceGraph_HighlightLinks": "Realçar todas as ligações acessíveis",
+	"Visual_Description_Label": "Mostra o peso nas ligações",
+	"Visual_Description_Thickness": "A espessura das ligações representa o peso"
 }

@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Grubość",
 	"Visual_ForceGraph_DecimalPlaces": "Miejsca dziesiętne",
 	"Visual_ForceGraph_MaxNameLength": "Maksymalna długość nazwy",
-	"Visual_ForceGraph_HighlightLinks": "Wyróżnij wszystkie osiągalne linki"
+	"Visual_ForceGraph_HighlightLinks": "Wyróżnij wszystkie osiągalne linki",
+	"Visual_Description_Label": "Wyświetla wagę linków",
+	"Visual_Description_Thickness": "Grubość linków reprezentuje wagę"
 }

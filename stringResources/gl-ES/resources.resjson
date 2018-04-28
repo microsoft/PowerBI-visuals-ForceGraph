@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Grosor",
 	"Visual_ForceGraph_DecimalPlaces": "Posicións decimais",
 	"Visual_ForceGraph_MaxNameLength": "Lonxitude máxima do nome",
-	"Visual_ForceGraph_HighlightLinks": "Realzar todas as ligazóns ás que se pode acceder"
+	"Visual_ForceGraph_HighlightLinks": "Realzar todas as ligazóns ás que se pode acceder",
+	"Visual_Description_Label": "Mostra o tamaño nas ligazóns",
+	"Visual_Description_Thickness": "O grosor das ligazóns representa o tamaño"
 }

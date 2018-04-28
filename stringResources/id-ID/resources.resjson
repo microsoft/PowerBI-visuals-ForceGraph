@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Ketebalan",
 	"Visual_ForceGraph_DecimalPlaces": "Tempat Desimal",
 	"Visual_ForceGraph_MaxNameLength": "Panjang nama maks",
-	"Visual_ForceGraph_HighlightLinks": "Sorot semua tautan yang dapat dijangkau"
+	"Visual_ForceGraph_HighlightLinks": "Sorot semua tautan yang dapat dijangkau",
+	"Visual_Description_Label": "Menampilkan bobot pada tautan",
+	"Visual_Description_Thickness": "Ketebalan tautan menunjukkan bobot"
 }

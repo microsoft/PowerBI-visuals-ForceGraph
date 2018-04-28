@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Loditasuna",
 	"Visual_ForceGraph_DecimalPlaces": "Hamartarrak",
 	"Visual_ForceGraph_MaxNameLength": "Izenen gehienezko luzera",
-	"Visual_ForceGraph_HighlightLinks": "Nabarmendu esteka eskuragarri guztiak"
+	"Visual_ForceGraph_HighlightLinks": "Nabarmendu esteka eskuragarri guztiak",
+	"Visual_Description_Label": "Pisua bistatzen du esteketan",
+	"Visual_Description_Thickness": "Esteken lodierak pisua adierazten du"
 }

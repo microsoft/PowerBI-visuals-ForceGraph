@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Hrúbka",
 	"Visual_ForceGraph_DecimalPlaces": "Desatinné miesta",
 	"Visual_ForceGraph_MaxNameLength": "Maximálna dĺžka názvu",
-	"Visual_ForceGraph_HighlightLinks": "Zvýrazniť všetky dostupné prepojenia"
+	"Visual_ForceGraph_HighlightLinks": "Zvýrazniť všetky dostupné prepojenia",
+	"Visual_Description_Label": "Zobrazí váhu na prepojeniach",
+	"Visual_Description_Thickness": "Hrúbka prepojení predstavuje váhu"
 }

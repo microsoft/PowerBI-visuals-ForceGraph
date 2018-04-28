@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "ความหนา",
 	"Visual_ForceGraph_DecimalPlaces": "ตำแหน่งทศนิยม",
 	"Visual_ForceGraph_MaxNameLength": "ความยาวชื่อสูงสุด",
-	"Visual_ForceGraph_HighlightLinks": "เน้นลิงก์ที่สามารถเข้าถึงได้ทั้งหมด"
+	"Visual_ForceGraph_HighlightLinks": "เน้นลิงก์ที่สามารถเข้าถึงได้ทั้งหมด",
+	"Visual_Description_Label": "แสดงน้ำหนักบนลิงก์",
+	"Visual_Description_Thickness": "ความหนาของลิงก์แสดงน้ำหนัก"
 }

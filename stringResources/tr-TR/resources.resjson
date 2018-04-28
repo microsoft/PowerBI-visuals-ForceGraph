@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Kalınlık",
 	"Visual_ForceGraph_DecimalPlaces": "Ondalık Haneler",
 	"Visual_ForceGraph_MaxNameLength": "En fazla ad uzunluğu",
-	"Visual_ForceGraph_HighlightLinks": "Tüm erişilebilir bağlantıları vurgula"
+	"Visual_ForceGraph_HighlightLinks": "Tüm erişilebilir bağlantıları vurgula",
+	"Visual_Description_Label": "Bağlantılar üzerinde ağırlığı görüntüler",
+	"Visual_Description_Thickness": "Bağlantıların kalınlığı ağırlığı temsil eder"
 }

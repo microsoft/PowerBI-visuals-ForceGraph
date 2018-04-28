@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Толщина",
 	"Visual_ForceGraph_DecimalPlaces": "Десятичные разряды",
 	"Visual_ForceGraph_MaxNameLength": "Максимальная длина имени",
-	"Visual_ForceGraph_HighlightLinks": "Выделить все доступные ссылки"
+	"Visual_ForceGraph_HighlightLinks": "Выделить все доступные ссылки",
+	"Visual_Description_Label": "Показывает вес ссылок",
+	"Visual_Description_Thickness": "Толщина связей означает вес"
 }

@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "太さ",
 	"Visual_ForceGraph_DecimalPlaces": "小数点以下桁数",
 	"Visual_ForceGraph_MaxNameLength": "名前の最大長",
-	"Visual_ForceGraph_HighlightLinks": "到達可能リンクすべてを強調表示"
+	"Visual_ForceGraph_HighlightLinks": "到達可能リンクすべてを強調表示",
+	"Visual_Description_Label": "リンクの重みを表示します",
+	"Visual_Description_Thickness": "リンクの太さは重みを表します"
 }

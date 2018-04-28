@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Biezums",
 	"Visual_ForceGraph_DecimalPlaces": "Decimāldaļas",
 	"Visual_ForceGraph_MaxNameLength": "Maksimālais nosaukuma garums",
-	"Visual_ForceGraph_HighlightLinks": "Iezīmēt visas sasniedzamās saites"
+	"Visual_ForceGraph_HighlightLinks": "Iezīmēt visas sasniedzamās saites",
+	"Visual_Description_Label": "Parāda svarīgumu, izmantojot saiti",
+	"Visual_Description_Thickness": "Saites biezums norāda svarīgumu"
 }

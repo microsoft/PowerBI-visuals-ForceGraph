@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Дебелина",
 	"Visual_ForceGraph_DecimalPlaces": "Знаци след десетичната запетая",
 	"Visual_ForceGraph_MaxNameLength": "Максимална дължина на името",
-	"Visual_ForceGraph_HighlightLinks": "Осветяване на всички достъпни връзки"
+	"Visual_ForceGraph_HighlightLinks": "Осветяване на всички достъпни връзки",
+	"Visual_Description_Label": "Показва тегло във връзките",
+	"Visual_Description_Thickness": "Дебелината на връзките представлява теглото"
 }

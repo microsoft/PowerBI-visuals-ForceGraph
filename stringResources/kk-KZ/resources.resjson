@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Қалыңдық",
 	"Visual_ForceGraph_DecimalPlaces": "Ондық таңбалар саны",
 	"Visual_ForceGraph_MaxNameLength": "Максималды ат ұзындығы",
-	"Visual_ForceGraph_HighlightLinks": "Барлық қолжетімді сілтемелерді ерекшелеу"
+	"Visual_ForceGraph_HighlightLinks": "Барлық қолжетімді сілтемелерді ерекшелеу",
+	"Visual_Description_Label": "Сілтемелерде салмақты көрсетеді",
+	"Visual_Description_Thickness": "Сілтемелердің қалыңдығы салмақты береді"
 }

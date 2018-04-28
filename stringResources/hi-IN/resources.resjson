@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "मोटाई",
 	"Visual_ForceGraph_DecimalPlaces": "दशमलव बिंदु",
 	"Visual_ForceGraph_MaxNameLength": "नाम की अधिकतम लंबाई",
-	"Visual_ForceGraph_HighlightLinks": "सभी पहुँच योग्य लिंक हाइलाइट करें"
+	"Visual_ForceGraph_HighlightLinks": "सभी पहुँच योग्य लिंक हाइलाइट करें",
+	"Visual_Description_Label": "लिंक पर मान प्रदर्शित करता है",
+	"Visual_Description_Thickness": "लिंक्स की मोटाई मान का प्रतिनिधित्व करती है"
 }

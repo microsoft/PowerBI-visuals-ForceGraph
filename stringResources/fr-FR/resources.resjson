@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Épaisseur",
 	"Visual_ForceGraph_DecimalPlaces": "Nombre de décimales",
 	"Visual_ForceGraph_MaxNameLength": "Longueur maximale du nom",
-	"Visual_ForceGraph_HighlightLinks": "Mettre en surbrillance tous les liens accessibles"
+	"Visual_ForceGraph_HighlightLinks": "Mettre en surbrillance tous les liens accessibles",
+	"Visual_Description_Label": "Affiche l'importance sur les liens",
+	"Visual_Description_Thickness": "L'épaisseur des liens représente l'importance"
 }

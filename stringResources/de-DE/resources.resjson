@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Stärke",
 	"Visual_ForceGraph_DecimalPlaces": "Dezimalstellen",
 	"Visual_ForceGraph_MaxNameLength": "Maximale Länge für Namen",
-	"Visual_ForceGraph_HighlightLinks": "Alle erreichbaren Links hervorheben"
+	"Visual_ForceGraph_HighlightLinks": "Alle erreichbaren Links hervorheben",
+	"Visual_Description_Label": "Hiermit wird die Gewichtung für Verbindungslinien angezeigt.",
+	"Visual_Description_Thickness": "Stärke der Verbindungslinien repräsentiert Gewichtung"
 }

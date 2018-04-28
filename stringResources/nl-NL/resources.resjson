@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Dikte",
 	"Visual_ForceGraph_DecimalPlaces": "Aantal decimalen",
 	"Visual_ForceGraph_MaxNameLength": "Maximumlengte van de naam",
-	"Visual_ForceGraph_HighlightLinks": "Alle bereikbare koppelingen markeren"
+	"Visual_ForceGraph_HighlightLinks": "Alle bereikbare koppelingen markeren",
+	"Visual_Description_Label": "Hiermee wordt het gewicht van koppelingen weergegeven",
+	"Visual_Description_Thickness": "De dikt van koppelingen geeft het gewicht aan"
 }

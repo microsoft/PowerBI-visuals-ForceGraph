@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Πάχος",
 	"Visual_ForceGraph_DecimalPlaces": "Δεκαδικά ψηφία",
 	"Visual_ForceGraph_MaxNameLength": "Μέγιστο μήκος ονόματος",
-	"Visual_ForceGraph_HighlightLinks": "Επισήμανση όλων των προσβάσιμων συνδέσεων"
+	"Visual_ForceGraph_HighlightLinks": "Επισήμανση όλων των προσβάσιμων συνδέσεων",
+	"Visual_Description_Label": "Εμφανίζει τη βαρύτητα στις συνδέσεις",
+	"Visual_Description_Thickness": "Το πάχος των συνδέσεων αντιπροσωπεύει τη βαρύτητα"
 }

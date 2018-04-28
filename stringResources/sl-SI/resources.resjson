@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Debelina",
 	"Visual_ForceGraph_DecimalPlaces": "Decimalna mesta",
 	"Visual_ForceGraph_MaxNameLength": "Največja možna dolžina imena",
-	"Visual_ForceGraph_HighlightLinks": "Označi vse dosegljive povezave"
+	"Visual_ForceGraph_HighlightLinks": "Označi vse dosegljive povezave",
+	"Visual_Description_Label": "Prikaži težo v povezavah",
+	"Visual_Description_Thickness": "Debelina povezave predstavlja težo"
 }

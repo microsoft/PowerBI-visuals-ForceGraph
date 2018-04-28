@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Jämedus",
 	"Visual_ForceGraph_DecimalPlaces": "Komakohad",
 	"Visual_ForceGraph_MaxNameLength": "Nime max pikkus",
-	"Visual_ForceGraph_HighlightLinks": "Tõsta kõik kättesaadavad lingid esile"
+	"Visual_ForceGraph_HighlightLinks": "Tõsta kõik kättesaadavad lingid esile",
+	"Visual_Description_Label": "Kuvab kaalu linkidel",
+	"Visual_Description_Thickness": "Linkide jämedus tähistab kaalu"
 }
