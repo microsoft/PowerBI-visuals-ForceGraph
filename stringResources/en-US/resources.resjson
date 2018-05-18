@@ -30,5 +30,7 @@
 	"Visual_ForceGraph_Thickness": "Thickness",
 	"Visual_ForceGraph_DecimalPlaces": "Decimal Places",
 	"Visual_ForceGraph_MaxNameLength": "Max name length",
-	"Visual_ForceGraph_HighlightLinks": "Highlight all reachable links"
+	"Visual_ForceGraph_HighlightLinks": "Highlight all reachable links",
+	"Visual_Description_Label": "Displays weight on links",
+	"Visual_Description_Thickness": "Thickenss of links represents weight"
 }

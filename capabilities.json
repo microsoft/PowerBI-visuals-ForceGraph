@@ -172,7 +172,8 @@
                     "type": {
                         "bool": true
                     },
-                    "displayName": "Arrow"
+                    "displayName": "Arrow",
+                    "displayNameKey": "Visual_Arrow"
                 },
                 "showLabel": {
                     "type": {
@@ -180,7 +181,8 @@
                     },
                     "displayName": "Label",
                     "displayNameKey": "Visual_Label",
-                    "description": "Displays weight on links"
+                    "description": "Displays weight on links",
+                    "descriptionKey": "Visual_Description_Label"
                 },
                 "colorLink": {
                     "type": {
@@ -211,7 +213,8 @@
                     },
                     "displayName": "Thickness",
                     "displayNameKey": "Visual_ForceGraph_Thickness",
-                    "description": "Thickenss of links represents weight"
+                    "description": "Thickenss of links represents weight",
+                    "descriptionKey": "Visual_Description_Thickness"
                 },
                 "displayUnits": {
                     "displayName": "Display Units",

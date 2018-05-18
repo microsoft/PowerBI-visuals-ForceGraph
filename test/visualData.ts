@@ -53,6 +53,7 @@ module powerbi.extensibility.visual.test {
             ["Harper", "USA"],
             ["Logan", "Brazil"],
             ["Ella", "Canada"],
+            ["USA", "USA"]
         ];
 
         public valuesWeight: number[] = getRandomNumbers(this.valuesSourceTarget.length, 10, 100);

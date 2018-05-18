@@ -1,3 +1,9 @@
+## 1.6.1
+* UPD: the nodes rendering algorithm (alpha) was changed to optimal algorithm (theta) 
+
+## 1.6.0
+* Added support for edges with same source and target
+
 ## 1.5.0
 * Added drill-down support
 
