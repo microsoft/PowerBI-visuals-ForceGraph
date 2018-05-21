@@ -470,10 +470,10 @@ module powerbi.extensibility.visual {
             this.updateNodes();
             if (this.settings.animation.show) {
                 this.forceLayout.on('tick', this.getForceTick());
-                this.forceLayout.theta(1.5).start();
+                this.forceLayout.theta(1.6).start();
                 this.setVisualData(this.container);
             } else {
-                this.forceLayout.theta(1.5).start();
+                this.forceLayout.theta(1.6).start();
                 let nodesNum: number = Object.keys(this.data.nodes).length;
 
                 for (let i = 0; i < nodesNum; ++i) {
