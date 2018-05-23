@@ -1,3 +1,6 @@
+## 1.7.0
+* Added localization for all supported languages
+
 ## 1.6.1
 * UPD: the nodes rendering algorithm (alpha) was changed to optimal algorithm (theta) 
 
