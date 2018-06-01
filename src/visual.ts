@@ -136,6 +136,7 @@ module powerbi.extensibility.visual {
         private static LinkLabelHolderSelector: ClassAndSelector = createClassAndSelector('linklabelholder');
         private static LinkLabelSelector: ClassAndSelector = createClassAndSelector('linklabel');
         private static NodeSelector: ClassAndSelector = createClassAndSelector('node');
+        private static NoAnimationLimit: number = 200;
 
         private static get Href(): string {
             return window.location.href.replace(window.location.hash, '');
@@ -204,6 +205,7 @@ module powerbi.extensibility.visual {
                 options.host.tooltipService,
                 options.element);
             this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
+
             this.forceLayout.drag()
                 .on('dragstart', ((d: ForceGraphNode) => {
                     this.forceLayout.stop();
@@ -468,13 +470,15 @@ module powerbi.extensibility.visual {
                 .linkDistance(ForceGraph.LinkDistance)
                 .charge(this.settings.size.charge / k);
             this.updateNodes();
-            if (this.settings.animation.show) {
+
+            let nodesNum: number = Object.keys(this.data.nodes).length;
+
+            if (this.settings.animation.show && nodesNum <= ForceGraph.NoAnimationLimit) {
                 this.forceLayout.on('tick', this.getForceTick());
                 this.forceLayout.theta(1.4).start();
                 this.setVisualData(this.container);
             } else {
                 this.forceLayout.theta(1.4).start();
-                let nodesNum: number = Object.keys(this.data.nodes).length;
 
                 for (let i = 0; i < nodesNum; ++i) {
                     this.forceLayout.tick();
@@ -552,6 +556,8 @@ module powerbi.extensibility.visual {
                     .remove();
             }
 
+            let nodesNum: number = Object.keys(this.data.nodes).length;
+
             // define the nodes
             this.nodes = svg.selectAll(ForceGraph.NodeSelector.selectorName)
                 .data(this.forceLayout.nodes())
@@ -559,7 +565,6 @@ module powerbi.extensibility.visual {
                 .append('g')
                 .attr('drag-resize-disabled', true)
                 .classed(ForceGraph.NodeSelector.className, true)
-                .call(this.forceLayout.drag)
                 .on('mouseover', (node: ForceGraphNode) => {
                     node.isOver = true;
                     this.fadeNode(node);
@@ -570,8 +575,12 @@ module powerbi.extensibility.visual {
                 })
                 .on('mousedown', () => (d3.event as MouseEvent).stopPropagation());
 
+                if (nodesNum <= ForceGraph.NoAnimationLimit) {
+                    this.nodes.call(this.forceLayout.drag);
+                }
+
             // render without animation
-            if (!this.settings.animation.show) {
+            if (!this.settings.animation.show || nodesNum > ForceGraph.NoAnimationLimit) {
                 const viewport: IViewport = this.viewportIn;
                 let maxWidth: number = viewport.width * ForceGraph.ResolutionFactor,
                     maxHeight: number = viewport.height * ForceGraph.ResolutionFactor,
@@ -718,7 +727,9 @@ module powerbi.extensibility.visual {
 
                 this.nodes.attr('transform', (node: ForceGraphNode) => translate(limitX(node.x), limitY(node.y)));
 
-                if (!this.settings.labels.allowIntersection && this.settings.labels.show) {
+                if (!this.settings.labels.allowIntersection
+                    && this.settings.labels.show
+                    && Object.keys(this.data.nodes).length <= ForceGraph.NoAnimationLimit) {
                     this.nodes
                         .classed('hiddenLabel', (node: ForceGraphNode) => {
                             properties.text = this.data.formatter.format(node.name);
@@ -737,6 +748,7 @@ module powerbi.extensibility.visual {
                             return node.hideLabel;
                         });
                 }
+
             };
         }
 

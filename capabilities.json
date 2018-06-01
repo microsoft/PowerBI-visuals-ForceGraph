@@ -74,7 +74,7 @@
                     },
                     "dataReductionAlgorithm": {
                         "top": {
-                            "count": 10000
+                            "count": 2000
                         }
                     }
                 },
