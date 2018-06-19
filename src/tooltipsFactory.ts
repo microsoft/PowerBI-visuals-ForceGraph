@@ -62,14 +62,13 @@ module powerbi.extensibility.visual {
                 }
 
                 value = inputObject[propertyName];
-
                 if (!(typeof value === "number")) {
                     value = valueFormatter.format(value, valueFormatter.getFormatStringByColumn(column));
                 }
 
                 tooltips.push({
                     displayName: column.displayName,
-                    value: value
+                    value: `${value}`
                 });
             }
 
