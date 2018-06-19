@@ -1,3 +1,6 @@
+## 1.8.1
+* Fix displaying of numbers in tooltip
+
 ## 1.8.0
 * Added restriction for animation and dragging because of performance issue (limit is 200 nodes)
 
