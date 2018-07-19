@@ -62,7 +62,6 @@
  */
 
 module powerbi.extensibility.visual {
-
     // powerbi.extensibility.utils.type
     import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
 
@@ -83,6 +82,8 @@ module powerbi.extensibility.visual {
     import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
     import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
 
+    // powerbi.extensibility.utils.color
+    import ColorHelper = powerbi.extensibility.utils.color.ColorHelper;
 
     export class ForceGraph implements IVisual {
         private static Count: number = 0;
@@ -100,7 +101,6 @@ module powerbi.extensibility.visual {
             height: 24
         };
 
-        private static MinAmountOfDataViews: number = 1;
         private static ImagePosition: number = -12;
         private static MinNodeWeight: number = 5;
         private static MinCharge: number = -100;
@@ -124,7 +124,7 @@ module powerbi.extensibility.visual {
         private static DefaultSourceType: string = '';
         private static DefaultTargetType: string = '';
         private static StartOffset: string = '25%';
-        private static DefaultYPosition: number = -12;
+        private static DefaultYPosition: number = -7;
         private static DefaultLinkFillColor: string = '#000';
         private static LinkTextAnchor: string = 'middle';
         private static DefaultLabelX: number = 12;
@@ -159,6 +159,8 @@ module powerbi.extensibility.visual {
         private forceLayout: d3.layout.Force<ForceGraphLink, ForceGraphNode>;
 
         private colorPalette: IColorPalette;
+        private colorHelper: ColorHelper;
+
         private uniqieId: string = `_${ForceGraph.Count++}_`;
 
         private marginValue: IMargin;
@@ -201,9 +203,14 @@ module powerbi.extensibility.visual {
         private init(options: VisualConstructorOptions): void {
             const root: d3.Selection<any> = d3.select(options.element);
             this.colorPalette = options.host.colorPalette;
+
+            this.colorHelper = new ColorHelper(this.colorPalette);
+
             this.tooltipServiceWrapper = createTooltipServiceWrapper(
                 options.host.tooltipService,
-                options.element);
+                options.element
+            );
+
             this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
 
             this.forceLayout.drag()
@@ -261,10 +268,18 @@ module powerbi.extensibility.visual {
             return scale(value);
         }
 
-        private getLinkColor(link: ForceGraphLink): string {
+        private getLinkColor(
+            link: ForceGraphLink,
+            colorPalette: IColorPalette,
+            colorHelper: ColorHelper,
+        ): string {
+            if (colorHelper.isHighContrast) {
+                return colorHelper.getThemeColor("foreground");
+            }
+
             switch (this.settings.links.colorLink) {
                 case LinkColorType.ByWeight: {
-                    return this.colorPalette
+                    return colorPalette
                         .getColor(this.scale1to10(link.weight).toString())
                         .value;
                 }
@@ -284,17 +299,25 @@ module powerbi.extensibility.visual {
             return ForceGraphSettings.enumerateObjectInstances(this.settings, options);
         }
 
-        public static converter(dataView: DataView, colors: IColorPalette): ForceGraphData {
-            let settings: ForceGraphSettings = ForceGraph.parseSettings(dataView),
-                nodes: ForceGraphNodes = {},
-                minFiles: number = Number.MAX_VALUE,
-                maxFiles: number = 0,
-                linkedByName: LinkedByName = {},
-                links: ForceGraphLink[] = [],
-                linkDataPoints = {},
-                linkTypeCount: number = 0,
-                tooltipInfo: VisualTooltipDataItem[] = [],
-                metadata: ForceGraphColumns<DataViewMetadataColumn> = ForceGraphColumns.getMetadataColumns(dataView);
+        public static converter(
+            dataView: DataView,
+            colorPalette: IColorPalette,
+            colorHelper: ColorHelper,
+        ): ForceGraphData {
+            const settings: ForceGraphSettings = ForceGraph.parseSettings(dataView, colorHelper);
+
+            const metadata: ForceGraphColumns<DataViewMetadataColumn> = ForceGraphColumns.getMetadataColumns(dataView);
+
+            const nodes: ForceGraphNodes = {};
+
+            let minFiles: number = Number.MAX_VALUE;
+            let maxFiles: number = 0;
+
+            const linkedByName: LinkedByName = {};
+            const links: ForceGraphLink[] = [];
+            const linkDataPoints = {};
+
+            let linkTypeCount: number = 0;
 
             if (!metadata || !metadata.Source || !metadata.Target) {
                 return null;
@@ -352,7 +375,10 @@ module powerbi.extensibility.visual {
                 source.adj[target.name] = ForceGraph.DefaultValueOfExistingLink;
                 target.adj[source.name] = ForceGraph.DefaultValueOfExistingLink;
 
-                tooltipInfo = ForceGraphTooltipsFactory.build(tableRow, dataView.metadata.columns);
+                const tooltipInfo: VisualTooltipDataItem[] = ForceGraphTooltipsFactory.build(
+                    tableRow,
+                    dataView.metadata.columns
+                );
 
                 let link: ForceGraphLink = {
                     source: source,
@@ -367,9 +393,14 @@ module powerbi.extensibility.visual {
                 };
 
                 if (metadata.LinkType && !linkDataPoints[tableRow.LinkType]) {
+                    const color: string = colorHelper.getHighContrastColor(
+                        "foreground",
+                        colorPalette.getColor((linkTypeCount++).toString()).value
+                    );
+
                     linkDataPoints[tableRow.LinkType] = {
+                        color,
                         label: tableRow.LinkType,
-                        color: colors.getColor((linkTypeCount++).toString()).value,
                     };
                 }
 
@@ -396,17 +427,33 @@ module powerbi.extensibility.visual {
             };
         }
 
-        private static parseSettings(dataView: DataView): ForceGraphSettings {
+        private static parseSettings(dataView: DataView, colorHelper: ColorHelper): ForceGraphSettings {
             let settings: ForceGraphSettings = ForceGraphSettings.parse<ForceGraphSettings>(dataView);
 
             settings.size.charge = Math.min(
                 Math.max(settings.size.charge, ForceGraph.MinCharge),
-                ForceGraph.MaxCharge);
+                ForceGraph.MaxCharge
+            );
 
-            settings.links.decimalPlaces = settings.links.decimalPlaces
-                && Math.min(
-                    Math.max(settings.links.decimalPlaces, ForceGraph.MinDecimalPlaces),
-                    ForceGraph.MaxDecimalPlaces);
+            settings.links.decimalPlaces = settings.links.decimalPlaces && Math.min(
+                Math.max(settings.links.decimalPlaces, ForceGraph.MinDecimalPlaces),
+                ForceGraph.MaxDecimalPlaces
+            );
+
+            settings.labels.color = colorHelper.getHighContrastColor(
+                "foreground",
+                settings.labels.color
+            );
+
+            settings.nodes.fill = colorHelper.getHighContrastColor(
+                "foreground",
+                settings.nodes.fill
+            );
+
+            settings.nodes.stroke = colorHelper.getHighContrastColor(
+                "background",
+                settings.nodes.stroke
+            );
 
             return settings;
         }
@@ -445,11 +492,18 @@ module powerbi.extensibility.visual {
         }
 
         public update(options: VisualUpdateOptions): void {
-            if (!options.dataViews || options.dataViews.length < ForceGraph.MinAmountOfDataViews) {
+            if (!options
+                || !options.dataViews
+                || !options.dataViews[0]
+            ) {
                 return;
             }
 
-            this.data = ForceGraph.converter(options.dataViews[0], this.colorPalette);
+            this.data = ForceGraph.converter(
+                options.dataViews[0],
+                this.colorPalette,
+                this.colorHelper
+            );
 
             if (!this.data) {
                 this.reset();
@@ -469,6 +523,7 @@ module powerbi.extensibility.visual {
                 .size([this.viewport.width, this.viewport.height])
                 .linkDistance(ForceGraph.LinkDistance)
                 .charge(this.settings.size.charge / k);
+
             this.updateNodes();
 
             let nodesNum: number = Object.keys(this.data.nodes).length;
@@ -476,7 +531,7 @@ module powerbi.extensibility.visual {
             if (this.settings.animation.show && nodesNum <= ForceGraph.NoAnimationLimit) {
                 this.forceLayout.on('tick', this.getForceTick());
                 this.forceLayout.theta(1.4).start();
-                this.setVisualData(this.container);
+                this.setVisualData(this.container, this.colorPalette, this.colorHelper);
             } else {
                 this.forceLayout.theta(1.4).start();
 
@@ -485,12 +540,16 @@ module powerbi.extensibility.visual {
                 }
 
                 this.forceLayout.stop();
-                this.setVisualData(this.container);
+                this.setVisualData(this.container, this.colorPalette, this.colorHelper);
                 this.forceLayout.on('tick', this.getForceTick());
             }
         }
 
-        private setVisualData(svg: d3.Selection<any>): void {
+        private setVisualData(
+            svg: d3.Selection<any>,
+            colorPalette: IColorPalette,
+            colorHelper: ColorHelper,
+        ): void {
             this.paths = svg.selectAll(ForceGraph.LinkSelector.selectorName)
                 .data(this.forceLayout.links())
                 .enter()
@@ -503,22 +562,27 @@ module powerbi.extensibility.visual {
                 })
                 .classed(ForceGraph.LinkSelector.className, true)
                 .style('stroke', (link: ForceGraphLink) => {
-                    return this.getLinkColor(link);
+                    return this.getLinkColor(link, colorPalette, colorHelper);
                 })
                 .style('fill', (link: ForceGraphLink) => {
                     if (this.settings.links.showArrow && link.source !== link.target) {
-                        return this.getLinkColor(link);
+                        return this.getLinkColor(link, colorPalette, colorHelper);
                     }
                 })
                 .on('mouseover', () => {
+
                     return this.fadePath(
                         ForceGraph.HoverOpacity,
-                        ForceGraph.DefaultLinkHighlightColor);
+                        colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkHighlightColor),
+                        colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor)
+                    );
                 })
                 .on('mouseout', () => {
                     return this.fadePath(
                         ForceGraph.DefaultOpacity,
-                        ForceGraph.DefaultLinkColor);
+                        colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor),
+                        colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor)
+                    );
                 });
 
             this.tooltipServiceWrapper.addTooltip(this.paths, (eventArgs: TooltipEventArgs<ForceGraphLink>) => {
@@ -535,9 +599,9 @@ module powerbi.extensibility.visual {
                     .classed(ForceGraph.LinkLabelHolderSelector.className, true)
                     .append('text')
                     .classed(ForceGraph.LinkLabelSelector.className, true)
-                    .attr('y', ForceGraph.DefaultYPosition)
+                    .attr('dy', ForceGraph.DefaultYPosition)
                     .attr('text-anchor', ForceGraph.LinkTextAnchor)
-                    .style('fill', ForceGraph.DefaultLinkFillColor)
+                    .style('fill', colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkFillColor))
                     .append('textPath')
                     .attr({
                         'xlink:href': (link: ForceGraphLink, index: number) => {
@@ -575,17 +639,19 @@ module powerbi.extensibility.visual {
                 })
                 .on('mousedown', () => (d3.event as MouseEvent).stopPropagation());
 
-                if (nodesNum <= ForceGraph.NoAnimationLimit) {
-                    this.nodes.call(this.forceLayout.drag);
-                }
+            if (nodesNum <= ForceGraph.NoAnimationLimit) {
+                this.nodes.call(this.forceLayout.drag);
+            }
 
             // render without animation
             if (!this.settings.animation.show || nodesNum > ForceGraph.NoAnimationLimit) {
                 const viewport: IViewport = this.viewportIn;
+
                 let maxWidth: number = viewport.width * ForceGraph.ResolutionFactor,
                     maxHeight: number = viewport.height * ForceGraph.ResolutionFactor,
                     limitX = x => Math.max((viewport.width - maxWidth) / 2, Math.min((viewport.width + maxWidth) / 2, x)),
                     limitY = y => Math.max((viewport.height - maxHeight) / 2, Math.min((viewport.height + maxHeight) / 2, y));
+
                 this.paths.attr("d", (link: ForceGraphLink) => {
                     link.source.x = limitX(link.source.x);
                     link.source.y = limitY(link.source.y);
@@ -596,6 +662,7 @@ module powerbi.extensibility.visual {
                         ? this.getPathWithArrow(link)
                         : this.getPathWithoutArrow(link);
                 });
+
                 this.nodes.attr('transform', (node: ForceGraphNode) => translate(limitX(node.x), limitY(node.y)));
             }
 
@@ -624,6 +691,10 @@ module powerbi.extensibility.visual {
                         return isNaN(node.weight) || node.weight < ForceGraph.MinNodeWeight
                             ? ForceGraph.MinNodeWeight
                             : node.weight;
+                    })
+                    .style({
+                        fill: this.settings.nodes.fill,
+                        stroke: this.settings.nodes.stroke,
                     });
             }
 
@@ -801,12 +872,16 @@ module powerbi.extensibility.visual {
                 + 'A' + dr + ',' + dr + ' 0 0,1 ' + link.target.x + ',' + link.target.y;
         }
 
-        private fadePath(opacity: number, highlightColor: string): (link: ForceGraphLink) => void {
+        private fadePath(
+            opacity: number,
+            highlightColor: string,
+            defaultHighlightColor: string
+        ): (link: ForceGraphLink) => void {
             if (this.settings.links.colorLink !== LinkColorType.Interactive) {
                 return;
             }
 
-            return (link: ForceGraphLink) => {
+            return () => {
                 this.paths.style({
                     'stroke-opacity': (link: ForceGraphLink) => {
                         return link.source === link.source && link.target === link.target
@@ -816,7 +891,7 @@ module powerbi.extensibility.visual {
                     'stroke': (link: ForceGraphLink) => {
                         return link.source === link.source && link.target === link.target
                             ? highlightColor
-                            : ForceGraph.DefaultLinkColor;
+                            : defaultHighlightColor;
                     }
                 });
             };
@@ -888,12 +963,25 @@ module powerbi.extensibility.visual {
             });
 
             this.paths.style('stroke-opacity', (link: ForceGraphLink) =>
-                (this.settings.nodes.highlightReachableLinks ? this.isReachable(node, link.source) :
-                    (link.source === node || link.target === node)) ? ForceGraph.DefaultOpacity : opacity);
+                (this.settings.nodes.highlightReachableLinks
+                    ? this.isReachable(node, link.source)
+                    : (link.source === node || link.target === node))
+                    ? ForceGraph.DefaultOpacity
+                    : opacity
+            );
 
-            this.paths.style('stroke', (link: ForceGraphLink) =>
-                (this.settings.nodes.highlightReachableLinks ? this.isReachable(node, link.source) :
-                    (link.source === node || link.target === node)) ? highlight : ForceGraph.DefaultLinkColor);
+            this.paths.style('stroke', (link: ForceGraphLink) => {
+                const color = (this.settings.nodes.highlightReachableLinks
+                    ? this.isReachable(node, link.source)
+                    : (link.source === node || link.target === node))
+                    ? highlight
+                    : ForceGraph.DefaultLinkColor;
+
+                return this.colorHelper.getHighContrastColor(
+                    "foreground",
+                    color
+                );
+            });
         }
 
         private areNodesConnected(firstNode: ForceGraphNode, secondNode: ForceGraphNode): number | boolean {

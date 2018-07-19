@@ -38,6 +38,7 @@
     "powerbi-visuals-utils-svgutils": "^1.1.0",
     "powerbi-visuals-utils-tooltiputils": "^1.0.1",
     "powerbi-visuals-utils-typeutils": "^1.1.0",
+    "powerbi-visuals-utils-colorutils": "^1.1.0",
     "powerbi-models": "1.0.3"
   },
   "devDependencies": {

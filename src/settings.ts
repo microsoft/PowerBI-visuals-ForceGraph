@@ -69,6 +69,8 @@ module powerbi.extensibility.visual {
         public imageExt: string = '.png';
         public nameMaxLength: number = 10;
         public highlightReachableLinks: boolean = false;
+        public fill: string = "#cccccc";
+        public stroke: string = "#ffffff";
     }
 
     export class SizeSettings {
