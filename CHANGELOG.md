@@ -1,3 +1,7 @@
+## 1.9.0
+* High contrast mode
+* API 1.13.0
+
 ## 1.8.1
 * Fix displaying of numbers in tooltip
 
