@@ -42,7 +42,7 @@ module powerbi.extensibility.visual {
 
     export class LabelsSettings {
         public show: boolean = true;
-        public color: string = '#777777';
+        public color: string = "#777777";
         public fontSize: number = 9;
         public allowIntersection: boolean = false;
     }
@@ -57,18 +57,20 @@ module powerbi.extensibility.visual {
     }
 
     export enum LinkColorType {
-        ByWeight = <any>'By Weight',
-        ByLinkType = <any>'By Link Type',
-        Interactive = <any>'Interactive'
+        ByWeight = <any>"By Weight",
+        ByLinkType = <any>"By Link Type",
+        Interactive = <any>"Interactive"
     }
 
     export class NodesSettings {
         public displayImage: boolean = false;
-        public defaultImage: string = 'Home';
-        public imageUrl: string = '';
-        public imageExt: string = '.png';
+        public defaultImage: string = "Home";
+        public imageUrl: string = "";
+        public imageExt: string = ".png";
         public nameMaxLength: number = 10;
         public highlightReachableLinks: boolean = false;
+        public fill: string = "#cccccc";
+        public stroke: string = "#ffffff";
     }
 
     export class SizeSettings {

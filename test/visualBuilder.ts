@@ -33,7 +33,7 @@ module powerbi.extensibility.visual.test {
     // ForceGraph1449359463895
     import VisualClass = powerbi.extensibility.visual.ForceGraph1449359463895.ForceGraph;
 
-    export class ForceGraphBuilder extends VisualBuilderBase<VisualClass> {
+    export class VisualBuilder extends VisualBuilderBase<VisualClass> {
         constructor(width: number, height: number) {
             super(width, height);
         }
@@ -52,6 +52,10 @@ module powerbi.extensibility.visual.test {
 
         public get nodes() {
             return this.mainElement.children("g.node");
+        }
+
+        public get circles() {
+            return this.nodes.children("circle");
         }
 
         public get nodeTexts() {

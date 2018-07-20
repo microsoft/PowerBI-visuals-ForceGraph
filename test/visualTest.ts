@@ -28,8 +28,9 @@
 
 module powerbi.extensibility.visual.test {
     // powerbi.extensibility.visual.test
-    import ForceGraphData = powerbi.extensibility.visual.test.ForceGraphData;
-    import ForceGraphBuilder = powerbi.extensibility.visual.test.ForceGraphBuilder;
+    import ForceGraphData = powerbi.extensibility.visual.test.VisualData;
+    import ForceGraphBuilder = powerbi.extensibility.visual.test.VisualBuilder;
+    import areColorsEqual = powerbi.extensibility.visual.test.helpers.areColorsEqual;
     import getSolidColorStructuralObject = powerbi.extensibility.visual.test.helpers.getSolidColorStructuralObject;
 
     // powerbi.extensibility.utils.test
@@ -246,24 +247,6 @@ module powerbi.extensibility.visual.test {
                             expect(element.css("font-size")).toBe(expectedFontSize);
                         });
                 });
-
-                /* -- This test is unstable for now probably because of using theta() instead of alpha() tick calculation algorythm
-                it("animation is turned off", (done) => {
-                    (dataView.metadata.objects as any).animation = { show: false };
-                    visualBuilder.updateRenderTimeout(dataView, () => {
-                        let originalTransform: JQuery = visualBuilder.mainElement
-                            .children("g.node")
-                            .map((item, element) => element.getAttribute("transform"));
-                        setTimeout(() => {
-                            let afterFullRender: JQuery = visualBuilder.mainElement
-                                .children("g.node")
-                                .map((item, element) => element.getAttribute("transform"));
-                            expect(_.isEqual(afterFullRender, originalTransform)).toBe(true);
-                            done();
-                        }, 1000);
-                    });
-                });
-                */
             });
 
             describe("Links", () => {
@@ -368,6 +351,72 @@ module powerbi.extensibility.visual.test {
 
                     objectsChecker(jsonData);
                 });
+            });
+        });
+
+        describe("Accessibility", () => {
+            describe("High contrast mode", () => {
+                const backgroundColor: string = "#000000";
+                const foregroundColor: string = "#ffff00";
+
+                beforeEach(() => {
+                    visualBuilder.visualHost.colorPalette.isHighContrast = true;
+
+                    visualBuilder.visualHost.colorPalette.background = { value: backgroundColor };
+                    visualBuilder.visualHost.colorPalette.foreground = { value: foregroundColor };
+                });
+
+                it("should use `foreground` color as a fill for all of nodes", (done) => {
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        const circles: JQuery[] = visualBuilder.circles.toArray().map($);
+
+                        expect(isColorAppliedToElements(circles, foregroundColor, "fill"));
+
+                        done();
+                    });
+                });
+
+                it("should use `background` color as a stroke for all of nodes", (done) => {
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        const circles: JQuery[] = visualBuilder.circles.toArray().map($);
+
+                        expect(isColorAppliedToElements(circles, backgroundColor, "stroke"));
+
+                        done();
+                    });
+                });
+
+                it("should use `foreground` color as a fill for all of labels", (done) => {
+                    dataView.metadata.objects = {
+                        links: {
+                            showLabel: true
+                        }
+                    };
+
+                    visualBuilder.updateRenderTimeout(dataView, () => {
+                        const labels: JQuery[] = visualBuilder.nodeTexts.toArray().map($);
+
+                        expect(isColorAppliedToElements(labels, foregroundColor, "fill"));
+
+                        done();
+                    });
+                });
+
+                function isColorAppliedToElements(
+                    elements: JQuery[],
+                    color?: string,
+                    colorStyleName: string = "fill"
+                ): boolean {
+                    return elements.some((element: JQuery) => {
+                        const currentColor: string = element.css(colorStyleName);
+
+                        if (!currentColor || !color) {
+                            return currentColor === color;
+                        }
+
+                        return areColorsEqual(currentColor, color);
+                    });
+                }
             });
         });
     });

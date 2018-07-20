@@ -34,7 +34,7 @@ module powerbi.extensibility.visual.test {
     // powerbi.extensibility.utils.type
     import ValueType = powerbi.extensibility.utils.type.ValueType;
 
-    export class ForceGraphData extends TestDataViewBuilder {
+    export class VisualData extends TestDataViewBuilder {
         public static ColumnSource: string = "Source";
         public static ColumnTarget: string = "Target";
         public static ColumnLinkType: string = "LinkType";
@@ -60,15 +60,15 @@ module powerbi.extensibility.visual.test {
 
         public getDataView(columnNames?: string[]): powerbi.DataView {
             columnNames = columnNames || [
-                ForceGraphData.ColumnSource,
-                ForceGraphData.ColumnTarget,
-                ForceGraphData.ColumnWeight
+                VisualData.ColumnSource,
+                VisualData.ColumnTarget,
+                VisualData.ColumnWeight
             ];
 
             return this.createCategoricalDataViewBuilder([
                 {
                     source: {
-                        displayName: ForceGraphData.ColumnSource,
+                        displayName: VisualData.ColumnSource,
                         roles: { Source: true },
                         type: ValueType.fromDescriptor({ text: true })
                     },
@@ -76,7 +76,7 @@ module powerbi.extensibility.visual.test {
                 },
                 {
                     source: {
-                        displayName: ForceGraphData.ColumnTarget,
+                        displayName: VisualData.ColumnTarget,
                         roles: { Target: true },
                         type: ValueType.fromDescriptor({ text: true }),
                     },
@@ -84,7 +84,7 @@ module powerbi.extensibility.visual.test {
                 },
                 {
                     source: {
-                        displayName: ForceGraphData.ColumnLinkType,
+                        displayName: VisualData.ColumnLinkType,
                         roles: { LinkType: true },
                         type: ValueType.fromDescriptor({ text: true }),
                     },
@@ -92,7 +92,7 @@ module powerbi.extensibility.visual.test {
                 },
                 {
                     source: {
-                        displayName: ForceGraphData.ColumnSourceType,
+                        displayName: VisualData.ColumnSourceType,
                         roles: { SourceType: true },
                         type: ValueType.fromDescriptor({ text: true }),
                     },
@@ -100,7 +100,7 @@ module powerbi.extensibility.visual.test {
                 },
                 {
                     source: {
-                        displayName: ForceGraphData.ColumnTargetType,
+                        displayName: VisualData.ColumnTargetType,
                         roles: { TargetType: true },
                         type: ValueType.fromDescriptor({ text: true }),
                     },
@@ -109,14 +109,15 @@ module powerbi.extensibility.visual.test {
             ], [
                     {
                         source: {
-                            displayName: ForceGraphData.ColumnWeight,
+                            displayName: VisualData.ColumnWeight,
                             roles: { Weight: true },
                             isMeasure: true,
                             type: ValueType.fromDescriptor({ numeric: true }),
                         },
                         values: this.valuesWeight
                     }
-                ], columnNames).build();
+                ], columnNames
+            ).build();
         }
     }
 }
