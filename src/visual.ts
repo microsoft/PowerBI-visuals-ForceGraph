@@ -688,7 +688,8 @@ module powerbi.extensibility.visual {
                             }
 
                             return ForceGraph.DefaultImage;
-                        }
+                        },
+                        title: (node: ForceGraphNode) => node.name,
                     });
             } else {
                 this.nodes

@@ -54,6 +54,10 @@ module powerbi.extensibility.visual.test {
             return this.mainElement.children("g.node");
         }
 
+        public get images() {
+            return this.nodes.children("image");
+        }
+
         public get circles() {
             return this.nodes.children("circle");
         }
