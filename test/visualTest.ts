@@ -355,6 +355,23 @@ module powerbi.extensibility.visual.test {
         });
 
         describe("Accessibility", () => {
+            it("title should be filled for all of images", () => {
+                dataView.metadata.objects = {
+                    nodes: {
+                        displayImage: true,
+                    },
+                };
+
+                visualBuilder.updateFlushAllD3Transitions(dataView);
+
+                visualBuilder.images
+                    .toArray()
+                    .map($)
+                    .forEach((image: JQuery) => {
+                        expect(image.attr("title")).toBeDefined();
+                    });
+            });
+
             describe("High contrast mode", () => {
                 const backgroundColor: string = "#000000";
                 const foregroundColor: string = "#ffff00";
