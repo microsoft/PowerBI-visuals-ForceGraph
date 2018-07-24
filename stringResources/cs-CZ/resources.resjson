@@ -32,5 +32,7 @@
 	"Visual_ForceGraph_MaxNameLength": "Maximální délka názvu",
 	"Visual_ForceGraph_HighlightLinks": "Zvýraznit všechny dostupné odkazy",
 	"Visual_Description_Label": "Ukazuje váhu na propojeních",
-	"Visual_Description_Thickness": "Tloušťka propojení představuje váhu"
+	"Visual_Description_Thickness": "Tloušťka propojení představuje váhu",
+	"ForceGraph_Short_Description": "Diagram vynuceného rozvržení se zakřivenou cestou. Užitečné k zobrazení propojení mezi entitami",
+	"ForceGraph_Long_Description": "Možnost vizualizovat vztah mezi položkami, váhy relace a tok často přináší na světlo mnoho poznatků, které jinak nejsou příliš viditelné. Prostá čísla a základní grafy k objevení a sdělení těchto datových příběhů nestačí. Potřebujeme nové techniky vizualizace, které obstojí v komplexním světě relací. Graf s vynucenou silou u těchto scénářů funguje na jedničku.\nTento vlastní vizuál implementuje diagram s vynuceným rozložením D3 a se zakřivenými cestami. Tloušťka cesty představuje váhu relace mezi uzly.\nVzhledem k tomu, že vztahy a propojení mezi velkými sadami entit můžou být velmi složité, vizuál umísťuje uzly způsobem, kde je co nejméně křížení. Díky tomu je zkoumání snadné a zábavné. Vizuál také vytváří rozložení, které je u velkých datových sad vizuálně velmi přitažlivé. Uživatele také můžou rozložení ručně upravit přetahováním uzlů.\nV ideálním případě budete u tohoto vizuálu potřebovat dvě dimenze a jedno měřítko (pro váhu). Funguje však i s pouze jedním sloupcem.\nTento vizuál je typu open source. Kód můžete získat z Githubu: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }
