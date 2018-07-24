@@ -32,5 +32,7 @@
 	"Visual_ForceGraph_MaxNameLength": "Maksimālais nosaukuma garums",
 	"Visual_ForceGraph_HighlightLinks": "Iezīmēt visas sasniedzamās saites",
 	"Visual_Description_Label": "Parāda svarīgumu, izmantojot saiti",
-	"Visual_Description_Thickness": "Saites biezums norāda svarīgumu"
+	"Visual_Description_Thickness": "Saites biezums norāda svarīgumu",
+	"ForceGraph_Short_Description": "Uzspiesta izkārtojuma diagramma ar līkni. Ļauj parādīt saistības starp entītijām.",
+	"ForceGraph_Long_Description": "Iespēja vizualizēt relāciju starp vienumiem, relācijas un plūsmas svaru bieži izceļ ieskatus, ko citādi varētu nepamanīt. Ar vienkāršiem skaitļiem un pamata diagrammām nepietiek, lai atklātu un izstāstītu šādus datu stāstus. Mums ir nepieciešamas jaunas vizualizācijas metodes sarežģītajai relāciju pasaulei, un Force-Directed Graph virza vajadzīgos risinājumus.\nŠajos pielāgotajos vizuālajos datos ir ieviesta D3 tīkla izkārtojuma diagramma ar līknēm. Līknes biezums norāda relācijas svaru starp mezgliem.\nTā kā relācija un savstarpējā saistība starp lielām entītiju kopām var būt ļoti sarežģīta, vizuālie dati novieto mezglus tā, lai būtu pēc iespējas mazāk krustpunktu un izpēte būtu vienkārša un aizraujoša. Vizuālie dati arī izveido izkārtojumu tā, lai tas būtu pievilcīgs lielu datu kopu gadījumā. Lietotāji var arī manuāli pielāgot izkārtojumu, velkot mezglus uz vajadzīgo vietu.\nIdeālā situācijā šādiem vizuālajiem datiem būtu jāizmanto divas dimensijas un viens mērs (svaram). Taču šo diagrammu var izmantot arī tad, ja ir tikai viena kolonna.\nŠie ir atvērtā pirmkoda vizuālie dati. Iegūstiet kodu no GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }
