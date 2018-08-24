@@ -69,9 +69,33 @@
             ],
             "categorical": {
                 "categories": {
-                    "for": {
-                        "in": "Source"
-                    },
+                    "select": [
+                        {
+                            "for": {
+                                "in": "Source"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "Target"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "LinkType"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "SourceType"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "TargeType"
+                            }
+                        }
+                    ],
                     "dataReductionAlgorithm": {
                         "top": {
                             "count": 2000
@@ -82,27 +106,7 @@
                     "select": [
                         {
                             "bind": {
-                                "to": "Target"
-                            }
-                        },
-                        {
-                            "bind": {
                                 "to": "Weight"
-                            }
-                        },
-                        {
-                            "bind": {
-                                "to": "LinkType"
-                            }
-                        },
-                        {
-                            "bind": {
-                                "to": "SourceType"
-                            }
-                        },
-                        {
-                            "bind": {
-                                "to": "TargetType"
                             }
                         }
                     ]
