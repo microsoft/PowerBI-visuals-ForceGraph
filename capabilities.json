@@ -92,7 +92,7 @@
                         },
                         {
                             "for": {
-                                "in": "TargeType"
+                                "in": "TargetType"
                             }
                         }
                     ],

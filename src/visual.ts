@@ -307,9 +307,7 @@ module powerbi.extensibility.visual {
             colorHelper: ColorHelper,
         ): ForceGraphData {
             const settings: ForceGraphSettings = ForceGraph.parseSettings(dataView, colorHelper);
-
             const metadata: ForceGraphColumns<DataViewMetadataColumn> = ForceGraphColumns.getMetadataColumns(dataView);
-
             const nodes: ForceGraphNodes = {};
 
             let minFiles: number = Number.MAX_VALUE;
@@ -325,14 +323,33 @@ module powerbi.extensibility.visual {
                 return null;
             }
 
-            let tableRows: ForceGraphColumns<any>[] = ForceGraphColumns.getTableRows(dataView),
-                weightFormatter: IValueFormatter = null;
+            let categorical: ForceGraphColumns<DataViewCategoryColumn & DataViewValueColumn[]>
+                = ForceGraphColumns.getCategoricalColumns(dataView);
+
+            if (!categorical
+                || !categorical.Source
+                || !categorical.Target
+                || _.isEmpty(categorical.Source.source)
+                || _.isEmpty(categorical.Source.values)
+                || _.isEmpty(categorical.Target.source)
+                || _.isEmpty(categorical.Target.values)
+            ) {
+                return null;
+            }
+            let sourceCategories: any[] = categorical.Source.values,
+                targetCategories: any[] = categorical.Target.values,
+                sourceTypeCategories: any[] = (categorical.SourceType || { values: [] }).values,
+                targetTypeCategories: any[] = (categorical.TargetType || { values: [] }).values,
+                linkTypeCategories: any[] = (categorical.LinkType || { values: [] }).values,
+                weightValues: any[] = (categorical.Weight && categorical.Weight[0] || { values: [] }).values;
+
+            let weightFormatter: IValueFormatter = null;
 
             if (metadata.Weight) {
                 let weightValue: number = settings.links.displayUnits;
 
-                if (!weightValue && tableRows.length) {
-                    weightValue = Math.max(...tableRows.map(x => x.Weight));
+                if (!weightValue && categorical.Weight && categorical.Weight.length) {
+                    weightValue = categorical.Weight[0].maxLocal as number;
                 }
 
                 weightFormatter = valueFormatter.create({
@@ -350,35 +367,42 @@ module powerbi.extensibility.visual {
                 format: valueFormatter.getFormatStringByColumn(metadata.Target, true),
             });
 
-            tableRows.forEach((tableRow: ForceGraphColumns<any>) => {
-                linkedByName[`${tableRow.Source},${tableRow.Target}`] = ForceGraph.DefaultValueOfExistingLink;
+            for (let i = 0; i < categorical.Target.values.length; i++) {
+                linkedByName[`${sourceCategories[i]},${targetCategories[i]}`] = ForceGraph.DefaultValueOfExistingLink;
 
-                if (!nodes[tableRow.Source]) {
-                    nodes[tableRow.Source] = {
-                        name: sourceFormatter.format(tableRow.Source),
+                if (!nodes[sourceCategories[i]]) {
+                    nodes[sourceCategories[i]] = {
+                        name: sourceFormatter.format(sourceCategories[i]),
                         hideLabel: false,
-                        image: tableRow.SourceType || ForceGraph.DefaultSourceType,
+                        image: sourceTypeCategories[i] || ForceGraph.DefaultSourceType,
                         adj: {}
                     };
                 }
 
-                if (!nodes[tableRow.Target]) {
-                    nodes[tableRow.Target] = {
-                        name: targetFormatter.format(tableRow.Target),
+                if (!nodes[targetCategories[i]]) {
+                    nodes[targetCategories[i]] = {
+                        name: targetFormatter.format(targetCategories[i]),
                         hideLabel: false,
-                        image: tableRow.TargetType || ForceGraph.DefaultTargetType,
+                        image: targetTypeCategories[i] || ForceGraph.DefaultTargetType,
                         adj: {}
                     };
                 }
 
-                let source: ForceGraphNode = nodes[tableRow.Source],
-                    target: ForceGraphNode = nodes[tableRow.Target];
+                let source: ForceGraphNode = nodes[sourceCategories[i]],
+                    target: ForceGraphNode = nodes[targetCategories[i]];
 
                 source.adj[target.name] = ForceGraph.DefaultValueOfExistingLink;
                 target.adj[source.name] = ForceGraph.DefaultValueOfExistingLink;
 
                 const tooltipInfo: VisualTooltipDataItem[] = ForceGraphTooltipsFactory.build(
-                    tableRow,
+                    {
+                        Source: sourceCategories[i],
+                        Target: targetCategories[i],
+                        Weight: weightValues[i],
+                        LinkType: linkTypeCategories[i],
+                        SourceType: sourceTypeCategories[i],
+                        TargetType: targetTypeCategories[i]
+                    },
                     dataView.metadata.columns
                 );
 
@@ -386,23 +410,23 @@ module powerbi.extensibility.visual {
                     source: source,
                     target: target,
                     weight: Math.max(metadata.Weight
-                        ? (tableRow.Weight || ForceGraph.MinWeight)
+                        ? (weightValues[i] || ForceGraph.MinWeight)
                         : ForceGraph.MaxWeight,
                         ForceGraph.MinWeight),
-                    formattedWeight: tableRow.Weight && weightFormatter.format(tableRow.Weight),
-                    linkType: tableRow.LinkType || ForceGraph.DefaultLinkType,
+                    formattedWeight: weightValues[i] && weightFormatter.format(weightValues[i]),
+                    linkType: linkTypeCategories[i] || ForceGraph.DefaultLinkType,
                     tooltipInfo: tooltipInfo,
                 };
 
-                if (metadata.LinkType && !linkDataPoints[tableRow.LinkType]) {
+                if (metadata.LinkType && !linkDataPoints[linkTypeCategories[i]]) {
                     const color: string = colorHelper.getHighContrastColor(
                         "foreground",
                         colorPalette.getColor((linkTypeCount++).toString()).value
                     );
 
-                    linkDataPoints[tableRow.LinkType] = {
+                    linkDataPoints[linkTypeCategories[i]] = {
                         color,
-                        label: tableRow.LinkType,
+                        label: linkTypeCategories[i],
                     };
                 }
 
@@ -415,7 +439,7 @@ module powerbi.extensibility.visual {
                 }
 
                 links.push(link);
-            });
+            }
 
             return {
                 nodes,
