@@ -336,6 +336,7 @@ module powerbi.extensibility.visual {
             ) {
                 return null;
             }
+
             let sourceCategories: any[] = categorical.Source.values,
                 targetCategories: any[] = categorical.Target.values,
                 sourceTypeCategories: any[] = (categorical.SourceType || { values: [] }).values,
@@ -367,66 +368,73 @@ module powerbi.extensibility.visual {
                 format: valueFormatter.getFormatStringByColumn(metadata.Target, true),
             });
 
-            for (let i = 0; i < categorical.Target.values.length; i++) {
-                linkedByName[`${sourceCategories[i]},${targetCategories[i]}`] = ForceGraph.DefaultValueOfExistingLink;
+            for (let i = 0; i < targetCategories.length; i++) {
+                const source = sourceCategories[i];
+                const target = targetCategories[i];
+                const targetType = targetTypeCategories[i];
+                const sourceType = sourceCategories[i];
+                const linkType = linkTypeCategories[i];
+                const weight = weightValues[i];
 
-                if (!nodes[sourceCategories[i]]) {
-                    nodes[sourceCategories[i]] = {
-                        name: sourceFormatter.format(sourceCategories[i]),
+                linkedByName[`${source},${target}`] = ForceGraph.DefaultValueOfExistingLink;
+
+                if (!nodes[source]) {
+                    nodes[source] = {
+                        name: sourceFormatter.format(source),
                         hideLabel: false,
-                        image: sourceTypeCategories[i] || ForceGraph.DefaultSourceType,
+                        image: sourceType || ForceGraph.DefaultSourceType,
                         adj: {}
                     };
                 }
 
-                if (!nodes[targetCategories[i]]) {
-                    nodes[targetCategories[i]] = {
-                        name: targetFormatter.format(targetCategories[i]),
+                if (!nodes[target]) {
+                    nodes[target] = {
+                        name: targetFormatter.format(target),
                         hideLabel: false,
-                        image: targetTypeCategories[i] || ForceGraph.DefaultTargetType,
+                        image: targetType || ForceGraph.DefaultTargetType,
                         adj: {}
                     };
                 }
 
-                let source: ForceGraphNode = nodes[sourceCategories[i]],
-                    target: ForceGraphNode = nodes[targetCategories[i]];
+                let sourceNode: ForceGraphNode = nodes[source],
+                    targetNode: ForceGraphNode = nodes[target];
 
-                source.adj[target.name] = ForceGraph.DefaultValueOfExistingLink;
-                target.adj[source.name] = ForceGraph.DefaultValueOfExistingLink;
+                sourceNode.adj[targetNode.name] = ForceGraph.DefaultValueOfExistingLink;
+                targetNode.adj[sourceNode.name] = ForceGraph.DefaultValueOfExistingLink;
 
                 const tooltipInfo: VisualTooltipDataItem[] = ForceGraphTooltipsFactory.build(
                     {
-                        Source: sourceCategories[i],
-                        Target: targetCategories[i],
-                        Weight: weightValues[i],
-                        LinkType: linkTypeCategories[i],
-                        SourceType: sourceTypeCategories[i],
-                        TargetType: targetTypeCategories[i]
+                        Source: source,
+                        Target: target,
+                        Weight: weight,
+                        LinkType: linkType,
+                        SourceType: sourceType,
+                        TargetType: targetType
                     },
                     dataView.metadata.columns
                 );
 
                 let link: ForceGraphLink = {
-                    source: source,
-                    target: target,
+                    source: sourceNode,
+                    target: targetNode,
                     weight: Math.max(metadata.Weight
-                        ? (weightValues[i] || ForceGraph.MinWeight)
+                        ? (weight || ForceGraph.MinWeight)
                         : ForceGraph.MaxWeight,
                         ForceGraph.MinWeight),
-                    formattedWeight: weightValues[i] && weightFormatter.format(weightValues[i]),
-                    linkType: linkTypeCategories[i] || ForceGraph.DefaultLinkType,
+                    formattedWeight: weight && weightFormatter.format(weight),
+                    linkType: linkType || ForceGraph.DefaultLinkType,
                     tooltipInfo: tooltipInfo,
                 };
 
-                if (metadata.LinkType && !linkDataPoints[linkTypeCategories[i]]) {
+                if (metadata.LinkType && !linkDataPoints[linkType]) {
                     const color: string = colorHelper.getHighContrastColor(
                         "foreground",
                         colorPalette.getColor((linkTypeCount++).toString()).value
                     );
 
-                    linkDataPoints[linkTypeCategories[i]] = {
+                    linkDataPoints[linkType] = {
                         color,
-                        label: linkTypeCategories[i],
+                        label: linkType,
                     };
                 }
 
