@@ -1,3 +1,4 @@
+
 /*
  *  Power BI Visualizations
  *
@@ -26,8 +27,6 @@
 
 module powerbi.extensibility.visual {
     // powerbi
-    import DataView = powerbi.DataView;
-    import DataViewTable = powerbi.DataViewTable;
     import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 
     export class ForceGraphColumns<T> {
@@ -39,12 +38,29 @@ module powerbi.extensibility.visual {
                 (n, i) => columns.filter(x => x.roles && x.roles[i])[0]);
         }
 
-        public static getTableRows(dataView: DataView): ForceGraphColumns<any>[] {
-            let table: DataViewTable = dataView && dataView.table,
-                columns: ForceGraphColumns<DataViewMetadataColumn> = this.getMetadataColumns(dataView);
+        public static getCategoricalColumns(dataView: DataView) {
+            const categorical: DataViewCategorical = dataView && dataView.categorical;
+            const categories: DataViewCategoryColumn[] = categorical && categorical.categories || [];
+            const values: DataViewValueColumns = categorical && categorical.values || <DataViewValueColumns>[];
 
-            return columns && table && table.rows.map(row =>
-                _.mapValues(columns, (n: DataViewMetadataColumn, i) => n && row[n.index]));
+            return categorical && _.mapValues(
+                new this<DataViewCategoryColumn & DataViewValueColumn[] & DataViewValueColumns>(),
+                (n, i) => {
+                    let result: any = categories.filter(x => x.source.roles && x.source.roles[i])[0];
+
+                    if (!result) {
+                        result = values.source && values.source.roles && values.source.roles[i] && values;
+                    }
+
+                    if (!result) {
+                        result = values.filter(x => x.source.roles && x.source.roles[i]);
+                        if (_.isEmpty(result)) {
+                            result = undefined;
+                        }
+                    }
+
+                    return result;
+                });
         }
 
         public Source: T = null;
