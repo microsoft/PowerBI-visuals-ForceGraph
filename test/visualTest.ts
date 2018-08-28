@@ -280,7 +280,7 @@ module powerbi.extensibility.visual.test {
                     linkLabelsTextPath.forEach((element: JQuery) => {
                         const text: string = element.text();
                         const secondPart: string[] = text.split(".")[1].split("");
-                        const filtered: string[] = secondPart.filter(x => !_.isNaN(_.parseInt(x)));
+                        const filtered: string[] = secondPart.filter(x => x && !_.isNaN(_.parseInt(x)));
 
                         expect(filtered.length).toBeLessThan(secondPart.length);
                         expect(filtered.length).toEqual(decimalPlaces);
