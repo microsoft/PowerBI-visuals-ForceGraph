@@ -24,34 +24,34 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual {
-    // powerbi
-    import DataView = powerbi.DataView;
-    import DataViewTable = powerbi.DataViewTable;
-    import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import powerbi from "powerbi-visuals-api";
+import * as _ from "lodash";
 
-    export class ForceGraphColumns<T> {
-        public static getMetadataColumns(dataView: DataView): ForceGraphColumns<DataViewMetadataColumn> {
-            let columns: DataViewMetadataColumn[] = dataView && dataView.metadata && dataView.metadata.columns;
+import DataView = powerbi.DataView;
+import DataViewTable = powerbi.DataViewTable;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 
-            return columns && _.mapValues(
-                new ForceGraphColumns<DataViewMetadataColumn>(),
-                (n, i) => columns.filter(x => x.roles && x.roles[i])[0]);
-        }
+export class ForceGraphColumns<T> {
+    public static getMetadataColumns(dataView: DataView): ForceGraphColumns<DataViewMetadataColumn> {
+        let columns: DataViewMetadataColumn[] = dataView && dataView.metadata && dataView.metadata.columns;
 
-        public static getTableRows(dataView: DataView): ForceGraphColumns<any>[] {
-            let table: DataViewTable = dataView && dataView.table,
-                columns: ForceGraphColumns<DataViewMetadataColumn> = this.getMetadataColumns(dataView);
-
-            return columns && table && table.rows.map(row =>
-                _.mapValues(columns, (n: DataViewMetadataColumn, i) => n && row[n.index]));
-        }
-
-        public Source: T = null;
-        public Target: T = null;
-        public Weight: T = null;
-        public LinkType: T = null;
-        public SourceType: T = null;
-        public TargetType: T = null;
+        return columns && _.mapValues(
+            new ForceGraphColumns<DataViewMetadataColumn>(),
+            (n, i) => columns.filter(x => x.roles && x.roles[i])[0]);
     }
+
+    public static getTableRows(dataView: DataView): ForceGraphColumns<any>[] {
+        let table: DataViewTable = dataView && dataView.table,
+            columns: ForceGraphColumns<DataViewMetadataColumn> = this.getMetadataColumns(dataView);
+
+        return columns && table && table.rows.map(row =>
+            _.mapValues(columns, (n: DataViewMetadataColumn, i) => n && row[n.index]));
+    }
+
+    public Source: T = null;
+    public Target: T = null;
+    public Weight: T = null;
+    public LinkType: T = null;
+    public SourceType: T = null;
+    public TargetType: T = null;
 }
