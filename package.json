@@ -67,7 +67,7 @@
     "less-loader": "4.1.0",
     "lodash": "4.17.4",
     "powerbi-visuals-api": "^2.1.0",
-    "powerbi-visuals-tools": "https://github.com/Microsoft/PowerBI-visuals-tools#dev/next",
+    "powerbi-visuals-tools": "3.0.1",
     "powerbi-visuals-utils-testutils": "1.2.1",
     "puppeteer": "^1.6.0",
     "style-loader": "0.21.0",

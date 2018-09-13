@@ -24,100 +24,96 @@
  *  THE SOFTWARE.
  */
 
-/// <reference path="_references.ts"/>
+// powerbi.extensibility.utils.test
+import getRandomNumbers = powerbi.extensibility.utils.test.helpers.getRandomNumbers;
+import TestDataViewBuilder = powerbi.extensibility.utils.test.dataViewBuilder.TestDataViewBuilder;
 
-module powerbi.extensibility.visual.test {
-    // powerbi.extensibility.utils.test
-    import getRandomNumbers = powerbi.extensibility.utils.test.helpers.getRandomNumbers;
-    import TestDataViewBuilder = powerbi.extensibility.utils.test.dataViewBuilder.TestDataViewBuilder;
+// powerbi.extensibility.utils.type
+import ValueType = powerbi.extensibility.utils.type.ValueType;
 
-    // powerbi.extensibility.utils.type
-    import ValueType = powerbi.extensibility.utils.type.ValueType;
+export class VisualData extends TestDataViewBuilder {
+    public static ColumnSource: string = "Source";
+    public static ColumnTarget: string = "Target";
+    public static ColumnLinkType: string = "LinkType";
+    public static ColumnWeight: string = "Weight";
+    public static ColumnSourceType: string = "SourceType";
+    public static ColumnTargetType: string = "TargetType";
 
-    export class VisualData extends TestDataViewBuilder {
-        public static ColumnSource: string = "Source";
-        public static ColumnTarget: string = "Target";
-        public static ColumnLinkType: string = "LinkType";
-        public static ColumnWeight: string = "Weight";
-        public static ColumnSourceType: string = "SourceType";
-        public static ColumnTargetType: string = "TargetType";
+    public valuesSourceTarget: string[][] = [
+        ["William", "Brazil"],
+        ["Olivia", "USA"],
+        ["Daniel", "Portugal"],
+        ["Lucas", "Canada"],
+        ["Henry", "USA"],
+        ["Aiden", "Brazil"],
+        ["Daniel", "Portugal"],
+        ["Harper", "USA"],
+        ["Logan", "Brazil"],
+        ["Ella", "Canada"],
+        ["USA", "USA"]
+    ];
 
-        public valuesSourceTarget: string[][] = [
-            ["William", "Brazil"],
-            ["Olivia", "USA"],
-            ["Daniel", "Portugal"],
-            ["Lucas", "Canada"],
-            ["Henry", "USA"],
-            ["Aiden", "Brazil"],
-            ["Daniel", "Portugal"],
-            ["Harper", "USA"],
-            ["Logan", "Brazil"],
-            ["Ella", "Canada"],
-            ["USA", "USA"]
+    public valuesWeight: number[] = getRandomNumbers(this.valuesSourceTarget.length, 10, 100);
+
+    public getDataView(columnNames?: string[]): powerbi.DataView {
+        columnNames = columnNames || [
+            VisualData.ColumnSource,
+            VisualData.ColumnTarget,
+            VisualData.ColumnWeight
         ];
 
-        public valuesWeight: number[] = getRandomNumbers(this.valuesSourceTarget.length, 10, 100);
-
-        public getDataView(columnNames?: string[]): powerbi.DataView {
-            columnNames = columnNames || [
-                VisualData.ColumnSource,
-                VisualData.ColumnTarget,
-                VisualData.ColumnWeight
-            ];
-
-            return this.createCategoricalDataViewBuilder([
-                {
-                    source: {
-                        displayName: VisualData.ColumnSource,
-                        roles: { Source: true },
-                        type: ValueType.fromDescriptor({ text: true })
-                    },
-                    values: this.valuesSourceTarget.map(x => x[0])
+        return this.createCategoricalDataViewBuilder([
+            {
+                source: {
+                    displayName: VisualData.ColumnSource,
+                    roles: { Source: true },
+                    type: ValueType.fromDescriptor({ text: true })
                 },
-                {
-                    source: {
-                        displayName: VisualData.ColumnTarget,
-                        roles: { Target: true },
-                        type: ValueType.fromDescriptor({ text: true }),
-                    },
-                    values: this.valuesSourceTarget.map(x => x[1])
+                values: this.valuesSourceTarget.map(x => x[0])
+            },
+            {
+                source: {
+                    displayName: VisualData.ColumnTarget,
+                    roles: { Target: true },
+                    type: ValueType.fromDescriptor({ text: true }),
                 },
-                {
-                    source: {
-                        displayName: VisualData.ColumnLinkType,
-                        roles: { LinkType: true },
-                        type: ValueType.fromDescriptor({ text: true }),
-                    },
-                    values: []
+                values: this.valuesSourceTarget.map(x => x[1])
+            },
+            {
+                source: {
+                    displayName: VisualData.ColumnLinkType,
+                    roles: { LinkType: true },
+                    type: ValueType.fromDescriptor({ text: true }),
                 },
-                {
-                    source: {
-                        displayName: VisualData.ColumnSourceType,
-                        roles: { SourceType: true },
-                        type: ValueType.fromDescriptor({ text: true }),
-                    },
-                    values: []
+                values: []
+            },
+            {
+                source: {
+                    displayName: VisualData.ColumnSourceType,
+                    roles: { SourceType: true },
+                    type: ValueType.fromDescriptor({ text: true }),
                 },
+                values: []
+            },
+            {
+                source: {
+                    displayName: VisualData.ColumnTargetType,
+                    roles: { TargetType: true },
+                    type: ValueType.fromDescriptor({ text: true }),
+                },
+                values: []
+            }
+        ], [
                 {
                     source: {
-                        displayName: VisualData.ColumnTargetType,
-                        roles: { TargetType: true },
-                        type: ValueType.fromDescriptor({ text: true }),
+                        displayName: VisualData.ColumnWeight,
+                        roles: { Weight: true },
+                        isMeasure: true,
+                        type: ValueType.fromDescriptor({ numeric: true }),
                     },
-                    values: []
+                    values: this.valuesWeight
                 }
-            ], [
-                    {
-                        source: {
-                            displayName: VisualData.ColumnWeight,
-                            roles: { Weight: true },
-                            isMeasure: true,
-                            type: ValueType.fromDescriptor({ numeric: true }),
-                        },
-                        values: this.valuesWeight
-                    }
-                ], columnNames
-            ).build();
-        }
+            ], columnNames
+        ).build();
     }
 }

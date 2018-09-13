@@ -24,54 +24,52 @@
  *  THE SOFTWARE.
  */
 
-/// <reference path="_references.ts"/>
+// powerbi.extensibility.utils.test
+import powerbi from "powerbi-visuals-api";
 
-module powerbi.extensibility.visual.test {
-    // powerbi.extensibility.utils.test
-    import VisualBuilderBase = powerbi.extensibility.utils.test.VisualBuilderBase;
+import VisualBuilderBase = powerbi.extensibility.utils.test.VisualBuilderBase;
 
-    // ForceGraph1449359463895
-    import VisualClass = powerbi.extensibility.visual.ForceGraph1449359463895.ForceGraph;
+// ForceGraph1449359463895
+import VisualClass = powerbi.extensibility.visual.ForceGraph1449359463895.ForceGraph;
 
-    export class VisualBuilder extends VisualBuilderBase<VisualClass> {
-        constructor(width: number, height: number) {
-            super(width, height);
-        }
+export class VisualBuilder extends VisualBuilderBase<VisualClass> {
+    constructor(width: number, height: number) {
+        super(width, height);
+    }
 
-        protected build(options: VisualConstructorOptions) {
-            return new VisualClass(options);
-        }
+    protected build(options: VisualConstructorOptions) {
+        return new VisualClass(options);
+    }
 
-        public get mainElement() {
-            return this.element.find("g.chartContainer");
-        }
+    public get mainElement() {
+        return this.element.find("g.chartContainer");
+    }
 
-        public get linkLabels() {
-            return this.mainElement.children("g.linklabelholder");
-        }
+    public get linkLabels() {
+        return this.mainElement.children("g.linklabelholder");
+    }
 
-        public get nodes() {
-            return this.mainElement.children("g.node");
-        }
+    public get nodes() {
+        return this.mainElement.children("g.node");
+    }
 
-        public get images() {
-            return this.nodes.children("image");
-        }
+    public get images() {
+        return this.nodes.children("image");
+    }
 
-        public get circles() {
-            return this.nodes.children("circle");
-        }
+    public get circles() {
+        return this.nodes.children("circle");
+    }
 
-        public get nodeTexts() {
-            return this.nodes.children("text");
-        }
+    public get nodeTexts() {
+        return this.nodes.children("text");
+    }
 
-        public get linkLabelsText() {
-            return this.linkLabels.children("text.linklabel");
-        }
+    public get linkLabelsText() {
+        return this.linkLabels.children("text.linklabel");
+    }
 
-        public get linkLabelsTextPath() {
-            return this.linkLabelsText.children("textpath");
-        }
+    public get linkLabelsTextPath() {
+        return this.linkLabelsText.children("textpath");
     }
 }

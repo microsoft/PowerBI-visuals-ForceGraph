@@ -61,7 +61,7 @@
  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import "./../style/lineDotChart.less";
+import "./../style/visual.less";
 
 import "./globalize.ts";
 
@@ -69,28 +69,37 @@ import * as d3 from "d3";
 import * as _ from "lodash";
 import powerbi from "powerbi-visuals-api";
 
-// powerbi.extensibility.utils.type
-import PixelConverter = powerbi.extensibility.utils.type.PixelConverter;
+import DataView = powerbi.DataView;
+import IViewport = powerbi.IViewport;
+import IVisual = powerbi.extensibility.visual.IVisual;
+import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
+import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
 
+import { pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils";
 // powerbi.extensibility.utils.svg
+//import { axisInterfaces } from "powerbi-visuals-utils-chartutils";
+//import IMargin = axisInterfaces.IMargin;
+
+import * as SVGUtil from "powerbi-visuals-utils-svgutils";
+import SVGManipulations = SVGUtil.manipulation;
+import ClassAndSelector = SVGUtil.CssConstants.ClassAndSelector;
+import createClassAndSelector = SVGUtil.CssConstants.createClassAndSelector;
+
 import IMargin = powerbi.extensibility.utils.svg.IMargin;
 import translate = powerbi.extensibility.utils.svg.translate;
-import ClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.ClassAndSelector;
-import createClassAndSelector = powerbi.extensibility.utils.svg.CssConstants.createClassAndSelector;
+
 
 // powerbi.extensibility.utils.formatting
-import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
-import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
+import { valueFormatter as vf, textMeasurementService as tms } from "powerbi-visuals-utils-formattingutils";
+import TextMeasurementService = tms.textMeasurementService;
+import IValueFormatter = vf.IValueFormatter;
+import valueFormatter = vf.valueFormatter;
 
 // powerbi.extensibility.utils.tooltip
-import TooltipEventArgs = powerbi.extensibility.utils.tooltip.TooltipEventArgs;
-import ITooltipServiceWrapper = powerbi.extensibility.utils.tooltip.ITooltipServiceWrapper;
-import createTooltipServiceWrapper = powerbi.extensibility.utils.tooltip.createTooltipServiceWrapper;
+import { TooltipEventArgs, ITooltipServiceWrapper, createTooltipServiceWrapper } from "powerbi-visuals-utils-tooltiputils";
 import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
-import textMeasurementService = powerbi.extensibility.utils.formatting.textMeasurementService;
 
-// powerbi.extensibility.utils.color
-import ColorHelper = powerbi.extensibility.utils.color.ColorHelper;
+import { ColorHelper } from "powerbi-visuals-utils-colorutils";
 
 export class ForceGraph implements IVisual {
     private static Count: number = 0;
@@ -162,9 +171,9 @@ export class ForceGraph implements IVisual {
     private defaultYPosition: number = -6;
     private defaultYOffset: number = -2;
 
-    private container: d3.Selection<any>;
-    private paths: d3.Selection<ForceGraphLink>;
-    private nodes: d3.Selection<ForceGraphNode>;
+    private container: d3.Selection<d3.BaseType, any, any, any>;
+    private paths: d3.Selection<d3.BaseType, ForceGraphLink, any, any>;
+    private nodes: d3.Selection<d3.BaseType, ForceGraphNode, any, any>;
     private forceLayout: d3.layout.Force<ForceGraphLink, ForceGraphNode>;
 
     private colorPalette: IColorPalette;
