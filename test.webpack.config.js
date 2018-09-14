@@ -26,8 +26,7 @@ module.exports = {
                     {
                         loader: 'less-loader',
                         options: {
-                            paths: [path.resolve(__dirname, 'node_modules')
-                            ]
+                            paths: [path.resolve(__dirname, 'node_modules')]
                         }
                     }
                 ]
@@ -38,12 +37,10 @@ module.exports = {
         "powerbi-visuals-api": '{}'
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js', '.css'
-        ]
+        extensions: ['.tsx', '.ts', '.js', '.css']
     },
     output: {
-        path: path.resolve(__dirname,
-            ".tmp/test")
+        path: path.resolve(__dirname, ".tmp/test")
     },
     plugins: [
         new webpack.ProvidePlugin({

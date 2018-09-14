@@ -75,6 +75,8 @@ import IVisual = powerbi.extensibility.visual.IVisual;
 
 import DataView = powerbi.DataView;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewValueColumn = powerbi.DataViewValueColumn;
 import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
@@ -342,14 +344,34 @@ export class ForceGraph implements IVisual {
             return null;
         }
 
-        let tableRows: ForceGraphColumns<any>[] = ForceGraphColumns.getTableRows(dataView),
-            weightFormatter: IValueFormatter = null;
+        let categorical: ForceGraphColumns<DataViewCategoryColumn & DataViewValueColumn[]>
+            = ForceGraphColumns.getCategoricalColumns(dataView);
+
+        if (!categorical
+            || !categorical.Source
+            || !categorical.Target
+            || _.isEmpty(categorical.Source.source)
+            || _.isEmpty(categorical.Source.values)
+            || _.isEmpty(categorical.Target.source)
+            || _.isEmpty(categorical.Target.values)
+        ) {
+            return null;
+        }
+
+        let sourceCategories: any[] = categorical.Source.values,
+            targetCategories: any[] = categorical.Target.values,
+            sourceTypeCategories: any[] = (categorical.SourceType || { values: [] }).values,
+            targetTypeCategories: any[] = (categorical.TargetType || { values: [] }).values,
+            linkTypeCategories: any[] = (categorical.LinkType || { values: [] }).values,
+            weightValues: any[] = (categorical.Weight && categorical.Weight[0] || { values: [] }).values;
+
+        let weightFormatter: IValueFormatter = null;
 
         if (metadata.Weight) {
             let weightValue: number = settings.links.displayUnits;
 
-            if (!weightValue && tableRows.length) {
-                weightValue = Math.max(...tableRows.map(x => x.Weight));
+            if (!weightValue && categorical.Weight && categorical.Weight.length) {
+                weightValue = categorical.Weight[0].maxLocal as number;
             }
 
             weightFormatter = valueFormatter.create({
@@ -367,59 +389,73 @@ export class ForceGraph implements IVisual {
             format: valueFormatter.getFormatStringByColumn(metadata.Target, true),
         });
 
-        tableRows.forEach((tableRow: ForceGraphColumns<any>) => {
-            linkedByName[`${tableRow.Source},${tableRow.Target}`] = ForceGraph.DefaultValueOfExistingLink;
+        for (let i = 0; i < targetCategories.length; i++) {
+            const source = sourceCategories[i];
+            const target = targetCategories[i];
+            const targetType = targetTypeCategories[i];
+            const sourceType = sourceCategories[i];
+            const linkType = linkTypeCategories[i];
+            const weight = weightValues[i];
 
-            if (!nodes[tableRow.Source]) {
-                nodes[tableRow.Source] = {
-                    name: sourceFormatter.format(tableRow.Source),
+            linkedByName[`${source},${target}`] = ForceGraph.DefaultValueOfExistingLink;
+
+            if (!nodes[source]) {
+                nodes[source] = {
+                    name: sourceFormatter.format(source),
                     hideLabel: false,
-                    image: tableRow.SourceType || ForceGraph.DefaultSourceType,
+                    image: sourceType || ForceGraph.DefaultSourceType,
                     adj: {}
                 };
             }
 
-            if (!nodes[tableRow.Target]) {
-                nodes[tableRow.Target] = {
-                    name: targetFormatter.format(tableRow.Target),
+            if (!nodes[target]) {
+                nodes[target] = {
+                    name: targetFormatter.format(target),
                     hideLabel: false,
-                    image: tableRow.TargetType || ForceGraph.DefaultTargetType,
+                    image: targetType || ForceGraph.DefaultTargetType,
                     adj: {}
                 };
             }
 
-            let source: ForceGraphNode = nodes[tableRow.Source],
-                target: ForceGraphNode = nodes[tableRow.Target];
+            let sourceNode: ForceGraphNode = nodes[source],
+                targetNode: ForceGraphNode = nodes[target];
 
-            source.adj[target.name] = ForceGraph.DefaultValueOfExistingLink;
-            target.adj[source.name] = ForceGraph.DefaultValueOfExistingLink;
+            sourceNode.adj[targetNode.name] = ForceGraph.DefaultValueOfExistingLink;
+            targetNode.adj[sourceNode.name] = ForceGraph.DefaultValueOfExistingLink;
 
             const tooltipInfo: VisualTooltipDataItem[] = ForceGraphTooltipsFactory.build(
-                tableRow,
+                {
+                    Source: source,
+                    Target: target,
+                    Weight: weight,
+                    LinkType: linkType,
+                    SourceType: sourceType,
+                    TargetType: targetType
+                },
                 dataView.metadata.columns
             );
 
             let link: ForceGraphLink = {
-                source: source,
-                target: target,
+                source: sourceNode,
+                target: targetNode,
                 weight: Math.max(metadata.Weight
-                    ? (tableRow.Weight || ForceGraph.MinWeight)
+                    ? (weight || ForceGraph.MinWeight)
                     : ForceGraph.MaxWeight,
                     ForceGraph.MinWeight),
-                formattedWeight: tableRow.Weight && weightFormatter.format(tableRow.Weight),
-                linkType: tableRow.LinkType || ForceGraph.DefaultLinkType,
+                formattedWeight: weight && weightFormatter.format(weight),
+                linkType: linkType || ForceGraph.DefaultLinkType,
                 tooltipInfo: tooltipInfo,
             };
 
-            if (metadata.LinkType && !linkDataPoints[tableRow.LinkType]) {
+            if (metadata.LinkType && !linkDataPoints[linkType]) {
                 const color: string = colorHelper.getHighContrastColor(
                     "foreground",
                     colorPalette.getColor((linkTypeCount++).toString()).value
                 );
 
-                linkDataPoints[tableRow.LinkType] = {
+                linkDataPoints[linkType] = {
                     color,
-                    label: tableRow.LinkType,
+                    label: linkType,
                 };
             }
 
@@ -432,7 +468,7 @@ export class ForceGraph implements IVisual {
             }
 
             links.push(link);
-        });
+        }
 
         return {
             nodes,

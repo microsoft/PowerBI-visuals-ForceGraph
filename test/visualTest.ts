@@ -257,9 +257,10 @@ describe("ForceGraph", () => {
             });
 
             it("links labels on", () => {
-                visualBuilder.updateFlushAllD3Transitions(dataView);
-                visualBuilder.linkLabelsTextPath.each((i: number, element: Element) => {
-                    expect($(element).text()).not.toBeEmpty();
+                const linkLabelsTextPath: JQuery[] = visualBuilder.linkLabelsTextPath.toArray().map($);
+                linkLabelsTextPath.forEach((element) => {
+                    const text: string = element.text();
+                    expect(text).not.toBeEmpty();
                 });
             });
 
@@ -271,9 +272,12 @@ describe("ForceGraph", () => {
 
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                visualBuilder.linkLabelsTextPath.each((i: number, element: Element) => {
-                    const secondPart: string[] = $(element).text().split(".")[1].split(""),
-                        filtered: string[] = secondPart.filter(x => !_.isNaN(_.parseInt(x)));
+                const linkLabelsTextPath: JQuery[] = visualBuilder.linkLabelsTextPath.toArray().map($);
+
+                linkLabelsTextPath.forEach((element: JQuery) => {
+                    const text: string = element.text();
+                    const secondPart: string[] = text.split(".")[1].split("");
+                    const filtered: string[] = secondPart.filter(x => x && !_.isNaN(_.parseInt(x)));
 
                     expect(filtered.length).toBeLessThan(secondPart.length);
                     expect(filtered.length).toEqual(decimalPlaces);
@@ -318,8 +322,10 @@ describe("ForceGraph", () => {
                 dataView = defaultDataViewBuilder.getDataView();
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                visualBuilder.nodeTexts.each((i, e) => {
-                    let text = $(e).text();
+                const nodeTexts: JQuery[] = visualBuilder.nodeTexts.toArray().map($);
+
+                nodeTexts.forEach((node) => {
+                    const text: string = node.text();
                     dates.forEach(date => {
                         expect(text).not.toEqual(date.toString());
                     });
