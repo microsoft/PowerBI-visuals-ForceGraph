@@ -24,19 +24,20 @@
  *  THE SOFTWARE.
  */
 
-// powerbi.extensibility.visual.test
-import ForceGraphData = powerbi.extensibility.visual.test.VisualData;
-import ForceGraphBuilder = powerbi.extensibility.visual.test.VisualBuilder;
-import areColorsEqual = powerbi.extensibility.visual.test.helpers.areColorsEqual;
-import getSolidColorStructuralObject = powerbi.extensibility.visual.test.helpers.getSolidColorStructuralObject;
+import powerbi from "powerbi-visuals-api";
+import * as _ from "lodash";
 
-// powerbi.extensibility.utils.test
-import assertColorsMatch = powerbi.extensibility.utils.test.helpers.color.assertColorsMatch;
+import DataView = powerbi.DataView;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 
-// ForceGraph1449359463895
-import ForceGraphTooltipsFactory = powerbi.extensibility.visual.ForceGraph1449359463895.ForceGraphTooltipsFactory;
-import ForceGraphTooltipInputObject = powerbi.extensibility.visual.ForceGraph1449359463895.ForceGraphTooltipInputObject;
-import ForceGraphMetadataRoleHelper = powerbi.extensibility.visual.ForceGraph1449359463895.ForceGraphMetadataRoleHelper;
+import { assertColorsMatch } from "powerbi-visuals-utils-testutils";
+
+import { areColorsEqual, getSolidColorStructuralObject } from "./helpers/helpers";
+import { VisualData as ForceGraphData } from "./visualData";
+import { VisualBuilder as ForceGraphBuilder } from "./visualBuilder";
+
+import { ForceGraphMetadataRoleHelper, ForceGraphTooltipsFactory, ForceGraphTooltipInputObject } from "./../src/tooltipsFactory";
 
 describe("ForceGraph", () => {
     let visualBuilder: ForceGraphBuilder,

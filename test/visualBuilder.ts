@@ -24,13 +24,12 @@
  *  THE SOFTWARE.
  */
 
-// powerbi.extensibility.utils.test
 import powerbi from "powerbi-visuals-api";
 
-import VisualBuilderBase = powerbi.extensibility.utils.test.VisualBuilderBase;
+import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
+import { VisualBuilderBase } from "powerbi-visuals-utils-testutils";
 
-// ForceGraph1449359463895
-import VisualClass = powerbi.extensibility.visual.ForceGraph1449359463895.ForceGraph;
+import { ForceGraph as VisualClass } from "./../src/visual";
 
 export class VisualBuilder extends VisualBuilderBase<VisualClass> {
     constructor(width: number, height: number) {

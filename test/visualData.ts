@@ -23,13 +23,15 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+import powerbi from "powerbi-visuals-api";
 
-// powerbi.extensibility.utils.test
-import getRandomNumbers = powerbi.extensibility.utils.test.helpers.getRandomNumbers;
-import TestDataViewBuilder = powerbi.extensibility.utils.test.dataViewBuilder.TestDataViewBuilder;
+import DataView = powerbi.DataView;
 
-// powerbi.extensibility.utils.type
-import ValueType = powerbi.extensibility.utils.type.ValueType;
+import { getRandomNumbers, testDataViewBuilder } from "powerbi-visuals-utils-testutils";
+import TestDataViewBuilder = testDataViewBuilder.TestDataViewBuilder;
+
+import { valueType as valueTypeModule } from "powerbi-visuals-utils-typeutils";
+import ValueType = valueTypeModule.ValueType;
 
 export class VisualData extends TestDataViewBuilder {
     public static ColumnSource: string = "Source";
@@ -55,7 +57,7 @@ export class VisualData extends TestDataViewBuilder {
 
     public valuesWeight: number[] = getRandomNumbers(this.valuesSourceTarget.length, 10, 100);
 
-    public getDataView(columnNames?: string[]): powerbi.DataView {
+    public getDataView(columnNames?: string[]): DataView {
         columnNames = columnNames || [
             VisualData.ColumnSource,
             VisualData.ColumnTarget,

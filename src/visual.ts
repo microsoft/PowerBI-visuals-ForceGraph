@@ -69,37 +69,40 @@ import * as d3 from "d3";
 import * as _ from "lodash";
 import powerbi from "powerbi-visuals-api";
 
-import DataView = powerbi.DataView;
 import IViewport = powerbi.IViewport;
+import IColorPalette = powerbi.extensibility.IColorPalette;
 import IVisual = powerbi.extensibility.visual.IVisual;
+
+import DataView = powerbi.DataView;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
+import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
+import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 
 import { pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils";
-// powerbi.extensibility.utils.svg
-//import { axisInterfaces } from "powerbi-visuals-utils-chartutils";
-//import IMargin = axisInterfaces.IMargin;
-
 import * as SVGUtil from "powerbi-visuals-utils-svgutils";
 import SVGManipulations = SVGUtil.manipulation;
 import ClassAndSelector = SVGUtil.CssConstants.ClassAndSelector;
 import createClassAndSelector = SVGUtil.CssConstants.createClassAndSelector;
 
-import IMargin = powerbi.extensibility.utils.svg.IMargin;
-import translate = powerbi.extensibility.utils.svg.translate;
+import { IMargin, manipulation } from "powerbi-visuals-utils-svgutils";
+import translate = manipulation.translate;
 
-
-// powerbi.extensibility.utils.formatting
-import { valueFormatter as vf, textMeasurementService as tms } from "powerbi-visuals-utils-formattingutils";
-import TextMeasurementService = tms.textMeasurementService;
+import { valueFormatter as vf, textMeasurementService as tms, textUtil } from "powerbi-visuals-utils-formattingutils";
+import textMeasurementService = tms.textMeasurementService;
+import TextProperties = tms.TextProperties;
 import IValueFormatter = vf.IValueFormatter;
 import valueFormatter = vf.valueFormatter;
 
-// powerbi.extensibility.utils.tooltip
 import { TooltipEventArgs, ITooltipServiceWrapper, createTooltipServiceWrapper } from "powerbi-visuals-utils-tooltiputils";
-import TextProperties = powerbi.extensibility.utils.formatting.TextProperties;
-
 import { ColorHelper } from "powerbi-visuals-utils-colorutils";
+
+import { ForceGraphColumns } from "./columns";
+import { ForceGraphSettings, LinkColorType } from "./settings";
+import { ForceGraphTooltipsFactory } from "./tooltipsFactory";
+import { ForceGraphData, ForceGraphNode, ForceGraphNodes, ForceGraphLink, LinkedByName, ITextRect } from "./dataInterfaces";
 
 export class ForceGraph implements IVisual {
     private static Count: number = 0;
@@ -219,7 +222,7 @@ export class ForceGraph implements IVisual {
     }
 
     private init(options: VisualConstructorOptions): void {
-        const root: d3.Selection<any> = d3.select(options.element);
+        const root: d3.Selection<d3.BaseType, any, any, any> = d3.select(options.element);
         this.colorPalette = options.host.colorPalette;
 
         this.colorHelper = new ColorHelper(this.colorPalette);
@@ -252,12 +255,10 @@ export class ForceGraph implements IVisual {
                 this.forceLayout.tick();
             });
 
-        const svg: d3.Selection<any> = root
+        const svg: d3.Selection<d3.BaseType, any, any, any> = root
             .append("svg")
-            .attr({
-                width: "100%",
-                height: "100%"
-            })
+            .attr("width", "100%")
+            .attr("height", "100%")
             .classed(ForceGraph.VisualClassName, true);
         this.container = svg.append("g").classed("chartContainer", true);
     }
@@ -564,7 +565,7 @@ export class ForceGraph implements IVisual {
     }
 
     private setVisualData(
-        svg: d3.Selection<any>,
+        svg: d3.Selection<d3.BaseType, any, any, any>,
         colorPalette: IColorPalette,
         colorHelper: ColorHelper,
     ): void {
@@ -608,7 +609,7 @@ export class ForceGraph implements IVisual {
         });
 
         if (this.settings.links.showLabel) {
-            let linklabelholderUpdate: d3.selection.Update<ForceGraphLink> = svg
+            let linklabelholderUpdate: d3.Selection<d3.BaseType, ForceGraphLink, any, any> = svg
                 .selectAll(ForceGraph.LinkLabelHolderSelector.selectorName)
                 .data(this.forceLayout.links());
 
@@ -625,12 +626,10 @@ export class ForceGraph implements IVisual {
                 .attr("text-anchor", ForceGraph.LinkTextAnchor)
                 .style("fill", colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkFillColor))
                 .append("textPath")
-                .attr({
-                    "xlink:href": (link: ForceGraphLink, index: number) => {
-                        return ForceGraph.Href + "#linkid_" + this.uniqieId + index;
-                    },
-                    startOffset: ForceGraph.StartOffset
+                .attr("xlink:href", (link: ForceGraphLink, index: number) => {
+                    return ForceGraph.Href + "#linkid_" + this.uniqieId + index;
                 })
+                .attr("startOffset", ForceGraph.StartOffset)
                 .text((link: ForceGraphLink) => {
                     return this.settings.links.colorLink === LinkColorType.ByLinkType
                         ? link.linkType
@@ -691,22 +690,20 @@ export class ForceGraph implements IVisual {
         // add the nodes
         if (this.settings.nodes.displayImage) {
             this.nodes.append("image")
-                .attr({
-                    x: PixelConverter.toString(ForceGraph.ImagePosition),
-                    y: PixelConverter.toString(ForceGraph.ImagePosition),
-                    width: PixelConverter.toString(ForceGraph.ImageViewport.width),
-                    height: PixelConverter.toString(ForceGraph.ImageViewport.height),
-                    "xlink:href": (node: ForceGraphNode) => {
-                        if (node.image) {
-                            return this.getImage(node.image);
-                        } else if (this.settings.nodes.defaultImage) {
-                            return this.getImage(this.settings.nodes.defaultImage);
-                        }
+                .attr("x", PixelConverter.toString(ForceGraph.ImagePosition))
+                .attr("y", PixelConverter.toString(ForceGraph.ImagePosition))
+                .attr("width", PixelConverter.toString(ForceGraph.ImageViewport.width))
+                .attr("height", PixelConverter.toString(ForceGraph.ImageViewport.height))
+                .attr("xlink:href", (node: ForceGraphNode) => {
+                    if (node.image) {
+                        return this.getImage(node.image);
+                    } else if (this.settings.nodes.defaultImage) {
+                        return this.getImage(this.settings.nodes.defaultImage);
+                    }
 
-                        return ForceGraph.DefaultImage;
-                    },
-                    title: (node: ForceGraphNode) => node.name,
-                });
+                    return ForceGraph.DefaultImage;
+                })
+                .attr("title", (node: ForceGraphNode) => node.name);
         } else {
             this.nodes
                 .append("circle")
@@ -715,23 +712,17 @@ export class ForceGraph implements IVisual {
                         ? ForceGraph.MinNodeWeight
                         : node.weight;
                 })
-                .style({
-                    fill: this.settings.nodes.fill,
-                    stroke: this.settings.nodes.stroke,
-                });
+                .style("fill", this.settings.nodes.fill)
+                .style("stroke", this.settings.nodes.stroke);
         }
 
         // add the text
         if (this.settings.labels.show) {
             this.nodes.append("text")
-                .attr({
-                    x: ForceGraph.DefaultLabelX,
-                    dy: ForceGraph.DefaultLabelDy
-                })
-                .style({
-                    fill: this.settings.labels.color,
-                    "font-size": PixelConverter.fromPoint(this.settings.labels.fontSize)
-                })
+                .attr("x", ForceGraph.DefaultLabelX)
+                .attr("dy", ForceGraph.DefaultLabelDy)
+                .style("fill", this.settings.labels.color)
+                .style("font-size", PixelConverter.fromPoint(this.settings.labels.fontSize))
                 .text((node: ForceGraphNode) => {
                     if (node.name) {
                         if (node.name.length > this.settings.nodes.nameMaxLength) {
@@ -905,18 +896,16 @@ export class ForceGraph implements IVisual {
         }
 
         return () => {
-            this.paths.style({
-                "stroke-opacity": (link: ForceGraphLink) => {
-                    return link.source === link.source && link.target === link.target
-                        ? ForceGraph.DefaultOpacity
-                        : opacity;
-                },
-                "stroke": (link: ForceGraphLink) => {
+            this.paths.style("stroke-opacity", (link: ForceGraphLink) => {
+                return link.source === link.source && link.target === link.target
+                    ? ForceGraph.DefaultOpacity
+                    : opacity;
+            })
+                .style("stroke", (link: ForceGraphLink) => {
                     return link.source === link.source && link.target === link.target
                         ? highlightColor
                         : defaultHighlightColor;
-                }
-            });
+                });
         };
     }
 

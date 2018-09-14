@@ -25,6 +25,7 @@
  */
 
 import powerbi from "powerbi-visuals-api";
+import {for } from "d3-force";
 // External libraries
 import Node = d3.layout.force.Node;
 
