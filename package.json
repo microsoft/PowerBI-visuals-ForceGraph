@@ -14,7 +14,7 @@
     "pbiviz": "pbiviz",
     "start": "pbiviz start",
     "package": "pbiviz package",
-    "lint": "tslint -r \"node_modules/tslint-microsoft-contrib\" \"+(src|test)/**/*.ts\"",
+    "lint": "node node_modules/tslint/bin/tslint \"+(src|test)/**/*.ts\"",
     "pretest": "pbiviz package --resources --no-minify --no-pbiviz --no-plugin",
     "test": "karma start",
     "cert": "pbiviz --create-cert"
@@ -73,8 +73,7 @@
     "style-loader": "0.21.0",
     "ts-loader": "4.4.2",
     "ts-node": "^7.0.0",
-    "tslint": "^5.5.0",
-    "tslint-microsoft-contrib": "^5.0.1",
+    "tslint": "5.11.0",
     "typescript": "^3.0.1",
     "webpack": "4.14.0"
   }

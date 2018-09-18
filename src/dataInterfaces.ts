@@ -24,19 +24,15 @@
  *  THE SOFTWARE.
  */
 
-import powerbi from "powerbi-visuals-api";
-import {for } from "d3-force";
-// External libraries
-import Node = d3.layout.force.Node;
+import { SimulationNodeDatum } from "d3-force";
 
-// powerbi.extensibility.utils.tooltip
 import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
 import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
 import IValueFormatter = vf.IValueFormatter;
 
 import { ForceGraphSettings } from "./settings";
 
-export interface ForceGraphNode extends Node {
+export interface ForceGraphNode extends SimulationNodeDatum {
     name: string;
     image: string;
     adj: { [i: string]: number };

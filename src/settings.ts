@@ -24,8 +24,6 @@
  *  THE SOFTWARE.
  */
 
-import powerbi from "powerbi-visuals-api";
-
 import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
 import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 

@@ -63,9 +63,8 @@
 
 import "./../style/visual.less";
 
-import "./globalize.ts";
-
 import * as d3 from "d3";
+import { forceSimulation, Simulation } from "d3-force";
 import * as _ from "lodash";
 import powerbi from "powerbi-visuals-api";
 
@@ -85,7 +84,6 @@ import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructor
 
 import { pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils";
 import * as SVGUtil from "powerbi-visuals-utils-svgutils";
-import SVGManipulations = SVGUtil.manipulation;
 import ClassAndSelector = SVGUtil.CssConstants.ClassAndSelector;
 import createClassAndSelector = SVGUtil.CssConstants.createClassAndSelector;
 
@@ -179,7 +177,7 @@ export class ForceGraph implements IVisual {
     private container: d3.Selection<d3.BaseType, any, any, any>;
     private paths: d3.Selection<d3.BaseType, ForceGraphLink, any, any>;
     private nodes: d3.Selection<d3.BaseType, ForceGraphNode, any, any>;
-    private forceLayout: d3.layout.Force<ForceGraphLink, ForceGraphNode>;
+    private forceLayout: Simulation<ForceGraphNode, ForceGraphLink>;
 
     private colorPalette: IColorPalette;
     private colorHelper: ColorHelper;
@@ -234,7 +232,7 @@ export class ForceGraph implements IVisual {
             options.element
         );
 
-        this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
+        this.forceLayout = forceSimulation<ForceGraphNode, ForceGraphLink>();
 
         this.forceLayout.drag()
             .on("dragstart", ((d: ForceGraphNode) => {
@@ -275,7 +273,7 @@ export class ForceGraph implements IVisual {
     }
 
     private scale1to10(value: number): number {
-        let scale: d3.scale.Linear<number, number> = d3.scale.linear()
+        let scale: d3.ScaleContinuousNumeric<number, number> = d3.scaleLinear()
             .domain([
                 this.data.minFiles,
                 this.data.maxFiles
@@ -572,6 +570,10 @@ export class ForceGraph implements IVisual {
 
         this.reset();
 
+        // let nodes: ForceGraphNode[] = this.forceLayout.nodes();
+        // nodes.forEach((node) {
+        //     node.x = 
+        // });
         this.forceLayout
             .gravity(ForceGraph.GravityFactor * k)
             .links(this.data.links)
@@ -583,6 +585,7 @@ export class ForceGraph implements IVisual {
 
         let nodesNum: number = Object.keys(this.data.nodes).length;
 
+        //const forceManyBody: d3.ForceManyBody = forceManyBody
         if (this.settings.animation.show && nodesNum <= ForceGraph.NoAnimationLimit) {
             this.forceLayout.on("tick", this.getForceTick());
             this.forceLayout.theta(1.4).start();
@@ -606,7 +609,7 @@ export class ForceGraph implements IVisual {
         colorHelper: ColorHelper,
     ): void {
         this.paths = svg.selectAll(ForceGraph.LinkSelector.selectorName)
-            .data(this.forceLayout.links())
+            .data(this.data.links)
             .enter()
             .append("path")
             .attr("id", (d, i) => "linkid_" + this.uniqieId + i)
