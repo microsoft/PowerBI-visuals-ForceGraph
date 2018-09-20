@@ -36,6 +36,7 @@ export interface ForceGraphNode extends SimulationNodeDatum {
     name: string;
     image: string;
     adj: { [i: string]: number };
+    weight?: number;
     x?: number;
     y?: number;
     isDrag?: boolean;
