@@ -24,7 +24,7 @@
  *  THE SOFTWARE.
  */
 
-import { SimulationNodeDatum } from "d3-force";
+import Node = d3.layout.force.Node;
 
 import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
 import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
@@ -32,11 +32,10 @@ import IValueFormatter = vf.IValueFormatter;
 
 import { ForceGraphSettings } from "./settings";
 
-export interface ForceGraphNode extends SimulationNodeDatum {
+export interface ForceGraphNode extends Node {
     name: string;
     image: string;
     adj: { [i: string]: number };
-    weight?: number;
     x?: number;
     y?: number;
     isDrag?: boolean;

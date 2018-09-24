@@ -173,12 +173,10 @@ export class ForceGraph implements IVisual {
     private defaultYPosition: number = -6;
     private defaultYOffset: number = -2;
 
-    private container: d3.Selection<d3.BaseType, any, any, any>;
-    private paths: d3.Selection<d3.BaseType, ForceGraphLink, any, any>;
-    private nodes: d3.Selection<d3.BaseType, ForceGraphNode, any, any>;
-    private forceLayout: d3.Simulation<ForceGraphNode, ForceGraphLink>;
-    private forceManyBody: d3.ForceManyBody<ForceGraphNode>;
-    private forceLinks: d3.ForceLink<any, ForceGraphLink>;
+    private container: d3.Selection<any>;
+    private paths: d3.Selection<ForceGraphLink>;
+    private nodes: d3.Selection<ForceGraphNode>;
+    private forceLayout: d3.layout.Force<ForceGraphLink, ForceGraphNode>;
 
     private colorPalette: IColorPalette;
     private colorHelper: ColorHelper;
@@ -222,25 +220,8 @@ export class ForceGraph implements IVisual {
         this.init(options);
     }
 
-    private tickActions(nodes, links): void {
-        //update node's image's positions to reflect node updates on each tick of the simulation
-        nodes
-            .attr("cx", (d) => d.x)
-            .attr("cy", (d) => d.y);
-
-        //update link positions 
-        //simply tells one end of the line to follow one node around
-        //and the other end of the line to follow the other node around
-        links
-            .attr("x1", function (d) { return d.source.x; })
-            .attr("y1", function (d) { return d.source.y; })
-            .attr("x2", function (d) { return d.target.x; })
-            .attr("y2", function (d) { return d.target.y; });
-
-    }
-
     private init(options: VisualConstructorOptions): void {
-        const root: d3.Selection<d3.BaseType, any, any, any> = d3.select(options.element);
+        const root: d3.Selection<any> = d3.select(options.element);
         this.colorPalette = options.host.colorPalette;
 
         this.colorHelper = new ColorHelper(this.colorPalette);
@@ -250,42 +231,35 @@ export class ForceGraph implements IVisual {
             options.element
         );
 
-        this.forceManyBody = d3.forceManyBody<ForceGraphNode>();
-        this.forceLayout = d3.forceSimulation<ForceGraphNode, ForceGraphLink>()
-            .force("charge", this.forceManyBody)
-            .force("center", d3.forceCenter(0.5, 0.5))
-        // .force("centerX", d3.forceX(this.viewport.width / 2))
-        // .force("centerY", d3.forceY(this.viewport.height / 2))
+        this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
 
-        debugger;
-        //this.forceLayout.on("tick", this.tickActions(this.nodes));
+        this.forceLayout.drag()
+            .on("dragstart", ((d: ForceGraphNode) => {
+                this.forceLayout.stop();
+                d.isDrag = true;
+                this.fadeNode(d);
+            }))
+            .on("dragend", ((d: ForceGraphNode) => {
+                this.forceLayout.tick();
+                this.forceLayout.resume();
+                d.isDrag = false;
+                this.fadeNode(d);
+            }))
+            .on("drag", (d: ForceGraphNode) => {
+                d.px += (d3.event as any).dx;
+                d.py += (d3.event as any).dy;
+                d.x += (d3.event as any).dx;
+                d.y += (d3.event as any).dy;
+                this.fadeNode(d);
+                this.forceLayout.tick();
+            });
 
-        // this.forceLayout.nodes.call(d3.drag())
-        //     .on("start", ((d: ForceGraphNode) => {
-        //         if (!d3.event.active) this.forceLayout.alphaTarget(0.3).restart();
-        //         this.forceLayout.stop();
-        //         d.isDrag = true;
-        //         //this.fadeNode(d);
-        //     }))
-        //     .on("end", ((d: ForceGraphNode) => {
-        //         this.forceLayout.tick();
-        //         this.forceLayout.alphaTarget(0);
-        //         d.isDrag = false;
-        //         //this.fadeNode(d);
-        //     }))
-        //     .on("drag", (d: ForceGraphNode) => {
-        //         d.fx += (d3.event as any).dx;
-        //         d.fy += (d3.event as any).dy;
-        //         d.x += (d3.event as any).dx;
-        //         d.y += (d3.event as any).dy;
-        //         // this.fadeNode(d);
-        //         this.forceLayout.tick();
-        //     });
-
-        const svg: d3.Selection<d3.BaseType, any, any, any> = root
+        const svg: d3.Selection<any> = root
             .append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%")
+            .attr({
+                width: "100%",
+                height: "100%"
+            })
             .classed(ForceGraph.VisualClassName, true);
         this.container = svg.append("g").classed("chartContainer", true);
     }
@@ -300,7 +274,7 @@ export class ForceGraph implements IVisual {
     }
 
     private scale1to10(value: number): number {
-        let scale: d3.ScaleContinuousNumeric<number, number> = d3.scaleLinear()
+        let scale: d3.scale.Linear<number, number> = d3.scale.linear()
             .domain([
                 this.data.minFiles,
                 this.data.maxFiles
@@ -599,17 +573,14 @@ export class ForceGraph implements IVisual {
 
         this.reset();
 
-        this.forceLinks = d3.forceLink(this.data.links)
-            .distance(ForceGraph.LinkDistance);
-
-        debugger;
-        // this.forceLayout
-        //.gravity(ForceGraph.GravityFactor * k)
-        // .size([this.viewport.width, this.viewport.height])
-        // .charge(this.settings.size.charge / k);
+        this.forceLayout
+            .gravity(ForceGraph.GravityFactor * k)
+            .links(this.data.links)
+            .size([this.viewport.width, this.viewport.height])
+            .linkDistance(ForceGraph.LinkDistance)
+            .charge(this.settings.size.charge / k);
 
         this.updateNodes();
-        //this.tickActions();
 
         let nodesNum: number = Object.keys(this.data.nodes).length;
 
@@ -617,16 +588,10 @@ export class ForceGraph implements IVisual {
 
         if (this.settings.animation.show && nodesNum <= ForceGraph.NoAnimationLimit) {
             this.forceLayout.on("tick", this.getForceTick());
-            this.forceManyBody = this.forceManyBody.theta(theta);
-            this.forceLayout
-                .force("charge", this.forceManyBody)
-                .restart();
+            this.forceLayout.theta(1.4).start();
             this.setVisualData(this.container, this.colorPalette, this.colorHelper);
         } else {
-            this.forceManyBody = this.forceManyBody.theta(theta);
-            this.forceLayout
-                .force("charge", this.forceManyBody)
-                .restart();
+            this.forceLayout.theta(1.4).start();
 
             for (let i = 0; i < nodesNum; ++i) {
                 this.forceLayout.tick();
@@ -638,42 +603,15 @@ export class ForceGraph implements IVisual {
         }
     }
 
-    private dragsubject() {
-        return this.forceLayout.find(d3.event.x, d3.event.y);
-    }
-
-    private dragstarted(d: ForceGraphNode) {
-        if (!d3.event.active) this.forceLayout.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
-    }
-
-    private dragged(d: ForceGraphNode) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-    }
-
-    private dragended(d: ForceGraphNode) {
-        if (!d3.event.active) this.forceLayout.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
-    }
-
     private setVisualData(
-        svg: d3.Selection<d3.BaseType, any, any, any>,
+        svg: d3.Selection<any>,
         colorPalette: IColorPalette,
         colorHelper: ColorHelper,
     ): void {
-        debugger;
-        const paths = svg.selectAll(ForceGraph.LinkSelector.selectorName)
-            .data(this.data.links);
-
-        const pathsMerged: d3.Selection<d3.BaseType, ForceGraphLink, d3.BaseType, any> = paths
+        this.paths = svg.selectAll(ForceGraph.LinkSelector.selectorName)
+            .data(this.forceLayout.links())
             .enter()
             .append("path")
-            .merge(paths);
-
-        pathsMerged
             .attr("id", (d, i) => "linkid_" + this.uniqieId + i)
             .attr("stroke-width", (link: ForceGraphLink) => {
                 return this.settings.links.thickenLink
@@ -705,25 +643,20 @@ export class ForceGraph implements IVisual {
                 );
             });
 
-        this.paths = pathsMerged;
         this.tooltipServiceWrapper.addTooltip(this.paths, (eventArgs: TooltipEventArgs<ForceGraphLink>) => {
             return eventArgs.data.tooltipInfo;
         });
 
         if (this.settings.links.showLabel) {
-            let linklabelholderUpdate: d3.Selection<d3.BaseType, ForceGraphLink, any, any> = svg
+            let linklabelholderUpdate: d3.selection.Update<ForceGraphLink> = svg
                 .selectAll(ForceGraph.LinkLabelHolderSelector.selectorName)
-                .data(this.forceLinks.links());
+                .data(this.forceLayout.links());
 
-            debugger;
-            const linklabelholderUpdateMerged: d3.Selection<d3.BaseType, ForceGraphLink, any, any> = linklabelholderUpdate
-                .enter()
+            linklabelholderUpdate.enter()
                 .append("g")
                 .classed(ForceGraph.LinkLabelHolderSelector.className, true)
                 .append("text")
-                .merge(linklabelholderUpdate);
-
-            linklabelholderUpdateMerged.classed(ForceGraph.LinkLabelSelector.className, true)
+                .classed(ForceGraph.LinkLabelSelector.className, true)
                 .attr("dy", (link: ForceGraphLink) => {
                     return this.settings.links.thickenLink
                         ? -this.scale1to10(link.weight) + this.defaultYOffset
@@ -750,15 +683,11 @@ export class ForceGraph implements IVisual {
         let nodesNum: number = Object.keys(this.data.nodes).length;
 
         // define the nodes
-        const nodes: d3.Selection<d3.BaseType, ForceGraphNode, d3.BaseType, ForceGraphNode> = svg.selectAll(ForceGraph.NodeSelector.selectorName)
-            .data(this.forceLayout.nodes());
-
-        const nodesMerged: d3.Selection<d3.BaseType, any, d3.BaseType, any> = nodes
+        this.nodes = svg.selectAll(ForceGraph.NodeSelector.selectorName)
+            .data(this.forceLayout.nodes())
             .enter()
             .append("g")
-            .merge(nodes);
-
-        nodesMerged.attr("drag-resize-disabled", true)
+            .attr("drag-resize-disabled", true)
             .classed(ForceGraph.NodeSelector.className, true)
             .on("mouseover", (node: ForceGraphNode) => {
                 node.isOver = true;
@@ -770,16 +699,8 @@ export class ForceGraph implements IVisual {
             })
             .on("mousedown", () => (d3.event as MouseEvent).stopPropagation());
 
-        const dragHandler: Function = d3.drag()
-            .on("start", this.dragstarted)
-            .on("drag", this.dragged)
-            .on("end", this.dragended);
-
-        dragHandler(nodesMerged);
-
-        this.nodes = nodesMerged;
         if (nodesNum <= ForceGraph.NoAnimationLimit) {
-            this.nodes.call(d3.drag());
+            this.nodes.call(this.forceLayout.drag);
         }
 
         // render without animation
@@ -869,66 +790,6 @@ export class ForceGraph implements IVisual {
             .remove();
     }
 
-    private drawSimulation(): void {
-        var link = this.container.append("g")
-            .attr("class", "links")
-            .selectAll("line")
-            .data(this.data.links)
-            .enter()
-            .append("line")
-            .attr("stroke", "black")
-
-        var node = this.container.append("g")
-            .attr("class", "nodes")
-            .selectAll("circle")
-            .data(d3.values(this.data.nodes))
-            .attr("r", function (d) { return d.weight })
-
-        this.forceLayout.nodes.call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
-
-        var ticked = function () {
-            this.paths
-                .attr("x1", function (d) { return d.source.x; })
-                .attr("y1", function (d) { return d.source.y; })
-                .attr("x2", function (d) { return d.target.x; })
-                .attr("y2", function (d) { return d.target.y; });
-
-            this.nodes
-                .attr("cx", function (d) { return d.x; })
-                .attr("cy", function (d) { return d.y; });
-        }
-
-        this.forceLayout
-            .nodes(d3.values(this.data.nodes))
-            .on("tick", ticked);
-
-        this.forceLayout.force("link",
-            d3.forceLink(this.data.links)
-                .distance(ForceGraph.LinkDistance));
-
-        function dragstarted(d) {
-            if (!d3.event.active) this.forceLayout.alphaTarget(0.3).restart();
-            d.fx = d.x;
-            d.fy = d.y;
-        }
-
-        function dragged(d) {
-            d.fx = d3.event.x;
-            d.fy = d3.event.y;
-        }
-
-        function dragended(d) {
-            if (!d3.event.active) this.forceLayout.alphaTarget(0);
-            d.fx = null;
-            d.fy = null;
-        }
-
-        debugger;
-    }
-
     private updateNodes(): void {
         let thePreviousNodes: ForceGraphNode[] = this.forceLayout.nodes();
 
@@ -946,8 +807,8 @@ export class ForceGraph implements IVisual {
     private updateNodeAttributes(first: ForceGraphNode, second: ForceGraphNode): void {
         first.x = second.x;
         first.y = second.y;
-        first.fx = second.fx;
-        first.fy = second.fy;
+        first.px = second.px;
+        first.py = second.py;
         first.weight = second.weight;
     }
 
@@ -1146,7 +1007,7 @@ export class ForceGraph implements IVisual {
                 : self.areNodesConnected(node, node))
                 ? ForceGraph.DefaultOpacity
                 : opacity;
-            //this.setAttribute("fill-opacity", thisOpacity);
+            this.setAttribute("fill-opacity", thisOpacity);
 
             return thisOpacity;
         });
