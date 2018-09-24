@@ -177,7 +177,7 @@ export class ForceGraph implements IVisual {
     private paths: d3.Selection<d3.BaseType, ForceGraphLink, any, any>;
     private nodes: d3.Selection<d3.BaseType, ForceGraphNode, any, any>;
     private forceLayout: d3.Simulation<ForceGraphNode, ForceGraphLink>;
-    //private forceNodes: d3.ForceNode<any, ForceGraphNode>;
+    private forceManyBody: d3.ForceManyBody<ForceGraphNode>;
     private forceLinks: d3.ForceLink<any, ForceGraphLink>;
 
     private colorPalette: IColorPalette;
@@ -250,12 +250,12 @@ export class ForceGraph implements IVisual {
             options.element
         );
 
+        this.forceManyBody = d3.forceManyBody<ForceGraphNode>();
         this.forceLayout = d3.forceSimulation<ForceGraphNode, ForceGraphLink>()
-            .force("charge", d3.forceManyBody().strength(-1000))
-            //.force("center", d3.forceCenter(this.viewport.width / 2, this.viewport.height / 2))
-            .force("centerX", d3.forceX(this.viewport.width))
-            .force("centerY", d3.forceY(this.viewport.height))
-            .alphaTarget(0.3);
+            .force("charge", this.forceManyBody)
+            .force("center", d3.forceCenter(0.5, 0.5))
+        // .force("centerX", d3.forceX(this.viewport.width / 2))
+        // .force("centerY", d3.forceY(this.viewport.height / 2))
 
         debugger;
         //this.forceLayout.on("tick", this.tickActions(this.nodes));
@@ -613,17 +613,20 @@ export class ForceGraph implements IVisual {
 
         let nodesNum: number = Object.keys(this.data.nodes).length;
 
-        const forceManyBody: d3.ForceManyBody<ForceGraphNodes> = d3.forceManyBody();
         const theta: number = 1.4;
 
         if (this.settings.animation.show && nodesNum <= ForceGraph.NoAnimationLimit) {
             this.forceLayout.on("tick", this.getForceTick());
-            forceManyBody.theta(theta);
-            this.forceLayout.restart();
+            this.forceManyBody = this.forceManyBody.theta(theta);
+            this.forceLayout
+                .force("charge", this.forceManyBody)
+                .restart();
             this.setVisualData(this.container, this.colorPalette, this.colorHelper);
         } else {
-            forceManyBody.theta(1.4);
-            this.forceLayout.restart();
+            this.forceManyBody = this.forceManyBody.theta(theta);
+            this.forceLayout
+                .force("charge", this.forceManyBody)
+                .restart();
 
             for (let i = 0; i < nodesNum; ++i) {
                 this.forceLayout.tick();
@@ -887,13 +890,13 @@ export class ForceGraph implements IVisual {
             .on("end", dragended));
 
         var ticked = function () {
-            link
+            this.paths
                 .attr("x1", function (d) { return d.source.x; })
                 .attr("y1", function (d) { return d.source.y; })
                 .attr("x2", function (d) { return d.target.x; })
                 .attr("y2", function (d) { return d.target.y; });
 
-            node
+            this.nodes
                 .attr("cx", function (d) { return d.x; })
                 .attr("cy", function (d) { return d.y; });
         }
