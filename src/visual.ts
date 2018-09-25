@@ -343,7 +343,7 @@ export class ForceGraph implements IVisual {
 
         let categorical: ForceGraphColumns<DataViewCategoryColumn & DataViewValueColumn[]>
             = ForceGraphColumns.getCategoricalColumns(dataView);
-        debugger;
+
         if (!categorical
             || !categorical.Source
             || !categorical.Target
@@ -467,8 +467,6 @@ export class ForceGraph implements IVisual {
             links.push(link);
         }
 
-        debugger;
-
         return {
             nodes,
             links,
@@ -553,8 +551,6 @@ export class ForceGraph implements IVisual {
             return;
         }
 
-        debugger;
-
         this.data = ForceGraph.converter(
             options.dataViews[0],
             this.colorPalette,
@@ -583,15 +579,14 @@ export class ForceGraph implements IVisual {
         this.updateNodes();
 
         let nodesNum: number = Object.keys(this.data.nodes).length;
-
         const theta: number = 1.4;
 
         if (this.settings.animation.show && nodesNum <= ForceGraph.NoAnimationLimit) {
             this.forceLayout.on("tick", this.getForceTick());
-            this.forceLayout.theta(1.4).start();
+            this.forceLayout.theta(theta).start();
             this.setVisualData(this.container, this.colorPalette, this.colorHelper);
         } else {
-            this.forceLayout.theta(1.4).start();
+            this.forceLayout.theta(theta).start();
 
             for (let i = 0; i < nodesNum; ++i) {
                 this.forceLayout.tick();

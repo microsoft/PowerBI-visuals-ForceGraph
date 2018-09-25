@@ -169,11 +169,11 @@ describe("ForceGraph", () => {
 
         it("curved arrows", () => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                visualBuilder.mainElement.children("path.link").each((i) => {
-                    let child = visualBuilder.mainElement.children("path.link").eq(i);
-                    if (child.get()[0]["__data__"].source.name === child.get()[0]["__data__"].target.name) {
-                        let path = child.get()[0].getAttribute("d");
-                        let curvedPath = /M \d*\.?\d* \d*\.?\d* C \d*\.?\d* \d*\.?\d*, \d*\.?\d* \d*\.?\d*, \d*\.?\d* \d*\.?\d*/;
+                const linkPaths: JQuery[] = visualBuilder.mainElement.children("path.link").toArray().map($);
+                linkPaths.forEach((linkPath) => {
+                    if (linkPath.get()[0]["__data__"].source.name === linkPath.get()[0]["__data__"].target.name) {
+                        let path = linkPath.get()[0].getAttribute("d");
+                        let curvedPath = /M (-)*\d*\.?\d* (-)*\d*\.?\d* C (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*/;
                         expect(curvedPath.test(path))
                             .toBe(true);
                     }
