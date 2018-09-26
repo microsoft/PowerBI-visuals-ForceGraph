@@ -36,7 +36,7 @@
     "powerbi-visuals-utils-formattingutils": "^4.0.2",
     "powerbi-visuals-utils-interactivityutils": "^5.0.1",
     "powerbi-visuals-utils-svgutils": "^2.0.2",
-    "powerbi-visuals-utils-tooltiputils": "^2.0.2",
+    "powerbi-visuals-utils-tooltiputils": "^2.0.3",
     "powerbi-visuals-utils-typeutils": "^2.0.1",
     "powerbi-visuals-utils-colorutils": "^2.0.2 ",
     "powerbi-models": "1.0.3"
