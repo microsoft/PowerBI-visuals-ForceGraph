@@ -444,7 +444,7 @@ export class ForceGraph implements IVisual {
                     ForceGraph.MinWeight),
                 formattedWeight: weight && weightFormatter.format(weight),
                 linkType: linkType || ForceGraph.DefaultLinkType,
-                tooltipInfo: tooltipInfo,
+                tooltipInfo: tooltipInfo
             };
 
             if (metadata.LinkType && !linkDataPoints[linkType]) {

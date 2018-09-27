@@ -30,7 +30,6 @@
   "homepage": "https://github.com/Microsoft/PowerBI-visuals-ForceGraph#readme",
   "dependencies": {
     "d3": "3.5.5",
-    "globalize": "0.1.0-a2",
     "powerbi-visuals-utils-chartutils": "^2.0.5",
     "powerbi-visuals-utils-dataviewutils": "^2.0.1",
     "powerbi-visuals-utils-formattingutils": "^4.0.2",
