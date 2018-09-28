@@ -24,23 +24,17 @@
  *  THE SOFTWARE.
  */
 
-/// <reference path="../_references.ts"/>
+import { RgbColor, parseColorString } from "powerbi-visuals-utils-colorutils";
 
-module powerbi.extensibility.visual.test.helpers {
-    // powerbi.extensibility.utils.test
-    import RgbColor = powerbi.extensibility.utils.test.helpers.color.RgbColor;
-    import parseColorString = powerbi.extensibility.utils.test.helpers.color.parseColorString;
+export function getSolidColorStructuralObject(color: string): any {
+    return { solid: { color } };
+}
 
-    export function getSolidColorStructuralObject(color: string): any {
-        return { solid: { color } };
-    }
+export function areColorsEqual(firstColor: string, secondColor: string): boolean {
+    const firstConvertedColor: RgbColor = parseColorString(firstColor);
+    const secondConvertedColor: RgbColor = parseColorString(secondColor);
 
-    export function areColorsEqual(firstColor: string, secondColor: string): boolean {
-        const firstConvertedColor: RgbColor = parseColorString(firstColor);
-        const secondConvertedColor: RgbColor = parseColorString(secondColor);
-
-        return firstConvertedColor.R === secondConvertedColor.R
-            && firstConvertedColor.G === secondConvertedColor.G
-            && firstConvertedColor.B === secondConvertedColor.B;
-    }
+    return firstConvertedColor.R === secondConvertedColor.R
+        && firstConvertedColor.G === secondConvertedColor.G
+        && firstConvertedColor.B === secondConvertedColor.B;
 }

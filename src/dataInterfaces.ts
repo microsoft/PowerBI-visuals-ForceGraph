@@ -24,56 +24,56 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual {
-    // External libraries
-    import Node = d3.layout.force.Node;
+import Node = d3.layout.force.Node;
 
-    // powerbi.extensibility.utils.tooltip
-    import TooltipEnabledDataPoint = powerbi.extensibility.utils.tooltip.TooltipEnabledDataPoint;
-    import IValueFormatter = powerbi.extensibility.utils.formatting.IValueFormatter;
+import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
+import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
+import IValueFormatter = vf.IValueFormatter;
 
-    export interface ForceGraphNode extends Node {
-        name: string;
-        image: string;
-        adj: {[i: string]: number};
-        x?: number;
-        y?: number;
-        isDrag?: boolean;
-        isOver?: boolean;
-        hideLabel?: boolean;
-    }
+import { ForceGraphSettings } from "./settings";
 
-    export interface ITextRect {
-        x1: number;
-        y1: number;
-        x2: number;
-        y2: number;
-    }
-
-    export interface ForceGraphNodes {
-        [i: string]: ForceGraphNode;
-    }
-
-    export interface ForceGraphLink extends TooltipEnabledDataPoint {
-        source: ForceGraphNode;
-        target: ForceGraphNode;
-        weight: number;
-        formattedWeight: string;
-        linkType: string;
-    }
-
-    export interface ForceGraphData {
-        nodes: ForceGraphNodes;
-        links: ForceGraphLink[];
-        minFiles: number;
-        maxFiles: number;
-        linkedByName: LinkedByName;
-        linkTypes: {};
-        settings: ForceGraphSettings;
-        formatter: IValueFormatter;
-    }
-
-    export interface LinkedByName {
-        [linkName: string]: number;
-    }
+export interface ForceGraphNode extends Node {
+    name: string;
+    image: string;
+    adj: { [i: string]: number };
+    x?: number;
+    y?: number;
+    isDrag?: boolean;
+    isOver?: boolean;
+    hideLabel?: boolean;
 }
+
+export interface ITextRect {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+}
+
+export interface ForceGraphNodes {
+    [i: string]: ForceGraphNode;
+}
+
+export interface ForceGraphLink extends TooltipEnabledDataPoint {
+    source: ForceGraphNode;
+    target: ForceGraphNode;
+    weight: number;
+    formattedWeight: string;
+    linkType: string;
+}
+
+export interface ForceGraphData {
+    nodes: ForceGraphNodes;
+    links: ForceGraphLink[];
+    minFiles: number;
+    maxFiles: number;
+    linkedByName: LinkedByName;
+    linkTypes: {};
+    settings: ForceGraphSettings;
+    formatter: IValueFormatter;
+}
+
+export interface LinkedByName {
+    [linkName: string]: number;
+}
+

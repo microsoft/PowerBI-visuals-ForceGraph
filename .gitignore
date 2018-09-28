@@ -8,3 +8,5 @@ typings
 /coverage
 
 .idea/*
+
+webpack.statistics.html

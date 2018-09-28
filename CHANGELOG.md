@@ -1,3 +1,7 @@
+## 2.0.0
+* API 2.1.0
+* Webpack integration
+
 ## 1.9.0
 * High contrast mode
 * API 1.13.0
