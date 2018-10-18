@@ -24,72 +24,72 @@
  *  THE SOFTWARE.
  */
 
-module powerbi.extensibility.visual {
-    // powerbi
-    import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import powerbi from "powerbi-visuals-api";
 
-    // powerbi.extensibility.utils.dataview
-    import hasRole = powerbi.extensibility.utils.dataview.DataRoleHelper.hasRole;
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
+import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 
-    // powerbi.extensibility.utils.formatting
-    import valueFormatter = powerbi.extensibility.utils.formatting.valueFormatter;
+import { dataRoleHelper as DataRoleHelperModule } from "powerbi-visuals-utils-dataviewutils";
+import hasRole = DataRoleHelperModule.DataRoleHelper.hasRole;
 
-    export interface ForceGraphTooltipInputObject {
-        [propertyName: string]: any;
-    }
+import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
+import valueFormatter = vf.valueFormatter;
 
-    export class ForceGraphTooltipsFactory {
-        public static build(
-            inputObject: ForceGraphTooltipInputObject,
-            dataViewMetadataColumns: DataViewMetadataColumn[]): VisualTooltipDataItem[] {
+export interface ForceGraphTooltipInputObject {
+    [propertyName: string]: any;
+}
 
-            let tooltips: VisualTooltipDataItem[] = [];
+export class ForceGraphTooltipsFactory {
+    public static build(
+        inputObject: ForceGraphTooltipInputObject,
+        dataViewMetadataColumns: DataViewMetadataColumn[]): VisualTooltipDataItem[] {
 
-            if (!inputObject) {
-                return tooltips;
-            }
+        let tooltips: VisualTooltipDataItem[] = [];
 
-            for (let propertyName in inputObject) {
-                let column: DataViewMetadataColumn,
-                    value: string;
-
-                column = ForceGraphMetadataRoleHelper.getColumnByRoleName(
-                    dataViewMetadataColumns,
-                    propertyName);
-
-                if (!column || !column.displayName) {
-                    continue;
-                }
-
-                value = inputObject[propertyName];
-                if (!(typeof value === "number")) {
-                    value = valueFormatter.format(value, valueFormatter.getFormatStringByColumn(column));
-                }
-
-                tooltips.push({
-                    displayName: column.displayName,
-                    value: `${value}`
-                });
-            }
-
+        if (!inputObject) {
             return tooltips;
         }
-    }
 
-    export class ForceGraphMetadataRoleHelper {
-        public static getColumnByRoleName(
-            dataViewMetadataColumns: DataViewMetadataColumn[],
-            roleName: string): DataViewMetadataColumn {
+        for (let propertyName in inputObject) {
+            let column: DataViewMetadataColumn,
+                value: string;
 
-            if (dataViewMetadataColumns && dataViewMetadataColumns.length && roleName) {
-                for (const metadataColumn of dataViewMetadataColumns) {
-                    if (metadataColumn && hasRole(metadataColumn, roleName)) {
-                        return metadataColumn;
-                    }
-                }
+            column = ForceGraphMetadataRoleHelper.getColumnByRoleName(
+                dataViewMetadataColumns,
+                propertyName);
+
+            if (!column || !column.displayName) {
+                continue;
             }
 
-            return null;
+            value = inputObject[propertyName];
+            if (!(typeof value === "number")) {
+                value = valueFormatter.format(value, valueFormatter.getFormatStringByColumn(column));
+            }
+
+            tooltips.push({
+                displayName: column.displayName,
+                value: `${value}`
+            });
         }
+
+        return tooltips;
+    }
+}
+
+export class ForceGraphMetadataRoleHelper {
+    public static getColumnByRoleName(
+        dataViewMetadataColumns: DataViewMetadataColumn[],
+        roleName: string): DataViewMetadataColumn {
+
+        if (dataViewMetadataColumns && dataViewMetadataColumns.length && roleName) {
+            for (const metadataColumn of dataViewMetadataColumns) {
+                if (metadataColumn && hasRole(metadataColumn, roleName)) {
+                    return metadataColumn;
+                }
+            }
+        }
+
+        return null;
     }
 }
