@@ -39,6 +39,9 @@ import { VisualBuilder as ForceGraphBuilder } from "./visualBuilder";
 
 import { ForceGraphMetadataRoleHelper, ForceGraphTooltipsFactory, ForceGraphTooltipInputObject } from "./../src/tooltipsFactory";
 
+import { ForceGraph } from "./../src/visual";
+
+
 describe("ForceGraph", () => {
     let visualBuilder: ForceGraphBuilder,
         defaultDataViewBuilder: ForceGraphData,
@@ -169,7 +172,7 @@ describe("ForceGraph", () => {
 
         it("curved arrows", () => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                const linkPaths: JQuery[] = visualBuilder.mainElement.children("path.link").toArray().map($);
+                const linkPaths: JQuery<any>[] = visualBuilder.mainElement.children("path.link").toArray().map($);
                 linkPaths.forEach((linkPath) => {
                     if (linkPath.get()[0]["__data__"].source.name === linkPath.get()[0]["__data__"].target.name) {
                         let path = linkPath.get()[0].getAttribute("d");
@@ -257,7 +260,7 @@ describe("ForceGraph", () => {
             });
 
             it("links labels on", () => {
-                const linkLabelsTextPath: JQuery[] = visualBuilder.linkLabelsTextPath.toArray().map($);
+                const linkLabelsTextPath: JQuery<any>[] = visualBuilder.linkLabelsTextPath.toArray().map($);
                 linkLabelsTextPath.forEach((element) => {
                     const text: string = element.text();
                     expect(text).not.toBeEmpty();
@@ -272,7 +275,7 @@ describe("ForceGraph", () => {
 
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                const linkLabelsTextPath: JQuery[] = visualBuilder.linkLabelsTextPath.toArray().map($);
+                const linkLabelsTextPath: JQuery<any>[] = visualBuilder.linkLabelsTextPath.toArray().map($);
 
                 linkLabelsTextPath.forEach((element: JQuery) => {
                     const text: string = element.text();
@@ -322,7 +325,7 @@ describe("ForceGraph", () => {
                 dataView = defaultDataViewBuilder.getDataView();
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                const nodeTexts: JQuery[] = visualBuilder.nodeTexts.toArray().map($);
+                const nodeTexts: JQuery<any>[] = visualBuilder.nodeTexts.toArray().map($);
 
                 nodeTexts.forEach((node) => {
                     const text: string = node.text();
@@ -389,7 +392,7 @@ describe("ForceGraph", () => {
 
             it("should use `foreground` color as a fill for all of nodes", (done) => {
                 visualBuilder.updateRenderTimeout(dataView, () => {
-                    const circles: JQuery[] = visualBuilder.circles.toArray().map($);
+                    const circles: JQuery<any>[] = visualBuilder.circles.toArray().map($);
 
                     expect(isColorAppliedToElements(circles, foregroundColor, "fill"));
 
@@ -399,7 +402,7 @@ describe("ForceGraph", () => {
 
             it("should use `background` color as a stroke for all of nodes", (done) => {
                 visualBuilder.updateRenderTimeout(dataView, () => {
-                    const circles: JQuery[] = visualBuilder.circles.toArray().map($);
+                    const circles: JQuery<any>[] = visualBuilder.circles.toArray().map($);
 
                     expect(isColorAppliedToElements(circles, backgroundColor, "stroke"));
 
@@ -415,7 +418,7 @@ describe("ForceGraph", () => {
                 };
 
                 visualBuilder.updateRenderTimeout(dataView, () => {
-                    const labels: JQuery[] = visualBuilder.nodeTexts.toArray().map($);
+                    const labels: JQuery<any>[] = visualBuilder.nodeTexts.toArray().map($);
 
                     expect(isColorAppliedToElements(labels, foregroundColor, "fill"));
 

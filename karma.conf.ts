@@ -28,13 +28,11 @@
 
 const webpackConfig = require("./test.webpack.config.js");
 const tsconfig = require("./test.tsconfig.json");
-const path = require("path");
+const path = require('path');
 
 const testRecursivePath = "test/visualTest.ts";
 const srcOriginalRecursivePath = "src/**/*.ts";
-const srcRecursivePath = ".tmp/drop/**/*.js";
 const coverageFolder = "coverage";
-const globals = "./test/globals.ts";
 
 process.env.CHROME_BIN = require("puppeteer").executablePath();
 
@@ -48,9 +46,39 @@ module.exports = (config: Config) => {
         frameworks: ["jasmine"],
         reporters: [
             "progress",
-            "coverage",
+            "junit",
             "coverage-istanbul"
         ],
+        junitReporter: {
+            outputDir: path.join(__dirname, coverageFolder),
+            outputFile: "TESTS-report.xml",
+            useBrowserName: false
+        },
+        coverageReporter: {
+            dir: path.join(__dirname, coverageFolder),
+            reporters: [
+                // reporters not supporting the `file` property
+                { type: 'html', subdir: 'html-report' },
+                { type: 'lcov', subdir: 'lcov' },
+                // reporters supporting the `file` property, use `subdir` to directly
+                // output them in the `dir` directory
+                { type: 'cobertura', subdir: '.', file: 'cobertura-coverage.xml' },
+                { type: 'lcovonly', subdir: '.', file: 'report-lcovonly.txt' },
+                { type: 'text-summary', subdir: '.', file: 'text-summary.txt' },
+            ]
+        },
+        coverageIstanbulReporter: {
+            reports: ["html", "lcovonly", "text-summary", "cobertura"],
+            dir: path.join(__dirname, coverageFolder),
+            'report-config': {
+                html: {
+                    subdir: 'html-report'
+                }
+            },
+            combineBrowserReports: true,
+            fixWebpackSourcePaths: true,
+            verbose: false
+        },
         singleRun: true,
         plugins: [
             "karma-coverage",
@@ -59,13 +87,12 @@ module.exports = (config: Config) => {
             "karma-jasmine",
             "karma-sourcemap-loader",
             "karma-chrome-launcher",
+            "karma-junit-reporter",
             "karma-coverage-istanbul-reporter"
         ],
         files: [
             "node_modules/jquery/dist/jquery.min.js",
             "node_modules/jasmine-jquery/lib/jasmine-jquery.js",
-            globals,
-            srcRecursivePath,
             testRecursivePath,
             {
                 pattern: srcOriginalRecursivePath,
@@ -73,55 +100,17 @@ module.exports = (config: Config) => {
                 served: true
             },
             {
-                pattern: "./capabilities.json",
+                pattern: './capabilities.json',
                 watched: false,
                 served: true,
                 included: false
             }
         ],
         preprocessors: {
-            [testRecursivePath]: ["webpack"],
-            [srcRecursivePath]: ["sourcemap"]
+            [testRecursivePath]: ["webpack", "coverage"]
         },
         typescriptPreprocessor: {
             options: tsconfig.compilerOptions
-        },
-        coverageIstanbulReporter: {
-            // reports can be any that are listed here: https://github.com/istanbuljs/istanbuljs/tree/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-reports/lib
-            reports: {
-                lcovonly: coverageFolder + "lcov.info",
-                html: coverageFolder,
-                "text-summary": null
-            },
-
-            // base output directory. If you include %browser% in the path it will be replaced with the karma browser name
-            dir: path.join(__dirname, "coverage"),
-
-            // Combines coverage information from multiple browsers into one report rather than outputting a report
-            // for each browser.
-            combineBrowserReports: true,
-
-            // if using webpack and pre-loaders, work around webpack breaking the source path
-            fixWebpackSourcePaths: true,
-
-            // Omit files with no statements, no functions and no branches from the report
-            skipFilesWithNoCoverage: true,
-
-            // Most reporters accept additional config options. You can pass these through the `report-config` option
-            "report-config": {
-                // all options available at: https://github.com/istanbuljs/istanbuljs/blob/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-reports/lib/html/index.js#L135-L137
-                html: {
-                    // outputs the report in ./coverage/html
-                    subdir: "html"
-                }
-            }
-        },
-        coverageReporter: {
-            dir: coverageFolder,
-            reporters: [
-                { type: "html" },
-                { type: "lcov" }
-            ]
         },
         mime: {
             "text/x-typescript": ["ts", "tsx"]
