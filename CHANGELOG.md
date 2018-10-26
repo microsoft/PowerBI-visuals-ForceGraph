@@ -1,3 +1,7 @@
+## 2.0.1
+* Updared dependencies
+* Azure Pipelines integration
+
 ## 2.0.0
 * API 2.1.0
 * Webpack integration
