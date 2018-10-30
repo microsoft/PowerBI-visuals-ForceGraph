@@ -10,7 +10,6 @@
     "powerbi-visuals"
   ],
   "scripts": {
-    "postinstall": "pbiviz update 2.1.0",
     "pbiviz": "pbiviz",
     "start": "pbiviz start",
     "package": "pbiviz package",
@@ -68,7 +67,7 @@
     "lodash": "4.17.11",
     "powerbi-models": "1.0.12",
     "powerbi-visuals-api": "^2.1.0",
-    "powerbi-visuals-tools": "3.0.1",
+    "powerbi-visuals-tools": "^3.0.4",
     "powerbi-visuals-utils-testutils": "2.1.4",
     "puppeteer": "1.9.0",
     "style-loader": "0.23.1",
