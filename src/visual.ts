@@ -108,9 +108,6 @@ import ISelectionManager = powerbi.extensibility.ISelectionManager;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import ISelectionId = powerbi.extensibility.ISelectionId;
 
-import { hostname } from "os";
-
-
 export class ForceGraph implements IVisual {
 
     private static Count: number = 0;
@@ -139,10 +136,10 @@ export class ForceGraph implements IVisual {
     private static LinkDistance: number = 100;
     private static HoverOpacity: number = 0.3;
     private static DefaultOpacity: number = 1;
-    private static DefaultLinkColor: string = "#ccc";
+    private static DefaultLinkColor: string = "#bbb";
     private static DefaultLinkHighlightColor: string = "#f00";
     private static DefaultLinkThickness: string = "1.5px";
-    private static LabelsFontFamily: string = "sans serif";
+    private static LabelsFontFamily: string = "sans-serif";
     private static MinRangeValue: number = 1;
     private static MaxRangeValue: number = 10;
     private static DefaultValueOfExistingLink: number = 1;
@@ -417,6 +414,7 @@ export class ForceGraph implements IVisual {
             if (!nodes[source]) {
                 nodes[source] = {
                     name: sourceFormatter.format(source),
+                    hideLabel: false,
                     image: sourceType || ForceGraph.DefaultSourceType,
                     adj: {},
                     identity: host.createSelectionIdBuilder()
@@ -719,8 +717,7 @@ export class ForceGraph implements IVisual {
                 node.isOver = false;
                 this.fadeNode(node);
             })
-            
-            .on('click', function(d) {
+            .on("click", function(d) {
                 selectionManager.select(d.identity).then((ids: ISelectionId[]) => {
                 }); 
 
