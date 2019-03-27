@@ -104,7 +104,12 @@ import { ForceGraphSettings, LinkColorType } from "./settings";
 import { ForceGraphTooltipsFactory } from "./tooltipsFactory";
 import { ForceGraphData, ForceGraphNode, ForceGraphNodes, ForceGraphLink, LinkedByName, ITextRect } from "./dataInterfaces";
 
+import ISelectionManager = powerbi.extensibility.ISelectionManager;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import ISelectionId = powerbi.extensibility.ISelectionId;
+
 export class ForceGraph implements IVisual {
+
     private static Count: number = 0;
     private static VisualClassName: string = "forceGraph";
     private static getEvent = () => require("d3").event;
@@ -156,6 +161,9 @@ export class ForceGraph implements IVisual {
     private static LinkLabelSelector: ClassAndSelector = createClassAndSelector("linklabel");
     private static NodeSelector: ClassAndSelector = createClassAndSelector("node");
     private static NoAnimationLimit: number = 200;
+
+    private selectionManager: ISelectionManager;
+    private host: IVisualHost;
 
     private static get Href(): string {
         return window.location.href.replace(window.location.hash, "");
@@ -219,6 +227,8 @@ export class ForceGraph implements IVisual {
     private tooltipServiceWrapper: ITooltipServiceWrapper;
 
     constructor(options: VisualConstructorOptions) {
+        this.selectionManager = options.host.createSelectionManager();
+        this.host = options.host;
         this.init(options);
     }
 
@@ -327,6 +337,7 @@ export class ForceGraph implements IVisual {
         dataView: DataView,
         colorPalette: IColorPalette,
         colorHelper: ColorHelper,
+        host: IVisualHost,
     ): ForceGraphData {
         const settings: ForceGraphSettings = ForceGraph.parseSettings(dataView, colorHelper);
         const metadata: ForceGraphColumns<DataViewMetadataColumn> = ForceGraphColumns.getMetadataColumns(dataView);
@@ -405,7 +416,11 @@ export class ForceGraph implements IVisual {
                     name: sourceFormatter.format(source),
                     hideLabel: false,
                     image: sourceType || ForceGraph.DefaultSourceType,
-                    adj: {}
+                    adj: {},
+                    identity: host.createSelectionIdBuilder()
+                        .withCategory(categorical.Source, i)
+                        .withMeasure(<string>categorical.Source.values[i])
+                        .createSelectionId()
                 };
             }
 
@@ -414,7 +429,11 @@ export class ForceGraph implements IVisual {
                     name: targetFormatter.format(target),
                     hideLabel: false,
                     image: targetType || ForceGraph.DefaultTargetType,
-                    adj: {}
+                    adj: {},
+                    identity: host.createSelectionIdBuilder()
+                        .withCategory(categorical.Target, i)
+                        .withMeasure(<string>categorical.Target.values[i])
+                        .createSelectionId()
                 };
             }
 
@@ -558,7 +577,8 @@ export class ForceGraph implements IVisual {
         this.data = ForceGraph.converter(
             options.dataViews[0],
             this.colorPalette,
-            this.colorHelper
+            this.colorHelper,
+            this.host
         );
 
         if (!this.data) {
@@ -680,6 +700,7 @@ export class ForceGraph implements IVisual {
         }
 
         let nodesNum: number = Object.keys(this.data.nodes).length;
+        let selectionManager = this.selectionManager;
 
         // define the nodes
         this.nodes = svg.selectAll(ForceGraph.NodeSelector.selectorName)
@@ -696,7 +717,11 @@ export class ForceGraph implements IVisual {
                 node.isOver = false;
                 this.fadeNode(node);
             })
-            .on("mousedown", () => (d3.event as MouseEvent).stopPropagation());
+            .on("click", function (d) {
+                selectionManager.select(d.identity);
+
+                (<Event>d3.event).stopPropagation();
+            });
 
         if (nodesNum <= ForceGraph.NoAnimationLimit) {
             this.nodes.call(this.forceLayout.drag);

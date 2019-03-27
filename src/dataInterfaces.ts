@@ -25,6 +25,7 @@
  */
 
 import Node = d3.layout.force.Node;
+import powerbi from "powerbi-visuals-api";
 
 import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
 import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
@@ -41,6 +42,7 @@ export interface ForceGraphNode extends Node {
     isDrag?: boolean;
     isOver?: boolean;
     hideLabel?: boolean;
+    identity: powerbi.visuals.ISelectionId;
 }
 
 export interface ITextRect {
