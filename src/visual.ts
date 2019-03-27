@@ -125,7 +125,7 @@ export class ForceGraph implements IVisual {
         width: 24,
         height: 24
     };
-    
+
     private static ImagePosition: number = -12;
     private static MinNodeWeight: number = 5;
     private static MinCharge: number = -100;
@@ -203,7 +203,7 @@ export class ForceGraph implements IVisual {
         this.marginValue = { ...value };
         this.viewportInValue = ForceGraph.substractMargin(this.viewport, this.margin);
     }
-    
+
     private viewportValue: IViewport;
 
     private get viewport(): IViewport {
@@ -369,7 +369,7 @@ export class ForceGraph implements IVisual {
         ) {
             return null;
         }
-        
+
         let sourceCategories: any[] = categorical.Source.values,
             targetCategories: any[] = categorical.Target.values,
             sourceTypeCategories: any[] = (categorical.SourceType || { values: [] }).values,
@@ -400,7 +400,7 @@ export class ForceGraph implements IVisual {
         let targetFormatter: IValueFormatter = valueFormatter.create({
             format: valueFormatter.getFormatStringByColumn(metadata.Target, true),
         });
-        
+
         for (let i = 0; i < targetCategories.length; i++) {
             const source = sourceCategories[i];
             const target = targetCategories[i];
@@ -421,7 +421,7 @@ export class ForceGraph implements IVisual {
                         .withCategory(categorical.Source, i)
                         .withMeasure(<string>categorical.Source.values[i])
                         .createSelectionId()
-                }
+                };
             }
 
             if (!nodes[target]) {
@@ -433,8 +433,8 @@ export class ForceGraph implements IVisual {
                     identity: host.createSelectionIdBuilder()
                         .withCategory(categorical.Target, i)
                         .withMeasure(<string>categorical.Target.values[i])
-                        .createSelectionId() 
-                }
+                        .createSelectionId()
+                };
             }
 
             let sourceNode: ForceGraphNode = nodes[source],
@@ -717,9 +717,8 @@ export class ForceGraph implements IVisual {
                 node.isOver = false;
                 this.fadeNode(node);
             })
-            .on("click", function(d) {
-                selectionManager.select(d.identity).then((ids: ISelectionId[]) => {
-                }); 
+            .on("click", function (d) {
+                selectionManager.select(d.identity);
 
                 (<Event>d3.event).stopPropagation();
             });
