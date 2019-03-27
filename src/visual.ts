@@ -1025,10 +1025,10 @@ export class ForceGraph implements IVisual {
             ? ForceGraph.DefaultLinkHighlightColor
             : ForceGraph.DefaultLinkColor;
 
-        this.nodes.style("stroke-opacity", function (node: ForceGraphNode) {
+        this.nodes.style("stroke-opacity", function (otherNode: ForceGraphNode) {
             let thisOpacity: number = (self.settings.nodes.highlightReachableLinks
-                ? self.isReachable(node, node)
-                : self.areNodesConnected(node, node))
+                ? self.isReachable(node, otherNode)
+                : self.areNodesConnected(node, otherNode))
                 ? ForceGraph.DefaultOpacity
                 : opacity;
             this.setAttribute("fill-opacity", thisOpacity);
