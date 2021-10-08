@@ -3,7 +3,7 @@
 
 > The new version of Force Graph based on the new DevTools/API
 
-![ForceGraph chart screenshot](https://az158878.vo.msecnd.net/marketing/Partner_21474836617/Product_42949680584/Asset_bc802df4-bddf-4671-baa8-4b1043780e3b/ForceDirectedGraphscreenshot1.png)
+![ForceGraph chart screenshot](https://github.com/microsoft/PowerBI-visuals-ForceGraph/blob/master/assets/screenshot.png)
 # Overview
 
 The ability to visualize the relationship between items, the weightage of the relationship and the flow often brings out the untold insights into limelight, which are otherwise not very evident. Simple numbers and basic charts won’t be enough to discover and tell such data stories. We need new visualization techniques for the complex world of relationship and Force-Directed Graph thrives to the forefront for such scenarios.
