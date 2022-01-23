@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/Microsoft/PowerBI-visuals-ForceGraph#readme",
   "dependencies": {
-    "@babel/polyfill": "^7.0.0",
     "d3": "3.5.17",
     "powerbi-visuals-utils-chartutils": "2.6.0",
     "powerbi-visuals-utils-colorutils": "2.3.1",
@@ -40,7 +39,7 @@
     "powerbi-visuals-utils-typeutils": "2.3.1"
   },
   "devDependencies": {
-    "@types/d3": "7.1.0",
+    "@types/d3": "3.5.41",
     "@types/jasmine": "2.8.9",
     "@types/jasmine-jquery": "1.5.34",
     "@types/jquery": "3.5.13",

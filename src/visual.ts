@@ -63,7 +63,6 @@
 
 import "./../style/visual.less";
 
-import "@babel/polyfill";
 import * as d3 from "d3";
 import * as _ from "lodash";
 import powerbi from "powerbi-visuals-api";
