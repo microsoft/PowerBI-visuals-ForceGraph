@@ -44,17 +44,14 @@ export class ForceGraphTooltipsFactory {
         inputObject: ForceGraphTooltipInputObject,
         dataViewMetadataColumns: DataViewMetadataColumn[]): VisualTooltipDataItem[] {
 
-        let tooltips: VisualTooltipDataItem[] = [];
+        const tooltips: VisualTooltipDataItem[] = [];
 
         if (!inputObject) {
             return tooltips;
         }
 
-        for (let propertyName in inputObject) {
-            let column: DataViewMetadataColumn,
-                value: string;
-
-            column = ForceGraphMetadataRoleHelper.getColumnByRoleName(
+        for (const propertyName in inputObject) {
+            const column: DataViewMetadataColumn = ForceGraphMetadataRoleHelper.getColumnByRoleName(
                 dataViewMetadataColumns,
                 propertyName);
 
@@ -62,7 +59,7 @@ export class ForceGraphTooltipsFactory {
                 continue;
             }
 
-            value = inputObject[propertyName];
+            let value: string = inputObject[propertyName];
             if (!(typeof value === "number")) {
                 value = valueFormatter.format(value, valueFormatter.getFormatStringByColumn(column));
             }
