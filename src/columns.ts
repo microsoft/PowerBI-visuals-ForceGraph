@@ -36,7 +36,7 @@ import DataViewValueColumns = powerbi.DataViewValueColumns;
 
 export class ForceGraphColumns<T> {
     public static getMetadataColumns(dataView: DataView): ForceGraphColumns<DataViewMetadataColumn> {
-        let columns: DataViewMetadataColumn[] = dataView && dataView.metadata && dataView.metadata.columns;
+        const columns: DataViewMetadataColumn[] = dataView && dataView.metadata && dataView.metadata.columns;
 
         return columns && _.mapValues(
             new ForceGraphColumns<DataViewMetadataColumn>(),
