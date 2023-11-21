@@ -1,4 +1,5 @@
 {
+    "privileges": [],
     "dataRoles": [
         {
             "displayNameKey": "Visual_Source",
