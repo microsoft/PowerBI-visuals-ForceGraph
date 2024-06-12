@@ -63,7 +63,6 @@
 
 import "./../style/visual.less";
 
-import "@babel/polyfill";
 import * as d3 from "d3";
 import * as _ from "lodash";
 import powerbi from "powerbi-visuals-api";
@@ -90,7 +89,7 @@ import createClassAndSelector = SVGUtil.CssConstants.createClassAndSelector;
 import { IMargin, manipulation } from "powerbi-visuals-utils-svgutils";
 import translate = manipulation.translate;
 
-import { valueFormatter as vf, textMeasurementService as tms, textUtil } from "powerbi-visuals-utils-formattingutils";
+import { valueFormatter as vf, textMeasurementService as tms } from "powerbi-visuals-utils-formattingutils";
 import textMeasurementService = tms.textMeasurementService;
 import TextProperties = tms.TextProperties;
 import IValueFormatter = vf.IValueFormatter;
@@ -106,7 +105,6 @@ import { ForceGraphData, ForceGraphNode, ForceGraphNodes, ForceGraphLink, Linked
 
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
-import ISelectionId = powerbi.extensibility.ISelectionId;
 
 export class ForceGraph implements IVisual {
 
@@ -288,7 +286,7 @@ export class ForceGraph implements IVisual {
     }
 
     private scale1to10(value: number): number {
-        let scale: d3.scale.Linear<number, number> = d3.scale.linear()
+        const scale: d3.scale.Linear<number, number> = d3.scale.linear()
             .domain([
                 this.data.minFiles,
                 this.data.maxFiles
@@ -356,7 +354,7 @@ export class ForceGraph implements IVisual {
             return null;
         }
 
-        let categorical: ForceGraphColumns<DataViewCategoryColumn & DataViewValueColumn[]>
+        const categorical: ForceGraphColumns<DataViewCategoryColumn & DataViewValueColumn[]>
             = ForceGraphColumns.getCategoricalColumns(dataView);
 
         if (!categorical
@@ -370,7 +368,7 @@ export class ForceGraph implements IVisual {
             return null;
         }
 
-        let sourceCategories: any[] = categorical.Source.values,
+        const sourceCategories: any[] = categorical.Source.values,
             targetCategories: any[] = categorical.Target.values,
             sourceTypeCategories: any[] = (categorical.SourceType || { values: [] }).values,
             targetTypeCategories: any[] = (categorical.TargetType || { values: [] }).values,
@@ -393,11 +391,11 @@ export class ForceGraph implements IVisual {
             });
         }
 
-        let sourceFormatter: IValueFormatter = valueFormatter.create({
+        const sourceFormatter: IValueFormatter = valueFormatter.create({
             format: valueFormatter.getFormatStringByColumn(metadata.Source, true),
         });
 
-        let targetFormatter: IValueFormatter = valueFormatter.create({
+        const targetFormatter: IValueFormatter = valueFormatter.create({
             format: valueFormatter.getFormatStringByColumn(metadata.Target, true),
         });
 
@@ -437,7 +435,7 @@ export class ForceGraph implements IVisual {
                 };
             }
 
-            let sourceNode: ForceGraphNode = nodes[source],
+            const sourceNode: ForceGraphNode = nodes[source],
                 targetNode: ForceGraphNode = nodes[target];
 
             sourceNode.adj[targetNode.name] = ForceGraph.DefaultValueOfExistingLink;
@@ -455,7 +453,7 @@ export class ForceGraph implements IVisual {
                 dataView.metadata.columns
             );
 
-            let link: ForceGraphLink = {
+            const link: ForceGraphLink = {
                 source: sourceNode,
                 target: targetNode,
                 weight: Math.max(metadata.Weight
@@ -503,7 +501,7 @@ export class ForceGraph implements IVisual {
     }
 
     private static parseSettings(dataView: DataView, colorHelper: ColorHelper): ForceGraphSettings {
-        let settings: ForceGraphSettings = ForceGraphSettings.parse<ForceGraphSettings>(dataView);
+        const settings: ForceGraphSettings = ForceGraphSettings.parse<ForceGraphSettings>(dataView);
 
         settings.size.charge = Math.min(
             Math.max(settings.size.charge, ForceGraph.MinCharge),
@@ -588,7 +586,7 @@ export class ForceGraph implements IVisual {
 
         this.viewport = options.viewport;
 
-        let k: number = Math.sqrt(Object.keys(this.data.nodes).length /
+        const k: number = Math.sqrt(Object.keys(this.data.nodes).length /
             (this.viewport.width * this.viewport.height));
 
         this.reset();
@@ -602,7 +600,7 @@ export class ForceGraph implements IVisual {
 
         this.updateNodes();
 
-        let nodesNum: number = Object.keys(this.data.nodes).length;
+        const nodesNum: number = Object.keys(this.data.nodes).length;
         const theta: number = 1.4;
 
         if (this.settings.animation.show && nodesNum <= ForceGraph.NoAnimationLimit) {
@@ -667,7 +665,7 @@ export class ForceGraph implements IVisual {
         });
 
         if (this.settings.links.showLabel) {
-            let linklabelholderUpdate: d3.selection.Update<ForceGraphLink> = svg
+            const linklabelholderUpdate: d3.selection.Update<ForceGraphLink> = svg
                 .selectAll(ForceGraph.LinkLabelHolderSelector.selectorName)
                 .data(this.forceLayout.links());
 
@@ -699,8 +697,8 @@ export class ForceGraph implements IVisual {
                 .remove();
         }
 
-        let nodesNum: number = Object.keys(this.data.nodes).length;
-        let selectionManager = this.selectionManager;
+        const nodesNum: number = Object.keys(this.data.nodes).length;
+        const selectionManager = this.selectionManager;
 
         // define the nodes
         this.nodes = svg.selectAll(ForceGraph.NodeSelector.selectorName)
@@ -731,7 +729,7 @@ export class ForceGraph implements IVisual {
         if (!this.settings.animation.show || nodesNum > ForceGraph.NoAnimationLimit) {
             const viewport: IViewport = this.viewportIn;
 
-            let maxWidth: number = viewport.width * ForceGraph.ResolutionFactor,
+            const maxWidth: number = viewport.width * ForceGraph.ResolutionFactor,
                 maxHeight: number = viewport.height * ForceGraph.ResolutionFactor,
                 limitX = x => Math.max((viewport.width - maxWidth) / 2, Math.min((viewport.width + maxWidth) / 2, x)),
                 limitY = y => Math.max((viewport.height - maxHeight) / 2, Math.min((viewport.height + maxHeight) / 2, y));
@@ -815,7 +813,7 @@ export class ForceGraph implements IVisual {
     }
 
     private updateNodes(): void {
-        let thePreviousNodes: ForceGraphNode[] = this.forceLayout.nodes();
+        const thePreviousNodes: ForceGraphNode[] = this.forceLayout.nodes();
 
         this.forceLayout.nodes(d3.values(this.data.nodes));
 
@@ -856,7 +854,6 @@ export class ForceGraph implements IVisual {
             maxHeight: number = viewport.height * resolutionFactor,
             viewPortWidthDownLimit: number = (viewport.width - maxWidth) / 2,
             viewPortHeightDownLimit: number = (viewport.height - maxHeight) / 2,
-            viewPortHeightUpLimit: number = (viewport.height + maxHeight) / 2,
             viewPortWidthUpLimit: number = (viewport.height + maxHeight) / 2,
             limitX: (x: number) => number = x => Math.max(viewPortWidthDownLimit, Math.min(viewPortWidthUpLimit, x)),
             limitY: (y: number) => number = y => Math.max(viewPortHeightDownLimit, Math.min(viewPortWidthUpLimit, y));
@@ -881,12 +878,12 @@ export class ForceGraph implements IVisual {
                 this.nodes
                     .classed("hiddenLabel", (node: ForceGraphNode) => {
                         properties.text = this.data.formatter.format(node.name);
-                        let curNodeTextRect: ITextRect = this.getTextRect(properties, node.x, node.y);
+                        const curNodeTextRect: ITextRect = this.getTextRect(properties, node.x, node.y);
 
                         node.hideLabel = false;
                         this.nodes.each((otherNode: ForceGraphNode) => {
                             properties.text = this.data.formatter.format(otherNode.name);
-                            let otherNodeTextRect: ITextRect = this.getTextRect(properties, otherNode.x, otherNode.y);
+                            const otherNodeTextRect: ITextRect = this.getTextRect(properties, otherNode.x, otherNode.y);
                             if (!otherNode.hideLabel && node.name !== otherNode.name && this.isIntersect(curNodeTextRect, otherNodeTextRect)) {
                                 node.hideLabel = true;
                                 return;
@@ -901,10 +898,10 @@ export class ForceGraph implements IVisual {
     }
 
     private getTextRect(properties: TextProperties, x: number, y: number): ITextRect {
-        let textHeight: number = textMeasurementService.estimateSvgTextHeight(properties);
-        let textWidth: number = textMeasurementService.measureSvgTextWidth(properties);
-        let curTextUpperPointX: number = x + textWidth;
-        let curTextUpperPointY: number = y - textHeight;
+        const textHeight: number = textMeasurementService.estimateSvgTextHeight(properties);
+        const textWidth: number = textMeasurementService.measureSvgTextWidth(properties);
+        const curTextUpperPointX: number = x + textWidth;
+        const curTextUpperPointY: number = y - textHeight;
 
         return <ITextRect>{
             x1: x,
@@ -915,7 +912,7 @@ export class ForceGraph implements IVisual {
     }
 
     private getPathWithArrow(link: ForceGraphLink): string {
-        let dx: number = link.target.x - link.source.x,
+        const dx: number = link.target.x - link.source.x,
             dy: number = link.target.y - link.source.y,
             dr: number = Math.sqrt(dx * dx + dy * dy),
             theta: number = Math.atan2(dy, dx) + Math.PI / 7.85,
@@ -937,7 +934,7 @@ export class ForceGraph implements IVisual {
     }
 
     private getPathWithoutArrow(link: ForceGraphLink): string {
-        let dx: number = link.target.x - link.source.x,
+        const dx: number = link.target.x - link.source.x,
             dy: number = link.target.y - link.source.y,
             dr: number = Math.sqrt(dx * dx + dy * dy);
 
@@ -977,24 +974,24 @@ export class ForceGraph implements IVisual {
             return true;
         }
 
-        let visited = {};
+        const visited = {};
 
-        for (let name in this.data.nodes) {
+        for (const name in this.data.nodes) {
             visited[name] = false;
         }
 
         visited[a.name] = true;
 
-        let stack = [];
+        const stack = [];
 
         stack.push(a.name);
 
         while (stack.length > 0) {
-            let cur = stack.pop(),
+            const cur = stack.pop(),
                 node = this.data.nodes[cur];
 
             if (node && node.adj) {
-                for (let nb in node.adj) {
+                for (const nb in node.adj) {
                     if (nb === b.name) {
                         return true;
                     }
@@ -1015,18 +1012,18 @@ export class ForceGraph implements IVisual {
             return;
         }
 
-        let self: ForceGraph = this,
+        const self: ForceGraph = this,
             isHighlight = node.isOver || node.isDrag,
             opacity: number = isHighlight
                 ? ForceGraph.HoverOpacity
                 : ForceGraph.DefaultOpacity;
 
-        let highlight: string = isHighlight
+        const highlight: string = isHighlight
             ? ForceGraph.DefaultLinkHighlightColor
             : ForceGraph.DefaultLinkColor;
 
         this.nodes.style("stroke-opacity", function (otherNode: ForceGraphNode) {
-            let thisOpacity: number = (self.settings.nodes.highlightReachableLinks
+            const thisOpacity: number = (self.settings.nodes.highlightReachableLinks
                 ? self.isReachable(node, otherNode)
                 : self.areNodesConnected(node, otherNode))
                 ? ForceGraph.DefaultOpacity
