@@ -24,7 +24,7 @@
  *  THE SOFTWARE.
  */
 
-import Node = d3.layout.force.Node;
+import { SimulationNodeDatum as Node } from "d3-force";
 import powerbi from "powerbi-visuals-api";
 
 import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
@@ -43,6 +43,7 @@ export interface ForceGraphNode extends Node {
     isOver?: boolean;
     hideLabel?: boolean;
     identity: powerbi.visuals.ISelectionId;
+    weight?: number;
 }
 
 export interface ITextRect {
@@ -70,7 +71,7 @@ export interface ForceGraphData {
     minFiles: number;
     maxFiles: number;
     linkedByName: LinkedByName;
-    linkTypes: {};
+    linkTypes: object;
     settings: ForceGraphSettings;
     formatter: IValueFormatter;
 }
