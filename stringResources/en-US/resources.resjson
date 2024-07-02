@@ -10,6 +10,7 @@
 	"Visual_DataLabels": "Data labels",
 	"Visual_Fill": "Fill",
 	"Visual_TextSize": "Text Size",
+	"Visual_FontControl" : "Font",
 	"Visual_Intersection": "Intersection",
 	"Visual_Arrow": "Arrow",
 	"Visual_Label": "Label",

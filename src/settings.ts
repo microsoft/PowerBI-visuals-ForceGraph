@@ -47,16 +47,8 @@ export class ForceGraphSettings extends FormattingSettingsModel {
     public setHighContrastColor(colorPalette: ISandboxExtendedColorPalette): void {
         if (colorPalette.isHighContrast){
             this.labels.color.value = colorPalette.foreground;
-            //add nodes fill and nodes stroke
-            // settings.nodes.fill = colorHelper.getHighContrastColor(
-            //     "foreground",
-            //     settings.nodes.fill
-            // );
-    
-            // settings.nodes.stroke = colorHelper.getHighContrastColor(
-            //     "background",
-            //     settings.nodes.stroke
-            // );
+            this.nodes.fill = colorPalette.foreground.value;
+            this.nodes.stroke = colorPalette.background.value;   
         }
     }
 }
@@ -85,24 +77,43 @@ class LabelsSettings extends FormattingSettingsCard {
 
     public color = new formattingSettings.ColorPicker({
         name: "color",
-        displayNameKey: "Visual_Fill",
+        displayNameKey: "Visual_Color",
         value: { value: this.defaultLabelColor }
     });
 
-    public fontSize = new formattingSettings.NumUpDown({
-        name: "fontSize",
-        displayNameKey: "Visual_TextSize",
-        value: this.defaultFontSize,
-        options: {
-            minValue: {
-                type: powerbi.visuals.ValidatorType.Min,
-                value: 8
-            },
-            maxValue: {
-                type: powerbi.visuals.ValidatorType.Max,
-                value: 60
-            },
-        }
+    public fontControl = new formattingSettings.FontControl({
+        name: "font",
+        displayNameKey: "Visual_FontControl",
+        fontFamily: new formattingSettings.FontPicker({
+            name: "fontFamily",
+            value: "Segoe UI"
+        }),
+        fontSize: new formattingSettings.NumUpDown({
+            name: "fontSize",
+            value: this.defaultFontSize,
+            options: {
+                minValue: {
+                    type: powerbi.visuals.ValidatorType.Min,
+                    value: 8
+                },
+                maxValue: {
+                    type: powerbi.visuals.ValidatorType.Max,
+                    value: 60
+                }
+            }
+        }),
+        bold: new formattingSettings.ToggleSwitch({
+            name: "fontBold",
+            value: false
+        }),
+        italic: new formattingSettings.ToggleSwitch({
+            name: "fontItalic",
+            value: false
+        }),
+        underline: new formattingSettings.ToggleSwitch({
+            name: "fontUnderline",
+            value: false
+        })
     });
 
     public allowIntersection = new formattingSettings.ToggleSwitch({
@@ -114,7 +125,7 @@ class LabelsSettings extends FormattingSettingsCard {
     public name: string = "labels";
     public displayNameKey: string = "Visual_DataLabels";
     topLevelSlice: formattingSettings.ToggleSwitch = this.show;
-    slices: FormattingSettingsSlice[] = [this.color, this.fontSize, this.allowIntersection];
+    slices: FormattingSettingsSlice[] = [this.fontControl, this.color, this.allowIntersection];
 }
 
 interface IEnumMemberWithDisplayNameKey extends IEnumMember{

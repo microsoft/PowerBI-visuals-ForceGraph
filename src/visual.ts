@@ -113,6 +113,7 @@ import { ForceGraphData, ForceGraphNode, ForceGraphNodes, ForceGraphLink, Linked
 
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
 
 export class ForceGraph implements IVisual {
 
@@ -188,7 +189,7 @@ export class ForceGraph implements IVisual {
     private nodes: Selection<ForceGraphNode>;
     private forceSimulation: Simulation<ForceGraphNode, ForceGraphLink>;
 
-    private colorPalette: IColorPalette;
+    private colorPalette: ISandboxExtendedColorPalette;
     private colorHelper: ColorHelper;
 
     private uniqieId: string = `_${ForceGraph.Count++}_`;
@@ -517,6 +518,7 @@ export class ForceGraph implements IVisual {
         }
 
         this.settings = this.formattingSettingsService.populateFormattingSettingsModel(ForceGraphSettings, options.dataViews[0]);
+        this.settings.setHighContrastColor(this.colorPalette);
 
         this.data = ForceGraph.converter(
             options.dataViews[0],
@@ -754,7 +756,11 @@ export class ForceGraph implements IVisual {
                 .attr("x", ForceGraph.DefaultLabelX)
                 .attr("dy", ForceGraph.DefaultLabelDy)
                 .style("fill", this.settings.labels.color.value.value)
-                .style("font-size", PixelConverter.fromPoint(this.settings.labels.fontSize.value))
+                .style("font-size", PixelConverter.fromPoint(this.settings.labels.fontControl.fontSize.value))
+                .style("font-family", this.settings.labels.fontControl.fontFamily.value)
+                .style("font-weight", this.settings.labels.fontControl.bold.value ? "bold" : "normal")
+                .style("font-style", this.settings.labels.fontControl.italic.value ? "italic" : "normal")
+                .style("text-decoration", this.settings.labels.fontControl.underline.value ? "underline" : "none")
                 .text((node: ForceGraphNode) => {
                     if (node.name) {
                         if (node.name.length > this.settings.nodes.nameMaxLength.value) {
@@ -806,7 +812,7 @@ export class ForceGraph implements IVisual {
         const viewport: IViewport = this.viewportIn;
         const properties: TextProperties = {
             fontFamily: ForceGraph.LabelsFontFamily,
-            fontSize: PixelConverter.fromPoint(this.settings.labels.fontSize.value),
+            fontSize: PixelConverter.fromPoint(this.settings.labels.fontControl.fontSize.value),
             text: this.data.formatter.format("")
         };
 
