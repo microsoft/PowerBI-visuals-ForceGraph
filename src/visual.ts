@@ -391,6 +391,7 @@ export class ForceGraph implements IVisual {
                     hideLabel: false,
                     image: sourceType || ForceGraph.DefaultSourceType,
                     adj: {},
+                    weight: 0,
                     identity: host.createSelectionIdBuilder()
                         .withCategory(categorical.Source, i)
                         .withMeasure(<string>categorical.Source.values[i])
@@ -404,6 +405,7 @@ export class ForceGraph implements IVisual {
                     hideLabel: false,
                     image: targetType || ForceGraph.DefaultTargetType,
                     adj: {},
+                    weight: 0,
                     identity: host.createSelectionIdBuilder()
                         .withCategory(categorical.Target, i)
                         .withMeasure(<string>categorical.Target.values[i])
@@ -414,8 +416,8 @@ export class ForceGraph implements IVisual {
             const sourceNode: ForceGraphNode = nodes[source],
                 targetNode: ForceGraphNode = nodes[target];
 
-            sourceNode.adj[targetNode.name] = ForceGraph.DefaultValueOfExistingLink;
-            targetNode.adj[sourceNode.name] = ForceGraph.DefaultValueOfExistingLink;
+            sourceNode.adj[targetNode.name] = sourceNode.adj[targetNode.name] + 1 || ForceGraph.DefaultValueOfExistingLink;
+            targetNode.adj[sourceNode.name] = targetNode.adj[sourceNode.name] + 1 || ForceGraph.DefaultValueOfExistingLink;
 
             const tooltipInfo: VisualTooltipDataItem[] = ForceGraphTooltipsFactory.build(
                 {
@@ -462,6 +464,11 @@ export class ForceGraph implements IVisual {
             }
 
             links.push(link);
+        }
+
+        // calculate nodes weight based on number of links
+        for (let node of Object.values(nodes)){
+            node.weight = Object.values(node.adj).reduce((partialSum, a) => partialSum + a, 0);
         }
 
         return {
