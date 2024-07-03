@@ -423,7 +423,7 @@ export class ForceGraph implements IVisual {
                 {
                     Source: source,
                     Target: target,
-                    Weight: weight,
+                    Weight: weightFormatter ? weightFormatter.format(weight) : weight,
                     LinkType: linkType,
                     SourceType: sourceType,
                     TargetType: targetType
