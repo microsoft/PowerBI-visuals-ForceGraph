@@ -546,33 +546,33 @@ export class ForceGraph implements IVisual {
             (this.viewport.width * this.viewport.height));
 
         this.reset();
+        const theta: number = 1.4;
 
         this.forceSimulation
             .force("link", forceLink(this.data.links).distance(ForceGraph.LinkDistance))
             .force("x", forceX(this.viewport.width / 2).strength(ForceGraph.GravityFactor * k))
             .force("y", forceY(this.viewport.height / 2).strength(ForceGraph.GravityFactor * k))
-            .force("charge", forceManyBody().strength(this.settings.size.charge.value / k));
-
-        this.updateNodes();
+            .force("charge", forceManyBody().strength(this.settings.size.charge.value / k))
+            .force("theta", forceManyBody().theta(theta))
+            .alpha(0.5);
 
         const nodesNum: number = Object.keys(this.data.nodes).length;
-        const theta: number = 1.4;
+        this.updateNodes();
 
         if (this.settings.animation.show.value && nodesNum <= ForceGraph.NoAnimationLimit) {
-            this.forceSimulation.on("tick", this.getForceTick());
-            this.forceSimulation.force("theta", forceManyBody().theta(theta)).restart();
-            this.setVisualData(this.container, this.colorPalette, this.colorHelper);
-        } else {
-            this.forceSimulation.force("theta", forceManyBody().theta(theta)).restart();
-
-            for (let i = 0; i < nodesNum; ++i) {
-                this.forceSimulation.tick();
+            this.forceSimulation.on("tick", this.getForceTick()).restart();
+        } 
+        else {
+            // manually run simulation to the end
+            while (this.forceSimulation.alpha() > this.forceSimulation.alphaMin()) { 
+                this.forceSimulation.tick(); 
             }
-
-            this.forceSimulation.stop();
-            this.setVisualData(this.container, this.colorPalette, this.colorHelper);
-            this.forceSimulation.on("tick", this.getForceTick());
+            // set nodes and links positions
+            this.getForceTick(); 
+            // for dispatching tick events for drag behavior
+            this.forceSimulation.on("tick", this.getForceTick()).restart();
         }
+        this.setVisualData(this.container, this.colorPalette, this.colorHelper);
     }
 
     public getFormattingModel(): powerbi.visuals.FormattingModel {
@@ -685,22 +685,27 @@ export class ForceGraph implements IVisual {
         if (nodesNum <= ForceGraph.NoAnimationLimit) {
             const drag = d3Drag()
                 .on("start", ((event: D3DragEvent<Element, ForceGraphNode, ForceGraphNode>, d: ForceGraphNode) => {
-                    if (!event.active) 
-                        this.forceSimulation.alphaTarget(0.3).restart();
+                    if (!event.active) {
+                        this.forceSimulation.alphaTarget(1).restart();
+                    }
                     d.isDrag = true;
+                    event.subject.fx = event.subject.x;
+                    event.subject.fy = event.subject.y;
                     this.fadeNode(d);
                 }))
                 .on("end", ((event: D3DragEvent<Element, ForceGraphNode, ForceGraphNode>, d: ForceGraphNode) => {
-                    if (!event.active) 
+                    if (!event.active) {
                         this.forceSimulation.alphaTarget(0);
+                    }
+                    event.subject.fx = null;
+                    event.subject.fy = null;
                     d.isDrag = false;
                     this.fadeNode(d);
                 }))
                 .on("drag", (event: D3DragEvent<Element, ForceGraphNode, ForceGraphNode>, d: ForceGraphNode) => {
-                    d.x = event.x;
-                    d.y = event.y;
+                    d.fx = event.x;
+                    d.fy = event.y;
                     this.fadeNode(d);
-                    this.forceSimulation.tick();
                 });
             this.nodes.call(drag);
         }
@@ -801,7 +806,7 @@ export class ForceGraph implements IVisual {
         this.forceSimulation.nodes(Object.values(this.data.nodes));
 
         this.forceSimulation.nodes().forEach((node: ForceGraphNode, index: number) => {
-            if (!thePreviousNodes[index]) {
+            if (!thePreviousNodes[index] || thePreviousNodes[index].name !== node.name) {
                 return;
             }
 
