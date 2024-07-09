@@ -47,6 +47,7 @@ export class ForceGraphSettings extends FormattingSettingsModel {
     public setHighContrastColor(colorPalette: ISandboxExtendedColorPalette): void {
         if (colorPalette.isHighContrast){
             this.labels.color.value = colorPalette.foreground;
+            this.links.linkLabels.color.value = colorPalette.foreground;
             this.nodes.fill = colorPalette.foreground.value;
             this.nodes.stroke = colorPalette.background.value;   
         }
@@ -65,9 +66,58 @@ class AnimationSettings extends FormattingSettingsCard {
     topLevelSlice: formattingSettings.ToggleSwitch = this.show;
 }
 
+class BaseFontCardSettings extends formattingSettings.FontControl {
+    public static minFontSize: number = 8;
+    public static maxFontSize: number = 60;
+    constructor(defaultFontSize: number, defaultFontFamily: string){
+        super(
+            new formattingSettings.FontControl({
+                name: "font",
+                displayName: "Font",
+                displayNameKey: "Visual_Font",
+                fontFamily: new formattingSettings.FontPicker({
+                    name: "fontFamily",
+                    value: defaultFontFamily
+                }),
+                fontSize: new formattingSettings.NumUpDown({
+                    name: "fontSize",
+                    displayName: "Text Size",
+                    displayNameKey: "Visual_TextSize",
+                    value: defaultFontSize,
+                    options: {
+                        minValue: {
+                            type: powerbi.visuals.ValidatorType.Min,
+                            value: 8
+                        },
+                        maxValue: {
+                            type: powerbi.visuals.ValidatorType.Max,
+                            value: 60
+                        }
+                    }
+                }),
+                bold: new formattingSettings.ToggleSwitch({
+                    name: "fontBold",
+                    value: false
+                }),
+                italic: new formattingSettings.ToggleSwitch({
+                    name: "fontItalic",
+                    value: false
+                }),
+                underline: new formattingSettings.ToggleSwitch({
+                    name: "fontUnderline",
+                    value: false
+                })
+            })
+        );
+    }
+}
+
 class LabelsSettings extends FormattingSettingsCard {
     public defaultLabelColor: string = "#777777";
+    public defaultFontFamily: string = "Segoe UI, sans-serif";
     public defaultFontSize: number = 9;
+
+    public fontControl = new BaseFontCardSettings(this.defaultFontSize, this.defaultFontFamily);
 
     public show = new formattingSettings.ToggleSwitch({
         name: "show",
@@ -79,41 +129,6 @@ class LabelsSettings extends FormattingSettingsCard {
         name: "color",
         displayNameKey: "Visual_Color",
         value: { value: this.defaultLabelColor }
-    });
-
-    public fontControl = new formattingSettings.FontControl({
-        name: "font",
-        displayNameKey: "Visual_FontControl",
-        fontFamily: new formattingSettings.FontPicker({
-            name: "fontFamily",
-            value: "Segoe UI"
-        }),
-        fontSize: new formattingSettings.NumUpDown({
-            name: "fontSize",
-            value: this.defaultFontSize,
-            options: {
-                minValue: {
-                    type: powerbi.visuals.ValidatorType.Min,
-                    value: 8
-                },
-                maxValue: {
-                    type: powerbi.visuals.ValidatorType.Max,
-                    value: 60
-                }
-            }
-        }),
-        bold: new formattingSettings.ToggleSwitch({
-            name: "fontBold",
-            value: false
-        }),
-        italic: new formattingSettings.ToggleSwitch({
-            name: "fontItalic",
-            value: false
-        }),
-        underline: new formattingSettings.ToggleSwitch({
-            name: "fontUnderline",
-            value: false
-        })
     });
 
     public allowIntersection = new formattingSettings.ToggleSwitch({
@@ -144,25 +159,11 @@ const colorLinkOptions : IEnumMemberWithDisplayNameKey[] = [
     {value : LinkColorType.Interactive, displayName : "Interactive", key: "Visual_Interactive"}, 
 ];
 
-class LinksSettings extends FormattingSettingsCard {
+class LinkOptionsGroup extends FormattingSettingsCard {
     public showArrow = new formattingSettings.ToggleSwitch({
         name: "showArrow",
         displayNameKey: "Visual_Arrow",
         value: false
-    });
-
-    public showLabel = new formattingSettings.ToggleSwitch({
-        name: "showLabel",
-        displayNameKey: "Visual_Label",
-        descriptionKey: "Visual_Description_Label",
-        value: false
-    });
-
-    public colorLink = new formattingSettings.ItemDropdown({
-        name: "colorLink",
-        displayNameKey: "Visual_Color",
-        items: colorLinkOptions,
-        value: colorLinkOptions[2],
     });
 
     public thickenLink = new formattingSettings.ToggleSwitch({
@@ -194,18 +195,57 @@ class LinksSettings extends FormattingSettingsCard {
         }
     });
 
-    public name: string = "links";
-    public displayNameKey: string = "Visual_ForceGraph_Links";
-    slices: FormattingSettingsSlice[] = [this.showArrow, this.showLabel, this.colorLink, this.thickenLink, this.displayUnits, this.decimalPlaces];
+    public colorLink = new formattingSettings.ItemDropdown({
+        name: "colorLink",
+        displayNameKey: "Visual_Color",
+        items: colorLinkOptions,
+        value: colorLinkOptions[2],
+    });
+
+    public name: string = "linkOptions";
+    public displayNameKey: string = "Visual_Options";
+    slices: FormattingSettingsSlice[] = [this.showArrow, this.thickenLink, this.colorLink, this.displayUnits, this.decimalPlaces]
 }
 
-class NodesSettings extends FormattingSettingsCard {
-    public defaultImageValue: string = "Home";
-    public defaultImageUrl: string = "";
+class LinkLabelsGroup extends FormattingSettingsCard {
+    public defaultFontSize: number = 10;
+    public defaultFontFamily: string = "Segoe UI, sans-serif";
+    public defaultLabelColor: string = "black";
+
+    public showLabel = new formattingSettings.ToggleSwitch({
+        name: "showLabel",
+        displayNameKey: "Visual_Label",
+        descriptionKey: "Visual_Description_Label",
+        value: false
+    });
+
+    public color = new formattingSettings.ColorPicker({
+        name: "color",
+        displayNameKey: "Visual_Color",
+        value: { value: this.defaultLabelColor }
+    });
+
+    public fontControl = new BaseFontCardSettings(this.defaultFontSize, this.defaultFontFamily);
+    
+    topLevelSlice: formattingSettings.ToggleSwitch = this.showLabel;
+    public name: string = "linkLabels";
+    public displayNameKey: string = "Visual_Label";
+    slices: FormattingSettingsSlice[] = [this.fontControl, this.color]
+}
+
+class LinksSettings extends FormattingSettingsCompositeCard {
+    public linkOptions: LinkOptionsGroup = new LinkOptionsGroup();
+    public linkLabels: LinkLabelsGroup = new LinkLabelsGroup();
+
+    public name: string = "links";
+    public displayNameKey: string = "Visual_ForceGraph_Links";
+    groups: FormattingSettingsGroup[] = [this.linkOptions, this.linkLabels];
+}
+
+class NodeImageSettingsGroup extends FormattingSettingsCard {
+    public defaultImageUrlPlaceholder: string = "Url";
+    public defaultImageValuePlaceholder: string = "Image name";
     public defaultImageExt: string = ".png";
-    public defaultNameMaxLength: number = 10;
-    public fill: string = "#cccccc";
-    public stroke: string = "#ffffff";
 
     public displayImage = new formattingSettings.ToggleSwitch({
         name: "displayImage",
@@ -213,18 +253,18 @@ class NodesSettings extends FormattingSettingsCard {
         value: false
     });
 
-    public defaultImage = new formattingSettings.TextInput({
-        name: "defaultImage",
-        displayNameKey: "Visual_DefaultImage",
-        value: this.defaultImageValue,
-        placeholder: this.defaultImageValue
-    });
-
     public imageUrl = new formattingSettings.TextInput({
         name: "imageUrl",
         displayNameKey: "Visual_ImageUrl",
-        value: this.defaultImageUrl,
-        placeholder: this.defaultImageUrl
+        value: "",
+        placeholder: this.defaultImageUrlPlaceholder
+    });
+
+    public defaultImage = new formattingSettings.TextInput({
+        name: "defaultImage",
+        displayNameKey: "Visual_DefaultImage",
+        value: "",
+        placeholder: this.defaultImageValuePlaceholder
     });
 
     public imageExt = new formattingSettings.TextInput({
@@ -233,6 +273,15 @@ class NodesSettings extends FormattingSettingsCard {
         value: this.defaultImageExt,
         placeholder: this.defaultImageExt
     });
+    
+    topLevelSlice: formattingSettings.ToggleSwitch = this.displayImage;
+    public name: string = "displayImageGroup";
+    public displayNameKey: string = "Visual_Image";
+    public slices: FormattingSettingsSlice[] = [this.imageUrl, this.defaultImage, this.imageExt];
+}
+
+class NodeOptionsGroup extends FormattingSettingsCard {
+    public defaultNameMaxLength: number = 10;
 
     public nameMaxLength = new formattingSettings.NumUpDown({
         name: "nameMaxLength",
@@ -246,9 +295,21 @@ class NodesSettings extends FormattingSettingsCard {
         value: false
     });
 
+    public name: string = "nodeOptions";
+    public displayNameKey: string = "Visual_Options";
+    public slices: FormattingSettingsSlice[] = [this.nameMaxLength, this.highlightReachableLinks];
+}
+
+class NodesSettings extends FormattingSettingsCompositeCard {
+    public fill: string = "#cccccc";
+    public stroke: string = "#ffffff";
+
+    public imageGroup: NodeImageSettingsGroup = new NodeImageSettingsGroup();
+    public optionGroup: NodeOptionsGroup = new NodeOptionsGroup();
+   
     public name: string = "nodes";
     public displayNameKey: string = "Visual_Nodes";
-    slices: FormattingSettingsSlice[] = [this.displayImage, this.defaultImage, this.imageUrl, this.imageExt, this.nameMaxLength, this.highlightReachableLinks];
+    groups: FormattingSettingsGroup[] = [this.optionGroup, this.imageGroup];
 }
 
 class SizeSettings extends FormattingSettingsCard{

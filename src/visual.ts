@@ -290,7 +290,7 @@ export class ForceGraph implements IVisual {
             return colorHelper.getThemeColor("foreground");
         }
 
-        switch (this.settings.links.colorLink.value.value) {
+        switch (this.settings.links.linkOptions.colorLink.value.value) {
             case LinkColorType.ByWeight: {
                 return colorPalette
                     .getColor(this.scale1to10(link.weight).toString())
@@ -354,7 +354,7 @@ export class ForceGraph implements IVisual {
         let weightFormatter: IValueFormatter = null;
 
         if (metadata.Weight) {
-            let weightValue: number = +settings.links.displayUnits.value;
+            let weightValue: number = +settings.links.linkOptions.displayUnits.value;
 
             if (!weightValue && categorical.Weight && categorical.Weight.length) {
                 weightValue = categorical.Weight[0].maxLocal as number;
@@ -362,7 +362,7 @@ export class ForceGraph implements IVisual {
 
             weightFormatter = valueFormatter.create({
                 format: valueFormatter.getFormatStringByColumn(metadata.Weight, true),
-                precision: settings.links.decimalPlaces.value,
+                precision: settings.links.linkOptions.decimalPlaces.value,
                 value: weightValue
             });
         }
@@ -591,7 +591,7 @@ export class ForceGraph implements IVisual {
             .append("path")
             .attr("id", (d, i) => "linkid_" + this.uniqieId + i)
             .attr("stroke-width", (link: ForceGraphLink) => {
-                return this.settings.links.thickenLink.value
+                return this.settings.links.linkOptions.thickenLink.value
                     ? this.scale1to10(link.weight)
                     : ForceGraph.DefaultLinkThickness;
             })
@@ -600,7 +600,7 @@ export class ForceGraph implements IVisual {
                 return this.getLinkColor(link, colorPalette, colorHelper);
             })
             .style("fill", (link: ForceGraphLink) => {
-                if (this.settings.links.showArrow.value && link.source !== link.target) {
+                if (this.settings.links.linkOptions.showArrow.value && link.source !== link.target) {
                     return this.getLinkColor(link, colorPalette, colorHelper);
                 }
             })
@@ -625,7 +625,7 @@ export class ForceGraph implements IVisual {
             (data: ForceGraphLink) => data.tooltipInfo
         );
 
-        if (this.settings.links.showLabel.value) {
+        if (this.settings.links.linkLabels.showLabel.value) {
             const linklabelholderUpdate: Selection<ForceGraphLink> = svg
                 .selectAll(ForceGraph.LinkLabelHolderSelector.selectorName)
                 .data(this.data.links);
@@ -636,19 +636,24 @@ export class ForceGraph implements IVisual {
                 .append("text")
                 .classed(ForceGraph.LinkLabelSelector.className, true)
                 .attr("dy", (link: ForceGraphLink) => {
-                    return this.settings.links.thickenLink.value
+                    return this.settings.links.linkOptions.thickenLink.value
                         ? -this.scale1to10(link.weight) + this.defaultYOffset
                         : this.defaultYPosition;
                 })
                 .attr("text-anchor", ForceGraph.LinkTextAnchor)
-                .style("fill", colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkFillColor))
+                .style("fill", this.settings.links.linkLabels.color.value.value)
+                .style("font-size", PixelConverter.fromPoint(this.settings.links.linkLabels.fontControl.fontSize.value))
+                .style("font-family", this.settings.links.linkLabels.fontControl.fontFamily.value)
+                .style("font-weight", this.settings.links.linkLabels.fontControl.bold.value ? "bold" : "normal")
+                .style("font-style", this.settings.links.linkLabels.fontControl.italic.value ? "italic" : "normal")
+                .style("text-decoration", this.settings.links.linkLabels.fontControl.underline.value ? "underline" : "none")
                 .append("textPath")
                 .attr("xlink:href", (link: ForceGraphLink, index: number) => {
                     return ForceGraph.Href + "#linkid_" + this.uniqieId + index;
                 })
                 .attr("startOffset", ForceGraph.StartOffset)
                 .text((link: ForceGraphLink) => {
-                    return this.settings.links.colorLink.value.value === LinkColorType.ByLinkType
+                    return this.settings.links.linkOptions.colorLink.value.value === LinkColorType.ByLinkType
                         ? link.linkType
                         : link.formattedWeight;
                 });
@@ -725,7 +730,7 @@ export class ForceGraph implements IVisual {
                 link.target.x = limitX(link.target.x);
                 link.target.y = limitY(link.target.y);
 
-                return this.settings && this.settings.links && this.settings.links.showArrow.value
+                return this.settings && this.settings.links && this.settings.links.linkOptions.showArrow.value
                     ? this.getPathWithArrow(link)
                     : this.getPathWithoutArrow(link);
             });
@@ -734,7 +739,7 @@ export class ForceGraph implements IVisual {
         }
 
         // add the nodes
-        if (this.settings.nodes.displayImage.value) {
+        if (this.settings.nodes.imageGroup.displayImage.value) {
             this.nodes.append("image")
                 .attr("x", PixelConverter.toString(ForceGraph.ImagePosition))
                 .attr("y", PixelConverter.toString(ForceGraph.ImagePosition))
@@ -743,8 +748,8 @@ export class ForceGraph implements IVisual {
                 .attr("xlink:href", (node: ForceGraphNode) => {
                     if (node.image) {
                         return this.getImage(node.image);
-                    } else if (this.settings.nodes.defaultImage) {
-                        return this.getImage(this.settings.nodes.defaultImage.value);
+                    } else if (this.settings.nodes.imageGroup.defaultImage.value) {
+                        return this.getImage(this.settings.nodes.imageGroup.defaultImage.value);
                     }
 
                     return ForceGraph.DefaultImage;
@@ -775,8 +780,8 @@ export class ForceGraph implements IVisual {
                 .style("text-decoration", this.settings.labels.fontControl.underline.value ? "underline" : "none")
                 .text((node: ForceGraphNode) => {
                     if (node.name) {
-                        if (node.name.length > this.settings.nodes.nameMaxLength.value) {
-                            return node.name.substr(0, this.settings.nodes.nameMaxLength.value);
+                        if (node.name.length > this.settings.nodes.optionGroup.nameMaxLength.value) {
+                            return node.name.substr(0, this.settings.nodes.optionGroup.nameMaxLength.value);
                         } else {
                             return node.name;
                         }
@@ -787,7 +792,7 @@ export class ForceGraph implements IVisual {
         }
     }
     private getImage(image: string): string {
-        return `${this.settings.nodes.imageUrl}${image}${this.settings.nodes.imageExt}`;
+        return `${this.settings.nodes.imageGroup.imageUrl.value}${image}${this.settings.nodes.imageGroup.imageExt.value}`;
     }
 
     private reset(): void {
@@ -828,7 +833,7 @@ export class ForceGraph implements IVisual {
             text: this.data.formatter.format("")
         };
 
-        const showArrow: boolean = this.settings.links.showArrow.value;
+        const showArrow: boolean = this.settings.links.linkOptions.showArrow.value;
 
         let resolutionFactor: number = ForceGraph.ResolutionFactor;
         if (this.settings.size.boundedByBox.value) {
@@ -938,7 +943,7 @@ export class ForceGraph implements IVisual {
         highlightColor: string,
         defaultHighlightColor: string
     ): (link: ForceGraphLink) => void {
-        if (this.settings.links.colorLink.value.value !== LinkColorType.Interactive) {
+        if (this.settings.links.linkOptions.colorLink.value.value !== LinkColorType.Interactive) {
             return;
         }
 
@@ -995,7 +1000,7 @@ export class ForceGraph implements IVisual {
     }
 
     private fadeNode(node: ForceGraphNode): void {
-        if (!this.settings || this.settings.links.colorLink.value.value !== LinkColorType.Interactive) {
+        if (!this.settings || this.settings.links.linkOptions.colorLink.value.value !== LinkColorType.Interactive) {
             return;
         }
 
@@ -1011,7 +1016,7 @@ export class ForceGraph implements IVisual {
             : ForceGraph.DefaultLinkColor;
 
         this.nodes.style("stroke-opacity", function (otherNode: ForceGraphNode) {
-            const thisOpacity: number = (self.settings.nodes.highlightReachableLinks.value
+            const thisOpacity: number = (self.settings.nodes.optionGroup.highlightReachableLinks.value
                 ? self.isReachable(node, otherNode)
                 : self.areNodesConnected(node, otherNode))
                 ? ForceGraph.DefaultOpacity
@@ -1022,7 +1027,7 @@ export class ForceGraph implements IVisual {
         });
 
         this.paths.style("stroke-opacity", (link: ForceGraphLink) =>
-            (this.settings.nodes.highlightReachableLinks.value
+            (this.settings.nodes.optionGroup.highlightReachableLinks.value
                 ? this.isReachable(node, link.source)
                 : (link.source === node || link.target === node))
                 ? ForceGraph.DefaultOpacity
@@ -1030,7 +1035,7 @@ export class ForceGraph implements IVisual {
         );
 
         this.paths.style("stroke", (link: ForceGraphLink) => {
-            const color = (this.settings.nodes.highlightReachableLinks.value
+            const color = (this.settings.nodes.optionGroup.highlightReachableLinks.value
                 ? this.isReachable(node, link.source)
                 : (link.source === node || link.target === node))
                 ? highlight
