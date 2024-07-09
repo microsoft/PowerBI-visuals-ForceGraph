@@ -1,5 +1,11 @@
 {
-    "privileges": [],
+    "privileges": [
+        {
+            "name": "WebAccess",
+            "essential": true,
+            "parameters": ["https://*"]
+        }
+    ],
     "dataRoles": [
         {
             "displayNameKey": "Visual_Source",

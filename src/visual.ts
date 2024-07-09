@@ -110,6 +110,7 @@ import { ForceGraphColumns } from "./columns";
 import { ForceGraphSettings, LinkColorType } from "./settings";
 import { ForceGraphTooltipsFactory } from "./tooltipsFactory";
 import { ForceGraphData, ForceGraphNode, ForceGraphNodes, ForceGraphLink, LinkedByName, ITextRect } from "./dataInterfaces";
+import { ExternalLinksTelemetry } from "./telemetry";
 
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
@@ -164,6 +165,8 @@ export class ForceGraph implements IVisual {
     private static LinkLabelSelector: ClassAndSelector = createClassAndSelector("linklabel");
     private static NodeSelector: ClassAndSelector = createClassAndSelector("node");
     private static NoAnimationLimit: number = 200;
+
+    private telemetry: ExternalLinksTelemetry;
 
     private selectionManager: ISelectionManager;
     private host: IVisualHost;
@@ -235,11 +238,12 @@ export class ForceGraph implements IVisual {
 
     private init(options: VisualConstructorOptions): void {
         const root: Selection<any> = d3Select(options.element);
-        this.colorPalette = options.host.colorPalette;
+        this.telemetry = new ExternalLinksTelemetry(this.host.telemetry);
 
         const localizationManager = this.host.createLocalizationManager();
         this.formattingSettingsService = new FormattingSettingsService(localizationManager);
 
+        this.colorPalette = options.host.colorPalette;
         this.colorHelper = new ColorHelper(this.colorPalette);
 
         this.tooltipServiceWrapper = createTooltipServiceWrapper(
@@ -573,6 +577,10 @@ export class ForceGraph implements IVisual {
             this.forceSimulation.on("tick", this.getForceTick()).restart();
         }
         this.setVisualData(this.container, this.colorPalette, this.colorHelper);
+
+        if (this.settings.nodes.imageGroup.displayImage.value){
+            this.telemetry.detectExternalImages(this.settings.nodes.imageGroup.imageUrl.value);
+        }
     }
 
     public getFormattingModel(): powerbi.visuals.FormattingModel {
