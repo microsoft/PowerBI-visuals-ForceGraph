@@ -673,11 +673,11 @@ export class ForceGraph implements IVisual {
             .append("g")
             .attr("drag-resize-disabled", true)
             .classed(ForceGraph.NodeSelector.className, true)
-            .on("mouseover", (node: ForceGraphNode) => {
+            .on("mouseover", (event: PointerEvent, node: ForceGraphNode) => {
                 node.isOver = true;
                 this.fadeNode(node);
             })
-            .on("mouseout", (node: ForceGraphNode) => {
+            .on("mouseout", (event: PointerEvent, node: ForceGraphNode) => {
                 node.isOver = false;
                 this.fadeNode(node);
             })
