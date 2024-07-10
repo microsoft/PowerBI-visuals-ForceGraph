@@ -40,6 +40,25 @@
         stroke: #fff;
         stroke-width: 1.5px;
         cursor: pointer;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:focus-visible {
+            outline-width: 4px !important;
+            stroke-width: 4px;
+        }
+    }
+
+    image {
+        &:focus {
+            outline: none;
+        }
+
+        &:focus-visible {
+            outline-width: 4px !important;
+        }
     }
 
     text {

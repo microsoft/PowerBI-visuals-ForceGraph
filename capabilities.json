@@ -315,5 +315,6 @@
                 }
             }
         }
-    }
+    },
+    "supportsKeyboardFocus": true
 }
