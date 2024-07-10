@@ -40,35 +40,43 @@ export class VisualBuilder extends VisualBuilderBase<VisualClass> {
         return new VisualClass(options);
     }
 
-    public get mainElement() {
-        return this.element.find("g.chartContainer");
+    public get svgElement(): SVGElement | null {
+        return this.element.querySelector("svg.forceGraph");
     }
 
-    public get linkLabels() {
-        return this.mainElement.children("g.linklabelholder");
+    public get mainElement(): HTMLElement | null {
+        return this.element.querySelector("g.chartContainer");
     }
 
-    public get nodes() {
-        return this.mainElement.children("g.node");
+    public get linkLabels() : NodeListOf<HTMLElement> | undefined {
+        return this.mainElement?.querySelectorAll("g.linklabelholder");
     }
 
-    public get images() {
-        return this.nodes.children("image");
+    public get nodes(): NodeListOf<HTMLElement> | undefined {
+        return this.mainElement?.querySelectorAll("g.node");
     }
 
-    public get circles() {
-        return this.nodes.children("circle");
+    public get links(): NodeListOf<HTMLElement> | undefined {
+        return this.mainElement?.querySelectorAll("path.link");
     }
 
-    public get nodeTexts() {
-        return this.nodes.children("text");
+    public get images(): NodeListOf<SVGElement> | undefined {
+        return this.mainElement?.querySelectorAll("image");
     }
 
-    public get linkLabelsText() {
-        return this.linkLabels.children("text.linklabel");
+    public get circles(): NodeListOf<SVGElement> | undefined {
+        return this.mainElement?.querySelectorAll("circle");
     }
 
-    public get linkLabelsTextPath() {
-        return this.linkLabelsText.children("textpath");
+    public get nodeTexts(): NodeListOf<HTMLElement> | undefined {
+        return this.mainElement?.querySelectorAll("g.node text");
+    }
+
+    public get linkLabelsText(): NodeListOf<HTMLElement> | undefined {
+        return this.mainElement?.querySelectorAll("text.linklabel");
+    }
+
+    public get linkLabelsTextPath(): NodeListOf<SVGElement> | undefined {
+        return this.mainElement?.querySelectorAll("text.linklabel textpath");
     }
 }
