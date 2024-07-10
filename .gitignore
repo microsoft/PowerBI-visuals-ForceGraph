@@ -9,4 +9,4 @@ typings
 
 .idea/*
 
-webpack.statistics.html
+webpack.statistics.*.html
