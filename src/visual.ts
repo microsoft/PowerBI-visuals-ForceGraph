@@ -786,8 +786,8 @@ export class ForceGraph implements IVisual {
                         ? ForceGraph.MinNodeWeight
                         : node.weight;
                 })
-                .style("fill", this.settings.nodes.fill)
-                .style("stroke", this.settings.nodes.stroke)
+                .style("fill", this.settings.nodes.optionGroup.fillColor.value.value)
+                .style("stroke", this.settings.nodes.optionGroup.strokeColor.value.value)
                 .style("outline", `solid 0px ${this.colorHelper.getHighContrastColor("foreground", "black")}`)
                 .style("border-radius", (node: ForceGraphNode) => {
                     const radius = isNaN(node.weight) || node.weight < ForceGraph.MinNodeWeight

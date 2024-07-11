@@ -48,8 +48,8 @@ export class ForceGraphSettings extends FormattingSettingsModel {
         if (colorPalette.isHighContrast){
             this.labels.color.value = colorPalette.foreground;
             this.links.linkLabels.color.value = colorPalette.foreground;
-            this.nodes.fill = colorPalette.foreground.value;
-            this.nodes.stroke = colorPalette.background.value;   
+            this.nodes.optionGroup.fillColor.value = colorPalette.foreground;
+            this.nodes.optionGroup.strokeColor.value = colorPalette.background;   
         }
     }
 }
@@ -282,6 +282,8 @@ class NodeImageSettingsGroup extends FormattingSettingsCard {
 
 class NodeOptionsGroup extends FormattingSettingsCard {
     public defaultNameMaxLength: number = 10;
+    public defaultFillColor: string = "#cccccc";
+    public defaultStrokeColor: string = "#777777";
 
     public nameMaxLength = new formattingSettings.NumUpDown({
         name: "nameMaxLength",
@@ -295,15 +297,24 @@ class NodeOptionsGroup extends FormattingSettingsCard {
         value: false
     });
 
+    public fillColor = new formattingSettings.ColorPicker({
+        name: "color",
+        displayNameKey: "Visual_Fill",
+        value: { value: this.defaultFillColor }
+    });
+
+    public strokeColor = new formattingSettings.ColorPicker({
+        name: "strokeColor",
+        displayNameKey: "Visual_Stroke",
+        value: { value: this.defaultStrokeColor }
+    });
+
     public name: string = "nodeOptions";
     public displayNameKey: string = "Visual_Options";
-    public slices: FormattingSettingsSlice[] = [this.nameMaxLength, this.highlightReachableLinks];
+    public slices: FormattingSettingsSlice[] = [this.fillColor, this.strokeColor, this.nameMaxLength, this.highlightReachableLinks];
 }
 
 class NodesSettings extends FormattingSettingsCompositeCard {
-    public fill: string = "#cccccc";
-    public stroke: string = "#ffffff";
-
     public imageGroup: NodeImageSettingsGroup = new NodeImageSettingsGroup();
     public optionGroup: NodeOptionsGroup = new NodeOptionsGroup();
    

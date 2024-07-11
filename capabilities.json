@@ -298,6 +298,15 @@
                             }
                         }
                     }
+                },
+                "strokeColor": {
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
                 }
             }
         },
