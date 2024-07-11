@@ -316,6 +316,7 @@ export class ForceGraph implements IVisual {
         return ForceGraph.DefaultLinkColor;
     }
 
+    // eslint-disable-next-line max-lines-per-function
     public static converter(
         dataView: DataView,
         colorPalette: IColorPalette,
