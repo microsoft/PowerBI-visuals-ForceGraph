@@ -27,7 +27,7 @@
 import powerbi from "powerbi-visuals-api";
 
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
-import { VisualBuilderBase } from "powerbi-visuals-utils-testutils";
+import { ClickEventType, VisualBuilderBase, d3Click } from "powerbi-visuals-utils-testutils";
 
 import { ForceGraph as VisualClass } from "./../src/visual";
 
@@ -56,8 +56,22 @@ export class VisualBuilder extends VisualBuilderBase<VisualClass> {
         return this.mainElement?.querySelectorAll("g.node");
     }
 
+    public get selectedNodes(): Element[] {
+        return Array.from(this.nodes).filter((element: HTMLElement) => {
+            const appliedOpacity: number = parseFloat(element.style.fillOpacity);
+            return appliedOpacity === 1;
+        });
+    }
+
     public get links(): NodeListOf<HTMLElement> | undefined {
         return this.mainElement?.querySelectorAll("path.link");
+    }
+
+    public get selectedLinks(): Element[] {
+        return Array.from(this.links).filter((element: HTMLElement) => {
+            const appliedOpacity: number = parseFloat(element.style.strokeOpacity);
+            return appliedOpacity === 1;
+        });
     }
 
     public get images(): NodeListOf<SVGElement> | undefined {
@@ -78,5 +92,36 @@ export class VisualBuilder extends VisualBuilderBase<VisualClass> {
 
     public get linkLabelsTextPath(): NodeListOf<SVGElement> | undefined {
         return this.mainElement?.querySelectorAll("text.linklabel textpath");
+    }
+
+    public nodeClick(text: string, eventType: ClickEventType = ClickEventType.Default): void{
+        const circle: SVGElement | undefined = Array.from(this.circles)
+            .find((element: SVGElement) => {
+                return element.ariaLabel === text;
+            });
+    
+        if (!circle) {
+            return;
+        }
+    
+        d3Click(
+            circle,
+            parseFloat(<string>circle?.getAttribute("x")),
+            parseFloat(<string>circle?.getAttribute("y")),
+            eventType
+        );
+    }
+
+    public nodeKeydown(text: string, keyboardEvent: KeyboardEvent) {
+        const circle: SVGElement | undefined = Array.from(this.circles)
+        .find((element: SVGElement) => {
+            return element.ariaLabel === text;
+        });
+
+        if (!circle) {
+            return;
+        }
+
+        circle.dispatchEvent(keyboardEvent);
     }
 }

@@ -30,7 +30,7 @@ import DataView = powerbi.DataView;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 
-import { assertColorsMatch } from "powerbi-visuals-utils-testutils";
+import { ClickEventType, assertColorsMatch, renderTimeout } from "powerbi-visuals-utils-testutils";
 
 import { areColorsEqual, getSolidColorStructuralObject } from "./helpers/helpers";
 import { VisualData as ForceGraphData } from "./visualData";
@@ -149,6 +149,7 @@ describe("ForceGraph", () => {
 
     describe("DOM tests", () => {
         it("svg element created", () => {
+            visualBuilder.updateFlushAllD3Transitions(dataView);
             expect(visualBuilder.svgElement).toBeDefined()
         });
 
@@ -171,15 +172,14 @@ describe("ForceGraph", () => {
         });
 
         it("curved arrows", () => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const linkPaths = visualBuilder.links;
-                linkPaths?.forEach((linkPath: HTMLElement) => {
-                    if (linkPath["__data__"].source.name === linkPath["__data__"].target.name) {
-                        let path = linkPath.getAttribute("d");
-                        let curvedPath = /M (-)*\d*\.?\d* (-)*\d*\.?\d* C (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*/;
-                        expect(curvedPath.test(path)).toBe(true);
-                    }
-                });
+            visualBuilder.updateFlushAllD3Transitions(dataView);
+            const linkPaths = visualBuilder.links;
+            linkPaths?.forEach((linkPath: HTMLElement) => {
+                if (linkPath["__data__"].source.name === linkPath["__data__"].target.name) {
+                    let path = linkPath.getAttribute("d");
+                    let curvedPath = /M (-)*\d*\.?\d* (-)*\d*\.?\d* C (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*/;
+                    expect(curvedPath.test(path)).toBe(true);
+                }
             });
         });
     });
@@ -391,5 +391,124 @@ describe("ForceGraph", () => {
                 });
             }
         });
+
+        describe("Keyboard navigation and related aria-attributes tests:", () => {
+            let dataViewKN: DataView;
+
+            beforeEach(() => {
+                dataViewKN = defaultDataViewBuilder.getDataView();
+            });
+
+            it("should have role=listbox and aria-multiselectable attributes correctly set", (done) => {
+                visualBuilder.updateRenderTimeout(dataViewKN, () => {
+                    const containerElement: HTMLElement | null = visualBuilder.mainElement;
+
+                    expect(containerElement?.getAttribute("role")).toBe("listbox");
+                    expect(containerElement?.getAttribute("aria-multiselectable")).toBe("true");
+
+                    done();
+                }, 100);
+            });
+
+            it("enter toggles the correct node", () => {
+                const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+                checkKeyboardSingleSelection(enterEvent);
+            });
+
+            it("space toggles the correct node", () => {
+                const spaceEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
+                checkKeyboardSingleSelection(spaceEvent);
+            });
+
+            it("multiselection should work with ctrlKey", () => {
+                const enterEventCtrlKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, ctrlKey: true });
+                checkKeyboardMultiSelection(enterEventCtrlKey);
+            });
+
+            it("multiselection should work with metaKey", () => {
+                const enterEventMetaKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, metaKey: true });
+                checkKeyboardMultiSelection(enterEventMetaKey);
+            });
+
+            it("multiselection should work with shiftKey", () => {
+                const enterEventShiftKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, shiftKey: true });
+                checkKeyboardMultiSelection(enterEventShiftKey);
+            });
+
+            function checkKeyboardSingleSelection(keyboardSingleSelectionEvent: KeyboardEvent): void {
+                visualBuilder.updateFlushAllD3Transitions(dataViewKN);
+
+                visualBuilder.nodeKeydown("William", keyboardSingleSelectionEvent);
+                expect(visualBuilder.selectedNodes.length).toBe(1);
+                expect(visualBuilder.selectedLinks.length).toBe(1);
+
+                visualBuilder.nodeKeydown("Brazil", keyboardSingleSelectionEvent);
+                expect(visualBuilder.selectedNodes.length).toBe(1);
+                expect(visualBuilder.selectedLinks.length).toBe(3);
+            }
+
+            function checkKeyboardMultiSelection(keyboardMultiselectionEvent: KeyboardEvent): void {
+                visualBuilder.updateFlushAllD3Transitions(dataViewKN);
+                // select first node
+                visualBuilder.nodeKeydown("William", keyboardMultiselectionEvent);
+                // multiselect second node
+                visualBuilder.nodeKeydown("Brazil", keyboardMultiselectionEvent);
+
+                expect(visualBuilder.selectedNodes.length).toBe(2);
+                expect(visualBuilder.selectedLinks.length).toBe(3);
+            }
+        });
+    });
+
+    describe("Selection tests", () => {
+        let dataViewSelection: DataView;
+        beforeEach(() => {
+            dataViewSelection = defaultDataViewBuilder.getDataView();
+        });
+
+        it("node can be selected", (done) => {
+            visualBuilder.updateRenderTimeout(dataViewSelection, () => {
+                visualBuilder.nodeClick("William");
+
+                renderTimeout(() => {
+                    expect(visualBuilder.selectedNodes?.length).toBe(1);
+                    expect(visualBuilder.selectedLinks?.length).toBe(1);
+                    done();
+                });
+            }, 100);
+        });
+
+        it("multi-selection should work with ctrlKey", (done) => {
+            visualBuilder.updateRenderTimeout(dataViewSelection, () => {
+                checkMultiselection(ClickEventType.CtrlKey, done);
+            }, 100);
+        });
+
+        it("multi-selection should work with metaKey", (done) => {
+            visualBuilder.updateRenderTimeout(dataViewSelection, () => {
+                checkMultiselection(ClickEventType.MetaKey, done);
+            }, 100);
+        });
+
+        it("multi-selection should work with shiftKey", (done) => {
+            visualBuilder.updateRenderTimeout(dataViewSelection, () => {
+                checkMultiselection(ClickEventType.ShiftKey, done);
+            }, 100);
+        });
+
+        function checkMultiselection(eventType: number, done: DoneFn): void {
+            visualBuilder.nodeClick("William");
+            renderTimeout(() => {
+                expect(visualBuilder.selectedNodes?.length).toBe(1);
+                expect(visualBuilder.selectedLinks?.length).toBe(1);
+
+                visualBuilder.nodeClick("Olivia", eventType);
+                renderTimeout(() => {
+                    expect(visualBuilder.selectedNodes?.length).toBe(2);
+                    expect(visualBuilder.selectedLinks?.length).toBe(2);
+                    done();
+                });
+            });
+        }
     });
 });
