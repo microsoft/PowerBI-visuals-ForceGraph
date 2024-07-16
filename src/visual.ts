@@ -78,6 +78,7 @@ import powerbi from "powerbi-visuals-api";
 import IViewport = powerbi.IViewport;
 import IColorPalette = powerbi.extensibility.IColorPalette;
 import IVisual = powerbi.extensibility.visual.IVisual;
+import IVisualEventService = powerbi.extensibility.IVisualEventService;
 
 import DataView = powerbi.DataView;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
@@ -169,6 +170,7 @@ export class ForceGraph implements IVisual {
 
     private behavior: ForceGraphBehavior;
     private host: IVisualHost;
+    private eventService: IVisualEventService;
     private settings: ForceGraphSettings;
     private formattingSettingsService: FormattingSettingsService;
 
@@ -244,6 +246,7 @@ export class ForceGraph implements IVisual {
 
         this.colorPalette = options.host.colorPalette;
         this.colorHelper = new ColorHelper(this.colorPalette);
+        this.eventService = options.host.eventService;
 
         const selectionManager: ISelectionManager = this.host.createSelectionManager();
         this.behavior = new ForceGraphBehavior(selectionManager);
@@ -585,7 +588,9 @@ export class ForceGraph implements IVisual {
             this.getForceTick();
         }
 
+        this.eventService.renderingStarted(options);
         this.render();
+        this.eventService.renderingFinished(options);
 
         if (this.settings.nodes.imageGroup.displayImage.value) {
             this.telemetry.detectExternalImages(this.settings.nodes.imageGroup.imageUrl.value);
