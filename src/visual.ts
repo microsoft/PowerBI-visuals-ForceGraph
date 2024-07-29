@@ -603,10 +603,10 @@ export class ForceGraph implements IVisual {
     }
 
     private render(): void {
-        this.renderLinks();
-        this.renderLinkLabels();
-        this.renderNodes();
-        this.renderNodeLabels();
+        this.renderLinks(this.settings);
+        this.renderLinkLabels(this.settings);
+        this.renderNodes(this.settings);
+        this.renderNodeLabels(this.settings);
 
         const behaviorOptions: ForceGraphBehaviorOptions = {
             nodes: this.nodes,
@@ -617,14 +617,14 @@ export class ForceGraph implements IVisual {
         this.behavior.renderSelection();
     }
 
-    private renderLinks(): void {
+    private renderLinks(settings: ForceGraphSettings): void {
         this.paths = this.container.selectAll(ForceGraph.LinkSelector.selectorName)
             .data(this.data.links)
             .enter()
             .append("path")
             .attr("id", (d, i) => "linkid_" + this.uniqieId + i)
             .attr("stroke-width", (link: ForceGraphLink) => {
-                return this.settings.links.linkOptions.thickenLink.value
+                return settings.links.linkOptions.thickenLink.value
                     ? this.scale1to10(link.weight)
                     : ForceGraph.DefaultLinkThickness;
             })
@@ -633,7 +633,7 @@ export class ForceGraph implements IVisual {
                 return this.getLinkColor(link, this.colorPalette, this.colorHelper);
             })
             .style("fill", (link: ForceGraphLink) => {
-                if (this.settings.links.linkOptions.showArrow.value && link.source !== link.target) {
+                if (settings.links.linkOptions.showArrow.value && link.source !== link.target) {
                     return this.getLinkColor(link, this.colorPalette, this.colorHelper);
                 }
             })
@@ -659,8 +659,8 @@ export class ForceGraph implements IVisual {
         );
     }
 
-    private renderLinkLabels(): void {
-        if (!this.settings.links.linkLabels.showLabel.value) {
+    private renderLinkLabels(settings: ForceGraphSettings): void {
+        if (!settings.links.linkLabels.showLabel.value) {
             return;
         }
 
@@ -674,24 +674,24 @@ export class ForceGraph implements IVisual {
             .append("text")
             .classed(ForceGraph.LinkLabelSelector.className, true)
             .attr("dy", (link: ForceGraphLink) => {
-                return this.settings.links.linkOptions.thickenLink.value
+                return settings.links.linkOptions.thickenLink.value
                     ? -this.scale1to10(link.weight) + this.defaultYOffset
                     : this.defaultYPosition;
             })
             .attr("text-anchor", ForceGraph.LinkTextAnchor)
-            .style("fill", this.settings.links.linkLabels.color.value.value)
-            .style("font-size", PixelConverter.fromPoint(this.settings.links.linkLabels.fontControl.fontSize.value))
-            .style("font-family", this.settings.links.linkLabels.fontControl.fontFamily.value)
-            .style("font-weight", this.settings.links.linkLabels.fontControl.bold.value ? "bold" : "normal")
-            .style("font-style", this.settings.links.linkLabels.fontControl.italic.value ? "italic" : "normal")
-            .style("text-decoration", this.settings.links.linkLabels.fontControl.underline.value ? "underline" : "none")
+            .style("fill", settings.links.linkLabels.color.value.value)
+            .style("font-size", PixelConverter.fromPoint(settings.links.linkLabels.fontControl.fontSize.value))
+            .style("font-family", settings.links.linkLabels.fontControl.fontFamily.value)
+            .style("font-weight", settings.links.linkLabels.fontControl.bold.value ? "bold" : "normal")
+            .style("font-style", settings.links.linkLabels.fontControl.italic.value ? "italic" : "normal")
+            .style("text-decoration", settings.links.linkLabels.fontControl.underline.value ? "underline" : "none")
             .append("textPath")
             .attr("xlink:href", (link: ForceGraphLink, index: number) => {
                 return ForceGraph.Href + "#linkid_" + this.uniqieId + index;
             })
             .attr("startOffset", ForceGraph.StartOffset)
             .text((link: ForceGraphLink) => {
-                return this.settings.links.linkOptions.colorLink.value.value === LinkColorType.ByLinkType
+                return settings.links.linkOptions.colorLink.value.value === LinkColorType.ByLinkType
                     ? link.linkType
                     : link.formattedWeight;
             });
@@ -701,7 +701,7 @@ export class ForceGraph implements IVisual {
             .remove();
     }
 
-    private renderNodes(): void {
+    private renderNodes(settings: ForceGraphSettings): void {
         // define the nodes
         this.nodes = this.container.selectAll(ForceGraph.NodeSelector.selectorName)
             .data(Object.values(this.data.nodes))
@@ -711,7 +711,7 @@ export class ForceGraph implements IVisual {
             .classed(ForceGraph.NodeSelector.className, true);
 
         const nodesNum: number = Object.keys(this.data.nodes).length;
-        if (nodesNum <= ForceGraph.NoAnimationLimit && this.settings.animation.show.value) {
+        if (nodesNum <= ForceGraph.NoAnimationLimit && settings.animation.show.value) {
             const drag = d3Drag()
                 .on("start", ((event: D3DragEvent<Element, ForceGraphNode, ForceGraphNode>, d: ForceGraphNode) => {
                     if (!event.active) {
@@ -753,7 +753,7 @@ export class ForceGraph implements IVisual {
                 link.target.x = limitX(link.target.x);
                 link.target.y = limitY(link.target.y);
 
-                return this.settings && this.settings.links && this.settings.links.linkOptions.showArrow.value
+                return settings && settings.links && settings.links.linkOptions.showArrow.value
                     ? this.getPathWithArrow(link)
                     : this.getPathWithoutArrow(link);
             });
@@ -762,7 +762,7 @@ export class ForceGraph implements IVisual {
         }
 
         // add the nodes
-        if (this.settings.nodes.imageGroup.displayImage.value) {
+        if (settings.nodes.imageGroup.displayImage.value) {
             this.nodes.append("image")
                 .attr("x", PixelConverter.toString(ForceGraph.ImagePosition))
                 .attr("y", PixelConverter.toString(ForceGraph.ImagePosition))
@@ -771,8 +771,8 @@ export class ForceGraph implements IVisual {
                 .attr("xlink:href", (node: ForceGraphNode) => {
                     if (node.image) {
                         return this.getImage(node.image);
-                    } else if (this.settings.nodes.imageGroup.defaultImage.value) {
-                        return this.getImage(this.settings.nodes.imageGroup.defaultImage.value);
+                    } else if (settings.nodes.imageGroup.defaultImage.value) {
+                        return this.getImage(settings.nodes.imageGroup.defaultImage.value);
                     }
 
                     return ForceGraph.DefaultImage;
@@ -792,8 +792,8 @@ export class ForceGraph implements IVisual {
                         ? ForceGraph.MinNodeWeight
                         : node.weight;
                 })
-                .style("fill", this.settings.nodes.optionGroup.fillColor.value.value)
-                .style("stroke", this.settings.nodes.optionGroup.strokeColor.value.value)
+                .style("fill", settings.nodes.optionGroup.fillColor.value.value)
+                .style("stroke", settings.nodes.optionGroup.strokeColor.value.value)
                 .style("outline", `solid 0px ${this.colorHelper.getHighContrastColor("foreground", "black")}`)
                 .style("border-radius", (node: ForceGraphNode) => {
                     const radius = isNaN(node.weight) || node.weight < ForceGraph.MinNodeWeight
@@ -807,24 +807,24 @@ export class ForceGraph implements IVisual {
         }
     }
 
-    private renderNodeLabels(): void {
-        if (!this.settings.labels.show.value) {
+    private renderNodeLabels(settings: ForceGraphSettings): void {
+        if (!settings.labels.show.value) {
             return;
         }
 
         this.nodes.append("text")
             .attr("x", ForceGraph.DefaultLabelX)
             .attr("dy", ForceGraph.DefaultLabelDy)
-            .style("fill", this.settings.labels.color.value.value)
-            .style("font-size", PixelConverter.fromPoint(this.settings.labels.fontControl.fontSize.value))
-            .style("font-family", this.settings.labels.fontControl.fontFamily.value)
-            .style("font-weight", this.settings.labels.fontControl.bold.value ? "bold" : "normal")
-            .style("font-style", this.settings.labels.fontControl.italic.value ? "italic" : "normal")
-            .style("text-decoration", this.settings.labels.fontControl.underline.value ? "underline" : "none")
+            .style("fill", settings.labels.color.value.value)
+            .style("font-size", PixelConverter.fromPoint(settings.labels.fontControl.fontSize.value))
+            .style("font-family", settings.labels.fontControl.fontFamily.value)
+            .style("font-weight", settings.labels.fontControl.bold.value ? "bold" : "normal")
+            .style("font-style", settings.labels.fontControl.italic.value ? "italic" : "normal")
+            .style("text-decoration", settings.labels.fontControl.underline.value ? "underline" : "none")
             .text((node: ForceGraphNode) => {
                 if (node.name) {
-                    if (node.name.length > this.settings.nodes.optionGroup.nameMaxLength.value) {
-                        return node.name.substr(0, this.settings.nodes.optionGroup.nameMaxLength.value);
+                    if (node.name.length > settings.nodes.optionGroup.nameMaxLength.value) {
+                        return node.name.substr(0, settings.nodes.optionGroup.nameMaxLength.value);
                     } else {
                         return node.name;
                     }
