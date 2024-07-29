@@ -27,6 +27,7 @@
 import { SimulationNodeDatum as Node } from "d3-force";
 import powerbi from "powerbi-visuals-api";
 import ISelectionId = powerbi.visuals.ISelectionId;
+import PrimitiveValue = powerbi.PrimitiveValue;
 
 import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
 import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
@@ -77,9 +78,18 @@ export interface ForceGraphData {
     minFiles: number;
     maxFiles: number;
     linkedByName: LinkedByName;
-    linkTypes: object;
+    linkTypes: LinkTypes;
     settings: ForceGraphSettings;
     formatter: IValueFormatter;
+}
+
+export interface LinkType {
+    color: string;
+    label: string;
+}
+
+export interface LinkTypes {
+    [linkType: string]: LinkType;
 }
 
 export interface LinkedByName {

@@ -174,10 +174,6 @@ export class ForceGraph implements IVisual {
     private settings: ForceGraphSettings;
     private formattingSettingsService: FormattingSettingsService;
 
-    private static get Href(): string {
-        return window.location.href.replace(window.location.hash, "");
-    }
-
     private static substractMargin(viewport: IViewport, margin: IMargin): IViewport {
         return {
             width: Math.max(viewport.width - (margin.left + margin.right), 0),
@@ -196,8 +192,6 @@ export class ForceGraph implements IVisual {
 
     private colorPalette: ISandboxExtendedColorPalette;
     private colorHelper: ColorHelper;
-
-    private uniqieId: string = `_${ForceGraph.Count++}_`;
 
     private marginValue: IMargin;
 
@@ -622,7 +616,7 @@ export class ForceGraph implements IVisual {
             .data(this.data.links)
             .enter()
             .append("path")
-            .attr("id", (d, i) => "linkid_" + this.uniqieId + i)
+            .attr("id", (d, i) => "linkid_" + i)
             .attr("stroke-width", (link: ForceGraphLink) => {
                 return settings.links.linkOptions.thickenLink.value
                     ? this.scale1to10(link.weight)
@@ -686,8 +680,8 @@ export class ForceGraph implements IVisual {
             .style("font-style", settings.links.linkLabels.fontControl.italic.value ? "italic" : "normal")
             .style("text-decoration", settings.links.linkLabels.fontControl.underline.value ? "underline" : "none")
             .append("textPath")
-            .attr("xlink:href", (link: ForceGraphLink, index: number) => {
-                return ForceGraph.Href + "#linkid_" + this.uniqieId + index;
+            .attr("href", (link: ForceGraphLink, index: number) => {
+                return "#linkid_" + index;
             })
             .attr("startOffset", ForceGraph.StartOffset)
             .text((link: ForceGraphLink) => {
