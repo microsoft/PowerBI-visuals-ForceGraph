@@ -58,7 +58,7 @@ class AnimationSettings extends FormattingSettingsCard {
     public show = new formattingSettings.ToggleSwitch({
         name: "show",
         displayNameKey: "Visual_Show",
-        value: true //change false
+        value: false
     });
 
     public name: string = "animation";
