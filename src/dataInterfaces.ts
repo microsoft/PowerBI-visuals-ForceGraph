@@ -27,7 +27,6 @@
 import { SimulationNodeDatum as Node } from "d3-force";
 import powerbi from "powerbi-visuals-api";
 import ISelectionId = powerbi.visuals.ISelectionId;
-import PrimitiveValue = powerbi.PrimitiveValue;
 
 import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
 import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
