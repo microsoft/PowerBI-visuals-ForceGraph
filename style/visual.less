@@ -28,8 +28,6 @@
  * Imports styles of tooltipmanager.
  * We compile it as a less file in order to wrap the external CSS rules.
  */
-@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
-
 .forceGraph {
     path.link {
         fill: none;
@@ -42,6 +40,25 @@
         stroke: #fff;
         stroke-width: 1.5px;
         cursor: pointer;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:focus-visible {
+            outline-width: 4px !important;
+            stroke-width: 4px;
+        }
+    }
+
+    image {
+        &:focus {
+            outline: none;
+        }
+
+        &:focus-visible {
+            outline-width: 4px !important;
+        }
     }
 
     text {

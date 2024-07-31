@@ -62,15 +62,23 @@
  */
 
 import "./../style/visual.less";
+import { drag as d3Drag, D3DragEvent } from "d3-drag";
+import { forceSimulation, forceLink, Simulation, forceManyBody, forceX, forceY } from "d3-force";
+import { scaleLinear as d3ScaleLinear, ScaleLinear as d3ScaleLinearType } from "d3-scale";
 
-import "@babel/polyfill";
-import * as d3 from "d3";
-import * as _ from "lodash";
+import {
+    select as d3Select,
+    Selection as d3Selection
+} from "d3-selection";
+type Selection<T> = d3Selection<any, T, any, any>;
+
+import isEmpty from "lodash.isempty";
 import powerbi from "powerbi-visuals-api";
 
 import IViewport = powerbi.IViewport;
 import IColorPalette = powerbi.extensibility.IColorPalette;
 import IVisual = powerbi.extensibility.visual.IVisual;
+import IVisualEventService = powerbi.extensibility.IVisualEventService;
 
 import DataView = powerbi.DataView;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
@@ -78,8 +86,6 @@ import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
 import DataViewValueColumn = powerbi.DataViewValueColumn;
 import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
-import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
-import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 
 import { pixelConverter as PixelConverter } from "powerbi-visuals-utils-typeutils";
@@ -90,30 +96,28 @@ import createClassAndSelector = SVGUtil.CssConstants.createClassAndSelector;
 import { IMargin, manipulation } from "powerbi-visuals-utils-svgutils";
 import translate = manipulation.translate;
 
-import { valueFormatter as vf, textMeasurementService as tms, textUtil } from "powerbi-visuals-utils-formattingutils";
-import textMeasurementService = tms.textMeasurementService;
-import TextProperties = tms.TextProperties;
-import IValueFormatter = vf.IValueFormatter;
-import valueFormatter = vf.valueFormatter;
+// powerbi.extensibility.utils.formatting
+import { valueFormatter, textMeasurementService, interfaces } from "powerbi-visuals-utils-formattingutils";
+import TextProperties = interfaces.TextProperties;
+import IValueFormatter = valueFormatter.IValueFormatter;
 
-import { TooltipEventArgs, ITooltipServiceWrapper, createTooltipServiceWrapper } from "powerbi-visuals-utils-tooltiputils";
+import { ITooltipServiceWrapper, createTooltipServiceWrapper } from "powerbi-visuals-utils-tooltiputils";
 import { ColorHelper } from "powerbi-visuals-utils-colorutils";
+import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
 
 import { ForceGraphColumns } from "./columns";
 import { ForceGraphSettings, LinkColorType } from "./settings";
 import { ForceGraphTooltipsFactory } from "./tooltipsFactory";
-import { ForceGraphData, ForceGraphNode, ForceGraphNodes, ForceGraphLink, LinkedByName, ITextRect } from "./dataInterfaces";
+import { ForceGraphData, ForceGraphNode, ForceGraphNodes, ForceGraphLink, LinkedByName, ITextRect, ForceGraphBehaviorOptions, LinkTypes } from "./dataInterfaces";
+import { ExternalLinksTelemetry } from "./telemetry";
+import { ForceGraphBehavior } from "./behavior";
 
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
-import ISelectionId = powerbi.extensibility.ISelectionId;
+import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
 
 export class ForceGraph implements IVisual {
-
-    private static Count: number = 0;
     private static VisualClassName: string = "forceGraph";
-    private static getEvent = () => require("d3").event;
-
     private static DefaultImage: string = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAMAAAHNDTTxAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACuUExURQAAAMbGxvLy8sfHx/Hx8fLy8vHx8cnJycrKyvHx8fHx8cvLy/Ly8szMzM3NzfHx8dDQ0PHx8fLy8vHx8e/v79LS0tPT0/Ly8tTU1NXV1dbW1vHx8fHx8fDw8NjY2PT09PLy8vLy8vHx8fLy8vHx8fHx8enp6fDw8PLy8uPj4+Tk5OXl5fHx8b+/v/Pz8+bm5vHx8ejo6PLy8vHx8fLy8sTExPLy8vLy8sXFxfHx8YCtMbUAAAA6dFJOUwD/k/+b7/f///+r/////0z/w1RcEP//ZP///4fj/v8Yj3yXn/unDEhQ////YP9Y/8//aIMU/9+L/+fzC4s1AAAACXBIWXMAABcRAAAXEQHKJvM/AAABQElEQVQoU5WS61LCMBCFFymlwSPKVdACIgWkuNyL+P4v5ibZ0jKjP/xm0uw5ySa7mRItAhnMoIC5TwQZdCZiZjcoC8WU6EVsmZgzoqGdxafgvJAvjUXCb2M+0cXNsd/GDarZqSf7av3M2P1E3xhfLkPUvLD5joEYwVVJQXM6+9McWUwLf4nDTCQZAy96UoDjNI/jhl3xPLbQamu8xD7iaIsPKw7GJ7KZEnWLY3Gi8EFj5nqibXnwD5VEGjJXk5sbpLppfvvo1RazQVrhSopPK4TODrtnjS3dY4ic8KurruWQYF+UG60BacexTMyT2jlNg41dOmKvTpkUd/Jevy7ZxQ61ULRUpoododx8GeDPvIrktbFVdUsK6f8Na5VlVpjZJtowTXVy7kfXF5wCaV1tqXAFuIdWJu+JviaQzNzfQvQDGKRXXEmy83cAAAAASUVORK5CYII=";
 
     private static MinViewport: IViewport = {
@@ -128,13 +132,9 @@ export class ForceGraph implements IVisual {
 
     private static ImagePosition: number = -12;
     private static MinNodeWeight: number = 5;
-    private static MinCharge: number = -100;
-    private static MaxCharge: number = -0.1;
-    private static MinDecimalPlaces: number = 0;
-    private static MaxDecimalPlaces: number = 5;
     private static GravityFactor: number = 100;
     private static LinkDistance: number = 100;
-    private static HoverOpacity: number = 0.3;
+    private static HoverOpacity: number = 0.4;
     private static DefaultOpacity: number = 1;
     private static DefaultLinkColor: string = "#bbb";
     private static DefaultLinkHighlightColor: string = "#f00";
@@ -162,12 +162,13 @@ export class ForceGraph implements IVisual {
     private static NodeSelector: ClassAndSelector = createClassAndSelector("node");
     private static NoAnimationLimit: number = 200;
 
-    private selectionManager: ISelectionManager;
-    private host: IVisualHost;
+    private telemetry: ExternalLinksTelemetry;
 
-    private static get Href(): string {
-        return window.location.href.replace(window.location.hash, "");
-    }
+    private behavior: ForceGraphBehavior;
+    private host: IVisualHost;
+    private eventService: IVisualEventService;
+    private settings: ForceGraphSettings;
+    private formattingSettingsService: FormattingSettingsService;
 
     private static substractMargin(viewport: IViewport, margin: IMargin): IViewport {
         return {
@@ -176,22 +177,17 @@ export class ForceGraph implements IVisual {
         };
     }
 
-    private get settings(): ForceGraphSettings {
-        return this.data && this.data.settings;
-    }
-
     private defaultYPosition: number = -6;
     private defaultYOffset: number = -2;
 
-    private container: d3.Selection<any>;
-    private paths: d3.Selection<ForceGraphLink>;
-    private nodes: d3.Selection<ForceGraphNode>;
-    private forceLayout: d3.layout.Force<ForceGraphLink, ForceGraphNode>;
+    private svg: Selection<any>;
+    private container: Selection<any>;
+    private paths: Selection<ForceGraphLink>;
+    private nodes: Selection<ForceGraphNode>;
+    private forceSimulation: Simulation<ForceGraphNode, ForceGraphLink>;
 
-    private colorPalette: IColorPalette;
+    private colorPalette: ISandboxExtendedColorPalette;
     private colorHelper: ColorHelper;
-
-    private uniqieId: string = `_${ForceGraph.Count++}_`;
 
     private marginValue: IMargin;
 
@@ -227,55 +223,41 @@ export class ForceGraph implements IVisual {
     private tooltipServiceWrapper: ITooltipServiceWrapper;
 
     constructor(options: VisualConstructorOptions) {
-        this.selectionManager = options.host.createSelectionManager();
         this.host = options.host;
         this.init(options);
     }
 
     private init(options: VisualConstructorOptions): void {
-        const root: d3.Selection<any> = d3.select(options.element);
-        this.colorPalette = options.host.colorPalette;
+        const root: Selection<any> = d3Select(options.element);
+        this.telemetry = new ExternalLinksTelemetry(this.host.telemetry);
 
+        const localizationManager = this.host.createLocalizationManager();
+        this.formattingSettingsService = new FormattingSettingsService(localizationManager);
+
+        this.colorPalette = options.host.colorPalette;
         this.colorHelper = new ColorHelper(this.colorPalette);
+        this.eventService = options.host.eventService;
+
+        const selectionManager: ISelectionManager = this.host.createSelectionManager();
+        this.behavior = new ForceGraphBehavior(selectionManager);
 
         this.tooltipServiceWrapper = createTooltipServiceWrapper(
             options.host.tooltipService,
-            options.element,
-            undefined,
-            ForceGraph.getEvent
+            options.element
         );
 
-        this.forceLayout = d3.layout.force<ForceGraphLink, ForceGraphNode>();
+        this.forceSimulation = forceSimulation<ForceGraphNode, ForceGraphLink>();
 
-        this.forceLayout.drag()
-            .on("dragstart", ((d: ForceGraphNode) => {
-                this.forceLayout.stop();
-                d.isDrag = true;
-                this.fadeNode(d);
-            }))
-            .on("dragend", ((d: ForceGraphNode) => {
-                this.forceLayout.tick();
-                this.forceLayout.resume();
-                d.isDrag = false;
-                this.fadeNode(d);
-            }))
-            .on("drag", (d: ForceGraphNode) => {
-                d.px += (d3.event as any).dx;
-                d.py += (d3.event as any).dy;
-                d.x += (d3.event as any).dx;
-                d.y += (d3.event as any).dy;
-                this.fadeNode(d);
-                this.forceLayout.tick();
-            });
-
-        const svg: d3.Selection<any> = root
+        this.svg = root
             .append("svg")
-            .attr({
-                width: "100%",
-                height: "100%"
-            })
+            .attr("width", "100%")
+            .attr("height", "100%")
             .classed(ForceGraph.VisualClassName, true);
-        this.container = svg.append("g").classed("chartContainer", true);
+
+        this.container = this.svg.append("g")
+            .classed("chartContainer", true)
+            .attr("role", "listbox")
+            .attr("aria-multiselectable", "true");
     }
 
     private static getViewport(viewport: IViewport): IViewport {
@@ -288,7 +270,7 @@ export class ForceGraph implements IVisual {
     }
 
     private scale1to10(value: number): number {
-        let scale: d3.scale.Linear<number, number> = d3.scale.linear()
+        const scale: d3ScaleLinearType<number, number> = d3ScaleLinear()
             .domain([
                 this.data.minFiles,
                 this.data.maxFiles
@@ -311,7 +293,7 @@ export class ForceGraph implements IVisual {
             return colorHelper.getThemeColor("foreground");
         }
 
-        switch (this.settings.links.colorLink) {
+        switch (this.settings.links.linkOptions.colorLink.value.value) {
             case LinkColorType.ByWeight: {
                 return colorPalette
                     .getColor(this.scale1to10(link.weight).toString())
@@ -327,19 +309,15 @@ export class ForceGraph implements IVisual {
         return ForceGraph.DefaultLinkColor;
     }
 
-    public enumerateObjectInstances(
-        options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-
-        return ForceGraphSettings.enumerateObjectInstances(this.settings, options);
-    }
-
+    // eslint-disable-next-line max-lines-per-function
     public static converter(
         dataView: DataView,
         colorPalette: IColorPalette,
         colorHelper: ColorHelper,
         host: IVisualHost,
+        settings: ForceGraphSettings
     ): ForceGraphData {
-        const settings: ForceGraphSettings = ForceGraph.parseSettings(dataView, colorHelper);
+
         const metadata: ForceGraphColumns<DataViewMetadataColumn> = ForceGraphColumns.getMetadataColumns(dataView);
         const nodes: ForceGraphNodes = {};
 
@@ -348,7 +326,7 @@ export class ForceGraph implements IVisual {
 
         const linkedByName: LinkedByName = {};
         const links: ForceGraphLink[] = [];
-        const linkDataPoints = {};
+        const linkDataPoints: LinkTypes = {};
 
         let linkTypeCount: number = 0;
 
@@ -356,21 +334,21 @@ export class ForceGraph implements IVisual {
             return null;
         }
 
-        let categorical: ForceGraphColumns<DataViewCategoryColumn & DataViewValueColumn[]>
+        const categorical: ForceGraphColumns<DataViewCategoryColumn & DataViewValueColumn[]>
             = ForceGraphColumns.getCategoricalColumns(dataView);
 
         if (!categorical
             || !categorical.Source
             || !categorical.Target
-            || _.isEmpty(categorical.Source.source)
-            || _.isEmpty(categorical.Source.values)
-            || _.isEmpty(categorical.Target.source)
-            || _.isEmpty(categorical.Target.values)
+            || isEmpty(categorical.Source.source)
+            || isEmpty(categorical.Source.values)
+            || isEmpty(categorical.Target.source)
+            || isEmpty(categorical.Target.values)
         ) {
             return null;
         }
 
-        let sourceCategories: any[] = categorical.Source.values,
+        const sourceCategories: any[] = categorical.Source.values,
             targetCategories: any[] = categorical.Target.values,
             sourceTypeCategories: any[] = (categorical.SourceType || { values: [] }).values,
             targetTypeCategories: any[] = (categorical.TargetType || { values: [] }).values,
@@ -380,7 +358,7 @@ export class ForceGraph implements IVisual {
         let weightFormatter: IValueFormatter = null;
 
         if (metadata.Weight) {
-            let weightValue: number = settings.links.displayUnits;
+            let weightValue: number = +settings.links.linkOptions.displayUnits.value;
 
             if (!weightValue && categorical.Weight && categorical.Weight.length) {
                 weightValue = categorical.Weight[0].maxLocal as number;
@@ -388,16 +366,16 @@ export class ForceGraph implements IVisual {
 
             weightFormatter = valueFormatter.create({
                 format: valueFormatter.getFormatStringByColumn(metadata.Weight, true),
-                precision: settings.links.decimalPlaces,
+                precision: settings.links.linkOptions.decimalPlaces.value,
                 value: weightValue
             });
         }
 
-        let sourceFormatter: IValueFormatter = valueFormatter.create({
+        const sourceFormatter: IValueFormatter = valueFormatter.create({
             format: valueFormatter.getFormatStringByColumn(metadata.Source, true),
         });
 
-        let targetFormatter: IValueFormatter = valueFormatter.create({
+        const targetFormatter: IValueFormatter = valueFormatter.create({
             format: valueFormatter.getFormatStringByColumn(metadata.Target, true),
         });
 
@@ -417,6 +395,8 @@ export class ForceGraph implements IVisual {
                     hideLabel: false,
                     image: sourceType || ForceGraph.DefaultSourceType,
                     adj: {},
+                    weight: 0,
+                    selected: false,
                     identity: host.createSelectionIdBuilder()
                         .withCategory(categorical.Source, i)
                         .withMeasure(<string>categorical.Source.values[i])
@@ -430,6 +410,8 @@ export class ForceGraph implements IVisual {
                     hideLabel: false,
                     image: targetType || ForceGraph.DefaultTargetType,
                     adj: {},
+                    weight: 0,
+                    selected: false,
                     identity: host.createSelectionIdBuilder()
                         .withCategory(categorical.Target, i)
                         .withMeasure(<string>categorical.Target.values[i])
@@ -437,17 +419,17 @@ export class ForceGraph implements IVisual {
                 };
             }
 
-            let sourceNode: ForceGraphNode = nodes[source],
+            const sourceNode: ForceGraphNode = nodes[source],
                 targetNode: ForceGraphNode = nodes[target];
 
-            sourceNode.adj[targetNode.name] = ForceGraph.DefaultValueOfExistingLink;
-            targetNode.adj[sourceNode.name] = ForceGraph.DefaultValueOfExistingLink;
+            sourceNode.adj[targetNode.name] = sourceNode.adj[targetNode.name] + 1 || ForceGraph.DefaultValueOfExistingLink;
+            targetNode.adj[sourceNode.name] = targetNode.adj[sourceNode.name] + 1 || ForceGraph.DefaultValueOfExistingLink;
 
             const tooltipInfo: VisualTooltipDataItem[] = ForceGraphTooltipsFactory.build(
                 {
                     Source: source,
                     Target: target,
-                    Weight: weight,
+                    Weight: weightFormatter ? weightFormatter.format(weight) : weight,
                     LinkType: linkType,
                     SourceType: sourceType,
                     TargetType: targetType
@@ -455,7 +437,7 @@ export class ForceGraph implements IVisual {
                 dataView.metadata.columns
             );
 
-            let link: ForceGraphLink = {
+            const link: ForceGraphLink = {
                 source: sourceNode,
                 target: targetNode,
                 weight: Math.max(metadata.Weight
@@ -464,7 +446,8 @@ export class ForceGraph implements IVisual {
                     ForceGraph.MinWeight),
                 formattedWeight: weight && weightFormatter.format(weight),
                 linkType: linkType || ForceGraph.DefaultLinkType,
-                tooltipInfo: tooltipInfo
+                tooltipInfo: tooltipInfo,
+                selected: false
             };
 
             if (metadata.LinkType && !linkDataPoints[linkType]) {
@@ -490,6 +473,11 @@ export class ForceGraph implements IVisual {
             links.push(link);
         }
 
+        // calculate nodes weight based on number of links
+        for (const node of Object.values(nodes)) {
+            node.weight = Object.values(node.adj).reduce((partialSum, a) => partialSum + a, 0);
+        }
+
         return {
             nodes,
             links,
@@ -500,37 +488,6 @@ export class ForceGraph implements IVisual {
             linkTypes: linkDataPoints,
             formatter: targetFormatter
         };
-    }
-
-    private static parseSettings(dataView: DataView, colorHelper: ColorHelper): ForceGraphSettings {
-        let settings: ForceGraphSettings = ForceGraphSettings.parse<ForceGraphSettings>(dataView);
-
-        settings.size.charge = Math.min(
-            Math.max(settings.size.charge, ForceGraph.MinCharge),
-            ForceGraph.MaxCharge
-        );
-
-        settings.links.decimalPlaces = settings.links.decimalPlaces && Math.min(
-            Math.max(settings.links.decimalPlaces, ForceGraph.MinDecimalPlaces),
-            ForceGraph.MaxDecimalPlaces
-        );
-
-        settings.labels.color = colorHelper.getHighContrastColor(
-            "foreground",
-            settings.labels.color
-        );
-
-        settings.nodes.fill = colorHelper.getHighContrastColor(
-            "foreground",
-            settings.nodes.fill
-        );
-
-        settings.nodes.stroke = colorHelper.getHighContrastColor(
-            "background",
-            settings.nodes.stroke
-        );
-
-        return settings;
     }
 
     private isIntersect(textRect1: ITextRect, textRect2: ITextRect): boolean {
@@ -574,11 +531,15 @@ export class ForceGraph implements IVisual {
             return;
         }
 
+        this.settings = this.formattingSettingsService.populateFormattingSettingsModel(ForceGraphSettings, options.dataViews[0]);
+        this.settings.setHighContrastColor(this.colorPalette);
+
         this.data = ForceGraph.converter(
             options.dataViews[0],
             this.colorPalette,
             this.colorHelper,
-            this.host
+            this.host,
+            this.settings
         );
 
         if (!this.data) {
@@ -588,150 +549,190 @@ export class ForceGraph implements IVisual {
 
         this.viewport = options.viewport;
 
-        let k: number = Math.sqrt(Object.keys(this.data.nodes).length /
+        const k: number = Math.sqrt(Object.keys(this.data.nodes).length /
             (this.viewport.width * this.viewport.height));
 
         this.reset();
-
-        this.forceLayout
-            .gravity(ForceGraph.GravityFactor * k)
-            .links(this.data.links)
-            .size([this.viewport.width, this.viewport.height])
-            .linkDistance(ForceGraph.LinkDistance)
-            .charge(this.settings.size.charge / k);
-
-        this.updateNodes();
-
-        let nodesNum: number = Object.keys(this.data.nodes).length;
         const theta: number = 1.4;
 
-        if (this.settings.animation.show && nodesNum <= ForceGraph.NoAnimationLimit) {
-            this.forceLayout.on("tick", this.getForceTick());
-            this.forceLayout.theta(theta).start();
-            this.setVisualData(this.container, this.colorPalette, this.colorHelper);
-        } else {
-            this.forceLayout.theta(theta).start();
+        this.forceSimulation
+            .force("link", forceLink(this.data.links).distance(ForceGraph.LinkDistance))
+            .force("x", forceX(this.viewport.width / 2).strength(ForceGraph.GravityFactor * k))
+            .force("y", forceY(this.viewport.height / 2).strength(ForceGraph.GravityFactor * k))
+            .force("charge", forceManyBody().strength(this.settings.size.charge.value / k))
+            .force("theta", forceManyBody().theta(theta))
+            .alpha(0.5);
 
-            for (let i = 0; i < nodesNum; ++i) {
-                this.forceLayout.tick();
+        const nodesNum: number = Object.keys(this.data.nodes).length;
+        this.updateNodes();
+
+        if (this.settings.animation.show.value && nodesNum <= ForceGraph.NoAnimationLimit) {
+            this.forceSimulation.on("tick", this.getForceTick()).restart();
+        }
+        else {
+            // manually run simulation to the end
+            while (this.forceSimulation.alpha() > this.forceSimulation.alphaMin()) {
+                this.forceSimulation.tick();
             }
+            // set nodes and links positions
+            this.getForceTick();
+        }
 
-            this.forceLayout.stop();
-            this.setVisualData(this.container, this.colorPalette, this.colorHelper);
-            this.forceLayout.on("tick", this.getForceTick());
+        this.eventService.renderingStarted(options);
+        this.render();
+        this.eventService.renderingFinished(options);
+
+        if (this.settings.nodes.imageGroup.displayImage.value) {
+            this.telemetry.detectExternalImages(this.settings.nodes.imageGroup.imageUrl.value);
         }
     }
 
-    private setVisualData(
-        svg: d3.Selection<any>,
-        colorPalette: IColorPalette,
-        colorHelper: ColorHelper,
-    ): void {
-        this.paths = svg.selectAll(ForceGraph.LinkSelector.selectorName)
-            .data(this.forceLayout.links())
+    public getFormattingModel(): powerbi.visuals.FormattingModel {
+        const model = this.formattingSettingsService.buildFormattingModel(this.settings);
+        return model;
+    }
+
+    private render(): void {
+        this.renderLinks(this.settings);
+        this.renderLinkLabels(this.settings);
+        this.renderNodes(this.settings);
+        this.renderNodeLabels(this.settings);
+
+        const behaviorOptions: ForceGraphBehaviorOptions = {
+            nodes: this.nodes,
+            links: this.paths,
+            clearCatcher: this.svg
+        }
+        this.behavior.bindEvents(behaviorOptions, this.fadeNode.bind(this));
+        this.behavior.renderSelection();
+    }
+
+    private renderLinks(settings: ForceGraphSettings): void {
+        this.paths = this.container.selectAll(ForceGraph.LinkSelector.selectorName)
+            .data(this.data.links)
             .enter()
             .append("path")
-            .attr("id", (d, i) => "linkid_" + this.uniqieId + i)
+            .attr("id", (d, i) => "linkid_" + i)
             .attr("stroke-width", (link: ForceGraphLink) => {
-                return this.settings.links.thickenLink
+                return settings.links.linkOptions.thickenLink.value
                     ? this.scale1to10(link.weight)
                     : ForceGraph.DefaultLinkThickness;
             })
             .classed(ForceGraph.LinkSelector.className, true)
             .style("stroke", (link: ForceGraphLink) => {
-                return this.getLinkColor(link, colorPalette, colorHelper);
+                return this.getLinkColor(link, this.colorPalette, this.colorHelper);
             })
             .style("fill", (link: ForceGraphLink) => {
-                if (this.settings.links.showArrow && link.source !== link.target) {
-                    return this.getLinkColor(link, colorPalette, colorHelper);
+                if (settings.links.linkOptions.showArrow.value && link.source !== link.target) {
+                    return this.getLinkColor(link, this.colorPalette, this.colorHelper);
                 }
             })
             .on("mouseover", () => {
-
                 return this.fadePath(
                     ForceGraph.HoverOpacity,
-                    colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkHighlightColor),
-                    colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor)
+                    this.colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkHighlightColor),//gray
+                    this.colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor)
                 );
             })
             .on("mouseout", () => {
                 return this.fadePath(
                     ForceGraph.DefaultOpacity,
-                    colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor),
-                    colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor)
+                    this.colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor),
+                    this.colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor)
                 );
             });
 
-        this.tooltipServiceWrapper.addTooltip(this.paths, (eventArgs: TooltipEventArgs<ForceGraphLink>) => {
-            return eventArgs.data.tooltipInfo;
-        });
+        //link tooltips
+        this.tooltipServiceWrapper.addTooltip(
+            this.paths,
+            (data: ForceGraphLink) => data.tooltipInfo
+        );
+    }
 
-        if (this.settings.links.showLabel) {
-            let linklabelholderUpdate: d3.selection.Update<ForceGraphLink> = svg
-                .selectAll(ForceGraph.LinkLabelHolderSelector.selectorName)
-                .data(this.forceLayout.links());
-
-            linklabelholderUpdate.enter()
-                .append("g")
-                .classed(ForceGraph.LinkLabelHolderSelector.className, true)
-                .append("text")
-                .classed(ForceGraph.LinkLabelSelector.className, true)
-                .attr("dy", (link: ForceGraphLink) => {
-                    return this.settings.links.thickenLink
-                        ? -this.scale1to10(link.weight) + this.defaultYOffset
-                        : this.defaultYPosition;
-                })
-                .attr("text-anchor", ForceGraph.LinkTextAnchor)
-                .style("fill", colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkFillColor))
-                .append("textPath")
-                .attr("xlink:href", (link: ForceGraphLink, index: number) => {
-                    return ForceGraph.Href + "#linkid_" + this.uniqieId + index;
-                })
-                .attr("startOffset", ForceGraph.StartOffset)
-                .text((link: ForceGraphLink) => {
-                    return this.settings.links.colorLink === LinkColorType.ByLinkType
-                        ? link.linkType
-                        : link.formattedWeight;
-                });
-
-            linklabelholderUpdate
-                .exit()
-                .remove();
+    private renderLinkLabels(settings: ForceGraphSettings): void {
+        if (!settings.links.linkLabels.showLabel.value) {
+            return;
         }
 
-        let nodesNum: number = Object.keys(this.data.nodes).length;
-        let selectionManager = this.selectionManager;
+        const linklabelholderUpdate: Selection<ForceGraphLink> = this.container
+            .selectAll(ForceGraph.LinkLabelHolderSelector.selectorName)
+            .data(this.data.links);
 
+        linklabelholderUpdate.enter()
+            .append("g")
+            .classed(ForceGraph.LinkLabelHolderSelector.className, true)
+            .append("text")
+            .classed(ForceGraph.LinkLabelSelector.className, true)
+            .attr("dy", (link: ForceGraphLink) => {
+                return settings.links.linkOptions.thickenLink.value
+                    ? -this.scale1to10(link.weight) + this.defaultYOffset
+                    : this.defaultYPosition;
+            })
+            .attr("text-anchor", ForceGraph.LinkTextAnchor)
+            .style("fill", settings.links.linkLabels.color.value.value)
+            .style("font-size", PixelConverter.fromPoint(settings.links.linkLabels.fontControl.fontSize.value))
+            .style("font-family", settings.links.linkLabels.fontControl.fontFamily.value)
+            .style("font-weight", settings.links.linkLabels.fontControl.bold.value ? "bold" : "normal")
+            .style("font-style", settings.links.linkLabels.fontControl.italic.value ? "italic" : "normal")
+            .style("text-decoration", settings.links.linkLabels.fontControl.underline.value ? "underline" : "none")
+            .append("textPath")
+            .attr("href", (link: ForceGraphLink, index: number) => {
+                return "#linkid_" + index;
+            })
+            .attr("startOffset", ForceGraph.StartOffset)
+            .text((link: ForceGraphLink) => {
+                return settings.links.linkOptions.colorLink.value.value === LinkColorType.ByLinkType
+                    ? link.linkType
+                    : link.formattedWeight;
+            });
+
+        linklabelholderUpdate
+            .exit()
+            .remove();
+    }
+
+    private renderNodes(settings: ForceGraphSettings): void {
         // define the nodes
-        this.nodes = svg.selectAll(ForceGraph.NodeSelector.selectorName)
-            .data(this.forceLayout.nodes())
+        this.nodes = this.container.selectAll(ForceGraph.NodeSelector.selectorName)
+            .data(Object.values(this.data.nodes))
             .enter()
             .append("g")
             .attr("drag-resize-disabled", true)
-            .classed(ForceGraph.NodeSelector.className, true)
-            .on("mouseover", (node: ForceGraphNode) => {
-                node.isOver = true;
-                this.fadeNode(node);
-            })
-            .on("mouseout", (node: ForceGraphNode) => {
-                node.isOver = false;
-                this.fadeNode(node);
-            })
-            .on("click", function (d) {
-                selectionManager.select(d.identity);
+            .classed(ForceGraph.NodeSelector.className, true);
 
-                (<Event>d3.event).stopPropagation();
-            });
-
-        if (nodesNum <= ForceGraph.NoAnimationLimit) {
-            this.nodes.call(this.forceLayout.drag);
+        const nodesNum: number = Object.keys(this.data.nodes).length;
+        if (nodesNum <= ForceGraph.NoAnimationLimit && settings.animation.show.value) {
+            const drag = d3Drag()
+                .on("start", ((event: D3DragEvent<Element, ForceGraphNode, ForceGraphNode>, d: ForceGraphNode) => {
+                    if (!event.active) {
+                        this.forceSimulation.alphaTarget(1).restart();
+                    }
+                    d.isDrag = true;
+                    event.subject.fx = event.subject.x;
+                    event.subject.fy = event.subject.y;
+                    this.fadeNode(d);
+                }))
+                .on("end", ((event: D3DragEvent<Element, ForceGraphNode, ForceGraphNode>, d: ForceGraphNode) => {
+                    if (!event.active) {
+                        this.forceSimulation.alphaTarget(0);
+                    }
+                    event.subject.fx = null;
+                    event.subject.fy = null;
+                    d.isDrag = false;
+                    this.fadeNode(d);
+                }))
+                .on("drag", (event: D3DragEvent<Element, ForceGraphNode, ForceGraphNode>, d: ForceGraphNode) => {
+                    d.fx = event.x;
+                    d.fy = event.y;
+                    this.fadeNode(d);
+                });
+            this.nodes.call(drag);
         }
-
         // render without animation
-        if (!this.settings.animation.show || nodesNum > ForceGraph.NoAnimationLimit) {
+        else {
             const viewport: IViewport = this.viewportIn;
 
-            let maxWidth: number = viewport.width * ForceGraph.ResolutionFactor,
+            const maxWidth: number = viewport.width * ForceGraph.ResolutionFactor,
                 maxHeight: number = viewport.height * ForceGraph.ResolutionFactor,
                 limitX = x => Math.max((viewport.width - maxWidth) / 2, Math.min((viewport.width + maxWidth) / 2, x)),
                 limitY = y => Math.max((viewport.height - maxHeight) / 2, Math.min((viewport.height + maxHeight) / 2, y));
@@ -742,7 +743,7 @@ export class ForceGraph implements IVisual {
                 link.target.x = limitX(link.target.x);
                 link.target.y = limitY(link.target.y);
 
-                return this.settings && this.settings.links && this.settings.links.showArrow
+                return settings && settings.links && settings.links.linkOptions.showArrow.value
                     ? this.getPathWithArrow(link)
                     : this.getPathWithoutArrow(link);
             });
@@ -751,7 +752,7 @@ export class ForceGraph implements IVisual {
         }
 
         // add the nodes
-        if (this.settings.nodes.displayImage) {
+        if (settings.nodes.imageGroup.displayImage.value) {
             this.nodes.append("image")
                 .attr("x", PixelConverter.toString(ForceGraph.ImagePosition))
                 .attr("y", PixelConverter.toString(ForceGraph.ImagePosition))
@@ -760,13 +761,19 @@ export class ForceGraph implements IVisual {
                 .attr("xlink:href", (node: ForceGraphNode) => {
                     if (node.image) {
                         return this.getImage(node.image);
-                    } else if (this.settings.nodes.defaultImage) {
-                        return this.getImage(this.settings.nodes.defaultImage);
+                    } else if (settings.nodes.imageGroup.defaultImage.value) {
+                        return this.getImage(settings.nodes.imageGroup.defaultImage.value);
                     }
 
                     return ForceGraph.DefaultImage;
                 })
-                .attr("title", (node: ForceGraphNode) => node.name);
+                .attr("title", (node: ForceGraphNode) => node.name)
+                .style("outline", `solid 0px ${this.colorHelper.getHighContrastColor("foreground", "black")}`)
+                .style("border-radius", "2px")
+                .attr("tabindex", 0)
+                .attr("aria-selected", "false")
+                .attr('aria-label', (node: ForceGraphNode) => `${node.name}`);
+
         } else {
             this.nodes
                 .append("circle")
@@ -775,52 +782,69 @@ export class ForceGraph implements IVisual {
                         ? ForceGraph.MinNodeWeight
                         : node.weight;
                 })
-                .style("fill", this.settings.nodes.fill)
-                .style("stroke", this.settings.nodes.stroke);
-        }
-
-        // add the text
-        if (this.settings.labels.show) {
-            this.nodes.append("text")
-                .attr("x", ForceGraph.DefaultLabelX)
-                .attr("dy", ForceGraph.DefaultLabelDy)
-                .style("fill", this.settings.labels.color)
-                .style("font-size", PixelConverter.fromPoint(this.settings.labels.fontSize))
-                .text((node: ForceGraphNode) => {
-                    if (node.name) {
-                        if (node.name.length > this.settings.nodes.nameMaxLength) {
-                            return node.name.substr(0, this.settings.nodes.nameMaxLength);
-                        } else {
-                            return node.name;
-                        }
-                    } else {
-                        return ForceGraph.DefaultLabelText;
-                    }
-                });
+                .style("fill", settings.nodes.optionGroup.fillColor.value.value)
+                .style("stroke", settings.nodes.optionGroup.strokeColor.value.value)
+                .style("outline", `solid 0px ${this.colorHelper.getHighContrastColor("foreground", "black")}`)
+                .style("border-radius", (node: ForceGraphNode) => {
+                    const radius = isNaN(node.weight) || node.weight < ForceGraph.MinNodeWeight
+                        ? ForceGraph.MinNodeWeight
+                        : node.weight;
+                    return `${radius}px`
+                })
+                .attr("tabindex", 0)
+                .attr("aria-selected", "false")
+                .attr('aria-label', (node: ForceGraphNode) => `${node.name}`);
         }
     }
+
+    private renderNodeLabels(settings: ForceGraphSettings): void {
+        if (!settings.labels.show.value) {
+            return;
+        }
+
+        this.nodes.append("text")
+            .attr("x", ForceGraph.DefaultLabelX)
+            .attr("dy", ForceGraph.DefaultLabelDy)
+            .style("fill", settings.labels.color.value.value)
+            .style("font-size", PixelConverter.fromPoint(settings.labels.fontControl.fontSize.value))
+            .style("font-family", settings.labels.fontControl.fontFamily.value)
+            .style("font-weight", settings.labels.fontControl.bold.value ? "bold" : "normal")
+            .style("font-style", settings.labels.fontControl.italic.value ? "italic" : "normal")
+            .style("text-decoration", settings.labels.fontControl.underline.value ? "underline" : "none")
+            .text((node: ForceGraphNode) => {
+                if (node.name) {
+                    if (node.name.length > settings.nodes.optionGroup.nameMaxLength.value) {
+                        return node.name.substr(0, settings.nodes.optionGroup.nameMaxLength.value);
+                    } else {
+                        return node.name;
+                    }
+                } else {
+                    return ForceGraph.DefaultLabelText;
+                }
+            });
+    }
+
     private getImage(image: string): string {
-        return `${this.settings.nodes.imageUrl}${image}${this.settings.nodes.imageExt}`;
+        return `${this.settings.nodes.imageGroup.imageUrl.value}${image}${this.settings.nodes.imageGroup.imageExt.value}`;
     }
 
     private reset(): void {
         if (this.container.empty()) {
             return;
         }
-        this.forceLayout.on("tick", null);
-        this.forceLayout.stop();
+        this.forceSimulation.on("tick", null);
+        this.forceSimulation.stop();
         this.container
             .selectAll("*")
             .remove();
     }
 
     private updateNodes(): void {
-        let thePreviousNodes: ForceGraphNode[] = this.forceLayout.nodes();
+        const thePreviousNodes: ForceGraphNode[] = this.forceSimulation.nodes();
+        this.forceSimulation.nodes(Object.values(this.data.nodes));
 
-        this.forceLayout.nodes(d3.values(this.data.nodes));
-
-        this.forceLayout.nodes().forEach((node: ForceGraphNode, index: number) => {
-            if (!thePreviousNodes[index]) {
+        this.forceSimulation.nodes().forEach((node: ForceGraphNode, index: number) => {
+            if (!thePreviousNodes[index] || thePreviousNodes[index].name !== node.name) {
                 return;
             }
 
@@ -831,8 +855,6 @@ export class ForceGraph implements IVisual {
     private updateNodeAttributes(first: ForceGraphNode, second: ForceGraphNode): void {
         first.x = second.x;
         first.y = second.y;
-        first.px = second.px;
-        first.py = second.py;
         first.weight = second.weight;
     }
 
@@ -840,14 +862,14 @@ export class ForceGraph implements IVisual {
         const viewport: IViewport = this.viewportIn;
         const properties: TextProperties = {
             fontFamily: ForceGraph.LabelsFontFamily,
-            fontSize: PixelConverter.fromPoint(this.settings.labels.fontSize),
+            fontSize: PixelConverter.fromPoint(this.settings.labels.fontControl.fontSize.value),
             text: this.data.formatter.format("")
         };
 
-        const showArrow: boolean = this.settings && this.settings.links && this.settings.links.showArrow;
+        const showArrow: boolean = this.settings.links.linkOptions.showArrow.value;
 
         let resolutionFactor: number = ForceGraph.ResolutionFactor;
-        if (this.settings.size.boundedByBox) {
+        if (this.settings.size.boundedByBox.value) {
             resolutionFactor = ForceGraph.ResolutionFactorBoundByBox;
         }
         // limitX and limitY is necessary when you minimize the graph and then resize it to normal.
@@ -859,7 +881,7 @@ export class ForceGraph implements IVisual {
             viewPortHeightUpLimit: number = (viewport.height + maxHeight) / 2,
             viewPortWidthUpLimit: number = (viewport.height + maxHeight) / 2,
             limitX: (x: number) => number = x => Math.max(viewPortWidthDownLimit, Math.min(viewPortWidthUpLimit, x)),
-            limitY: (y: number) => number = y => Math.max(viewPortHeightDownLimit, Math.min(viewPortWidthUpLimit, y));
+            limitY: (y: number) => number = y => Math.max(viewPortHeightDownLimit, Math.min(viewPortHeightUpLimit, y));
 
         return () => {
             this.paths.attr("d", (link: ForceGraphLink) => {
@@ -875,18 +897,18 @@ export class ForceGraph implements IVisual {
 
             this.nodes.attr("transform", (node: ForceGraphNode) => translate(limitX(node.x), limitY(node.y)));
 
-            if (!this.settings.labels.allowIntersection
-                && this.settings.labels.show
+            if (!this.settings.labels.allowIntersection.value
+                && this.settings.labels.show.value
                 && Object.keys(this.data.nodes).length <= ForceGraph.NoAnimationLimit) {
                 this.nodes
                     .classed("hiddenLabel", (node: ForceGraphNode) => {
                         properties.text = this.data.formatter.format(node.name);
-                        let curNodeTextRect: ITextRect = this.getTextRect(properties, node.x, node.y);
+                        const curNodeTextRect: ITextRect = this.getTextRect(properties, node.x, node.y);
 
                         node.hideLabel = false;
                         this.nodes.each((otherNode: ForceGraphNode) => {
                             properties.text = this.data.formatter.format(otherNode.name);
-                            let otherNodeTextRect: ITextRect = this.getTextRect(properties, otherNode.x, otherNode.y);
+                            const otherNodeTextRect: ITextRect = this.getTextRect(properties, otherNode.x, otherNode.y);
                             if (!otherNode.hideLabel && node.name !== otherNode.name && this.isIntersect(curNodeTextRect, otherNodeTextRect)) {
                                 node.hideLabel = true;
                                 return;
@@ -901,10 +923,10 @@ export class ForceGraph implements IVisual {
     }
 
     private getTextRect(properties: TextProperties, x: number, y: number): ITextRect {
-        let textHeight: number = textMeasurementService.estimateSvgTextHeight(properties);
-        let textWidth: number = textMeasurementService.measureSvgTextWidth(properties);
-        let curTextUpperPointX: number = x + textWidth;
-        let curTextUpperPointY: number = y - textHeight;
+        const textHeight: number = textMeasurementService.estimateSvgTextHeight(properties);
+        const textWidth: number = textMeasurementService.measureSvgTextWidth(properties);
+        const curTextUpperPointX: number = x + textWidth;
+        const curTextUpperPointY: number = y - textHeight;
 
         return <ITextRect>{
             x1: x,
@@ -915,7 +937,7 @@ export class ForceGraph implements IVisual {
     }
 
     private getPathWithArrow(link: ForceGraphLink): string {
-        let dx: number = link.target.x - link.source.x,
+        const dx: number = link.target.x - link.source.x,
             dy: number = link.target.y - link.source.y,
             dr: number = Math.sqrt(dx * dx + dy * dy),
             theta: number = Math.atan2(dy, dx) + Math.PI / 7.85,
@@ -937,7 +959,7 @@ export class ForceGraph implements IVisual {
     }
 
     private getPathWithoutArrow(link: ForceGraphLink): string {
-        let dx: number = link.target.x - link.source.x,
+        const dx: number = link.target.x - link.source.x,
             dy: number = link.target.y - link.source.y,
             dr: number = Math.sqrt(dx * dx + dy * dy);
 
@@ -954,7 +976,7 @@ export class ForceGraph implements IVisual {
         highlightColor: string,
         defaultHighlightColor: string
     ): (link: ForceGraphLink) => void {
-        if (this.settings.links.colorLink !== LinkColorType.Interactive) {
+        if (this.settings.links.linkOptions.colorLink.value.value !== LinkColorType.Interactive) {
             return;
         }
 
@@ -977,24 +999,24 @@ export class ForceGraph implements IVisual {
             return true;
         }
 
-        let visited = {};
+        const visited = {};
 
-        for (let name in this.data.nodes) {
+        for (const name in this.data.nodes) {
             visited[name] = false;
         }
 
         visited[a.name] = true;
 
-        let stack = [];
+        const stack = [];
 
         stack.push(a.name);
 
         while (stack.length > 0) {
-            let cur = stack.pop(),
+            const cur = stack.pop(),
                 node = this.data.nodes[cur];
 
             if (node && node.adj) {
-                for (let nb in node.adj) {
+                for (const nb in node.adj) {
                     if (nb === b.name) {
                         return true;
                     }
@@ -1011,22 +1033,23 @@ export class ForceGraph implements IVisual {
     }
 
     private fadeNode(node: ForceGraphNode): void {
-        if (!this.settings || this.settings.links.colorLink !== LinkColorType.Interactive) {
+        if (!this.settings || this.settings.links.linkOptions.colorLink.value.value !== LinkColorType.Interactive) {
             return;
         }
 
-        let self: ForceGraph = this,
+        // eslint-disable-next-line
+        const self: ForceGraph = this,
             isHighlight = node.isOver || node.isDrag,
             opacity: number = isHighlight
                 ? ForceGraph.HoverOpacity
                 : ForceGraph.DefaultOpacity;
 
-        let highlight: string = isHighlight
+        const highlight: string = isHighlight
             ? ForceGraph.DefaultLinkHighlightColor
             : ForceGraph.DefaultLinkColor;
 
         this.nodes.style("stroke-opacity", function (otherNode: ForceGraphNode) {
-            let thisOpacity: number = (self.settings.nodes.highlightReachableLinks
+            const thisOpacity: number = (self.settings.nodes.optionGroup.highlightReachableLinks.value
                 ? self.isReachable(node, otherNode)
                 : self.areNodesConnected(node, otherNode))
                 ? ForceGraph.DefaultOpacity
@@ -1037,7 +1060,7 @@ export class ForceGraph implements IVisual {
         });
 
         this.paths.style("stroke-opacity", (link: ForceGraphLink) =>
-            (this.settings.nodes.highlightReachableLinks
+            (this.settings.nodes.optionGroup.highlightReachableLinks.value
                 ? this.isReachable(node, link.source)
                 : (link.source === node || link.target === node))
                 ? ForceGraph.DefaultOpacity
@@ -1045,7 +1068,7 @@ export class ForceGraph implements IVisual {
         );
 
         this.paths.style("stroke", (link: ForceGraphLink) => {
-            const color = (this.settings.nodes.highlightReachableLinks
+            const color = (this.settings.nodes.optionGroup.highlightReachableLinks.value
                 ? this.isReachable(node, link.source)
                 : (link.source === node || link.target === node))
                 ? highlight
