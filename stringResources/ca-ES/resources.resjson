@@ -8,8 +8,10 @@
   "Visual_Animations": "Animacions",
   "Visual_Show": "Mostra",
   "Visual_DataLabels": "Etiquetes de dades",
-  "Visual_Fill": "Emplena",
+  "Visual_Fill": "Color d'emplenament",
+  "Visual_Stroke": "Color del traç",
   "Visual_TextSize": "Mida del text",
+  "Visual_Font": "Tipus de lletra",
   "Visual_Intersection": "Intersecció",
   "Visual_Arrow": "Fletxa",
   "Visual_Label": "Etiqueta",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Mostra les unitats",
   "Visual_Nodes": "Nodes",
   "Visual_Image": "Imatge",
+  "Visual_Options": "Opcions",
   "Visual_DefaultImage": "Imatge per defecte",
   "Visual_ImageUrl": "URL de la imatge",
   "Visual_ImageExtension": "Extensió d'imatge",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Longitud màxima del nom",
   "Visual_ForceGraph_HighlightLinks": "Ressalta els enllaços accessibles",
   "Visual_Description_Label": "Mostra el pes als enllaços",
-  "Visual_Description_Thickness": "El gruix dels enllaços representa el pes."
+  "Visual_Description_Thickness": "El gruix dels enllaços representa el pes.",
+  "Visual_Short_Description": "Forceu el diagrama de distribució amb corbes. Resulta útil per mostrar les connexions entre entitats.",
+  "Visual_Long_Description": "La possibilitat de visualitzar les relacions entre diferents elements, la ponderació d’aquestes i el flux sovint permet obtenir conclusions de gran valor que en altres casos no serien tan evidents. Els nombres bàsics i els gràfics senzills no són suficients per descobrir i comunicar aquestes dades tan importants. Necessitem noves tècniques de visualització per al complex món de les relacions, i els gràfics de força són molt útils en aquests casos.\nAquest element visual personalitzat implementa un diagrama de disseny de forces D3 amb corbes. El gruix de les línies representa la ponderació de la relació entre els nodes.\nAtès que la relació i la interconnexió entre conjunts grans d’entitats poden arribar a ser molt complexes, l’element visual col·loca els nodes de manera que hi hagi el menor nombre possible d’encreuaments, cosa que fa que l’experiència d’exploració sigui fàcil i divertida. Així mateix, en el cas dels conjunts de dades grans, l’element visual també produeix una disposició que, en general, és agradable a la vista. Els usuaris també poden arrossegar i col·locar els nodes com vulguin per ajustar la disposició manualment.\nIdealment, per fer servir aquest element visual es necessiten dues dimensions i una mesura (per a la ponderació), però també funciona amb una sola columna.\nAquest element visual és de codi obert. Podeu obtenir el codi al GitHub, a https://github.com/Microsoft/PowerBI-visuals-ForceGraph."
 }

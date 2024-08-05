@@ -8,8 +8,10 @@
   "Visual_Animations": "애니메이션",
   "Visual_Show": "표시",
   "Visual_DataLabels": "데이터 레이블",
-  "Visual_Fill": "채우기",
+  "Visual_Fill": "채우기 색",
+  "Visual_Stroke": "스트로크 색",
   "Visual_TextSize": "텍스트 크기",
+  "Visual_Font": "글꼴",
   "Visual_Intersection": "교차",
   "Visual_Arrow": "화살표",
   "Visual_Label": "레이블",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "표시 단위",
   "Visual_Nodes": "노드",
   "Visual_Image": "이미지",
+  "Visual_Options": "옵션",
   "Visual_DefaultImage": "기본 이미지",
   "Visual_ImageUrl": "이미지 URL",
   "Visual_ImageExtension": "이미지 확장명",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "최대 이름 길이",
   "Visual_ForceGraph_HighlightLinks": "연결 가능한 모든 링크 강조 표시",
   "Visual_Description_Label": "링크에 대한 가중치 표시",
-  "Visual_Description_Thickness": "링크의 두께는 가중치를 나타냄"
+  "Visual_Description_Thickness": "링크의 두께는 가중치를 나타냄",
+  "Visual_Short_Description": "곡선 경로가 포함된 레이아웃 다이어그램을 강제로 적용합니다. 엔터티 간 연결을 표시하는 데 유용합니다.",
+  "Visual_Long_Description": "항목 간의 관계, 관계의 가중치, 흐름을 시각화할 수 있으면 다른 방법으로는 명확히 드러나지 않으며 말로 표현하기 힘든 인사이트에 주목하도록 할 수 있는 경우가 많습니다. 간단한 숫자와 기본적인 차트로는 이러한 데이터에 담긴 스토리를 밝혀내 풀어나갈 수 없습니다. 따라서 복잡한 관계 영역을 시각화하기 위한 새로운 기법이 필요한데, Force-Directed 그래프는 이러한 상황에서 널리 사용되고 있습니다.\n이 사용자 지정 시각적 개체는 곡선 경로가 포함된 D3 강제 레이아웃 다이어그램을 구현합니다. 경로의 두께는 노드 간 관계의 가중치를 나타냅니다.\n대규모 엔터티 집합 간의 관계 및 상호 연결은 매우 복잡할 수 있기 때문에 이 시각적 개체는 엇갈리는 상황이 최대한 발생하지 않도록 노드를 배치하여 쉽고 재미있게 탐색할 수 있게 해 줍니다. 또한 이 시각적 개체는 대규모 데이터 집합을 볼 때 눈이 즐겁고 편안하도록 하는 레이아웃을 생성합니다. 사용자는 노드를 끌어다 놓기만 하면 레이아웃을 수동으로 조정할 수 있습니다.\n이상적인 경우라면 이 시각적 개체와 함께 사용할 차원 두 개와 측정값 하나(가중치용)가 필요할 것입니다. 하지만 이 조건은 단일 열에도 사용할 수 있습니다.\n이는 오픈 소스 시각적 개체입니다. GitHub에서 코드를 받아 보세요. https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

@@ -8,8 +8,10 @@
   "Visual_Animations": "Animations",
   "Visual_Show": "Afficher",
   "Visual_DataLabels": "Étiquettes de données",
-  "Visual_Fill": "Remplir",
+  "Visual_Fill": "Couleur de remplissage",
+  "Visual_Stroke": "Couleur du trait",
   "Visual_TextSize": "Taille du texte",
+  "Visual_Font": "Police",
   "Visual_Intersection": "Intersection",
   "Visual_Arrow": "Flèche",
   "Visual_Label": "Étiquette",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Unités d'affichage",
   "Visual_Nodes": "Nœuds",
   "Visual_Image": "Image",
+  "Visual_Options": "Options",
   "Visual_DefaultImage": "Image par défaut",
   "Visual_ImageUrl": "URL de l'image",
   "Visual_ImageExtension": "Extension d'image",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Longueur maximale du nom",
   "Visual_ForceGraph_HighlightLinks": "Mettre en surbrillance tous les liens accessibles",
   "Visual_Description_Label": "Affiche l'importance sur les liens",
-  "Visual_Description_Thickness": "L'épaisseur des liens représente l'importance"
+  "Visual_Description_Thickness": "L'épaisseur des liens représente l'importance",
+  "Visual_Short_Description": "Diagramme de disposition des forces avec des trajectoires courbes. Utile pour montrer les connexions entre des entités",
+  "Visual_Long_Description": "La possibilité de visualiser la relation entre des éléments, le poids de la relation et le flux permet de mettre en lumière certains insights peu évidents qui passent souvent inaperçus. Pour découvrir et exposer certains récits de données, l'utilisation de simples chiffres et de graphiques de base est insuffisante. Le graphique des forces se hisse au premier plan des nouvelles techniques de visualisation développées pour illustrer le monde complexe des relations.\nCe visuel personnalisé implémente un diagramme de disposition des forces D3 au moyen de trajectoires courbes. L'épaisseur de la trajectoire représente le poids de la relation entre les nœuds.\nDu fait de la complexité des relations et des interconnexions au sein d'un vaste jeu d'entités, le visuel positionne les nœuds de manière à minimiser les croisements, rendant l'exploration simple et agréable. Le visuel transforme également les grands jeux de données en dispositions esthétiques que les utilisateurs peuvent ajuster manuellement en faisant simplement glisser les nœuds à l'endroit souhaité.\nDans l'idéal, ce visuel accepte deux dimensions et une mesure (pour le poids), mais il fonctionne également avec une seule colonne.\nCe visuel est open source. Obtenez le code sur GitHub ici : https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

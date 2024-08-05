@@ -8,8 +8,10 @@
   "Visual_Animations": "Animasi",
   "Visual_Show": "Tunjukkan",
   "Visual_DataLabels": "Label data",
-  "Visual_Fill": "Isi",
+  "Visual_Fill": "Warna isian",
+  "Visual_Stroke": "Warna strok",
   "Visual_TextSize": "Saiz Teks",
+  "Visual_Font": "Fon",
   "Visual_Intersection": "Persilangan",
   "Visual_Arrow": "Panah",
   "Visual_Label": "Label",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Paparkan Unit",
   "Visual_Nodes": "Nod",
   "Visual_Image": "Imej",
+  "Visual_Options": "Opsyen",
   "Visual_DefaultImage": "Imej lalai",
   "Visual_ImageUrl": "Url imej",
   "Visual_ImageExtension": "Sambungan imej",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Panjang nama maks",
   "Visual_ForceGraph_HighlightLinks": "Serlahkan semua pautan boleh dicapai",
   "Visual_Description_Label": "Memaparkan berat pada pautan",
-  "Visual_Description_Thickness": "Ketebalan pautan mewakili berat"
+  "Visual_Description_Thickness": "Ketebalan pautan mewakili berat",
+  "Visual_Short_Description": "Gambarajah susun atur Force Boleh melengkung. Berguna untuk menunjukkan hubungan antara entiti",
+  "Visual_Long_Description": "Keupayaan untuk memvisualisasikan hubungan antara item, berat perhubungan dan aliran sering membawa wawasan yang tidak terhingga kepada perhatian, yang sebaliknya tidak begitu jelas. Nombor mudah dan carta asas tidak cukup untuk menemui dan menceritakan kisah data sedemikian. Kita memerlukan teknik visualisasi baru untuk dunia perhubungan yang rumit dan Graph Directed Force maju ke hadapan untuk senario sedemikian.\nPerhatian visual ini menggunakan gambarajah susun atur gaya D3 dengan laluan melengkung. Ketebalan jalan mewakili berat hubungan antara nod.\nOleh kerana perhubungan dan hubungan antara satu set besar entiti dapat menjadi sangat rumit, kedudukan visual node sedemikian rupa sehingga ada sedikit lintasan yang mungkin, menjadikan pengalaman penjelajahan mudah, menyenangkan. Visual juga menghasilkan susun atur yang keseluruhannya menyenangkan mata bagi set data yang besar. Pengguna juga boleh menyesuaikan susun atur secara manual dengan hanya menyeret nod sekitar.\nSecara kebetulan anda memerlukan dua dimensi dan satu ukuran (untuk berat) untuk digunakan dengan visual ini. Tetapi ini juga berfungsi hanya dengan satu lajur.\nIni adalah visual sumber terbuka. Dapatkan kod dari GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

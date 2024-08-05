@@ -8,8 +8,10 @@
   "Visual_Animations": "Animações",
   "Visual_Show": "Mostrar",
   "Visual_DataLabels": "Etiquetas de dados",
-  "Visual_Fill": "Preenchimento",
+  "Visual_Fill": "Cor de preenchimento",
+  "Visual_Stroke": "Cor do traço",
   "Visual_TextSize": "Tamanho do Texto",
+  "Visual_Font": "Tipo de Letra",
   "Visual_Intersection": "Interseção",
   "Visual_Arrow": "Seta",
   "Visual_Label": "Etiqueta",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Mostrar Unidades",
   "Visual_Nodes": "Nós",
   "Visual_Image": "Imagem",
+  "Visual_Options": "Opções",
   "Visual_DefaultImage": "Imagem predefinida",
   "Visual_ImageUrl": "URL da Imagem",
   "Visual_ImageExtension": "Extensão de imagem",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Comprimento máximo do nome",
   "Visual_ForceGraph_HighlightLinks": "Realçar todas as ligações acessíveis",
   "Visual_Description_Label": "Mostra o peso nas ligações",
-  "Visual_Description_Thickness": "A espessura das ligações representa o peso"
+  "Visual_Description_Thickness": "A espessura das ligações representa o peso",
+  "Visual_Short_Description": "Force o diagrama de esquema com um caminho curvo. Útil para mostrar ligações entre entidades",
+  "Visual_Long_Description": "A capacidade de visualizar a relação entre itens, o peso da relação e o fluxo costuma destacar informações novas, que não seriam muito evidentes de outras formas. Os gráficos de números simples de base não são suficientes para descobrir e contar estas histórias de dados. Precisamos de novas técnicas de visualização para o mundo complexo das relações de dados e o Gráfico Direcionado por Força é ideal esses cenários.\nEste visual personalizado implementa um diagrama de esquema de força D3 com caminhos curvos. A espessura do caminho representa o peso da relação entre os nós.\nUma vez que a relação e a interligação entre um grande conjunto de entidades pode ser muito complexa, o visual posiciona os nós de forma a que exista o mínimo de cruzamentos possíveis, tornando a experiência de exploração fácil e divertida. O visual também produz o esquema, que é visualmente atrativo em conjuntos de dados grandes. Os utilizadores podem também ajustar o esquema manualmente, arrastando simplesmente os nós à volta.\nNuma situação ideal, precisa de duas dimensões e uma medida (para o peso) a utilizar com este visual, mas também funciona apenas com uma coluna.\nEste é um visual de open source. Obtenha o código do GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

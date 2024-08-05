@@ -8,8 +8,10 @@
   "Visual_Animations": "Animazioni",
   "Visual_Show": "Mostra",
   "Visual_DataLabels": "Etichette dati",
-  "Visual_Fill": "Riempimento",
+  "Visual_Fill": "Colore riempimento",
+  "Visual_Stroke": "Colore tratto",
   "Visual_TextSize": "Dimensioni testo",
+  "Visual_Font": "Tipo di carattere",
   "Visual_Intersection": "Intersezione",
   "Visual_Arrow": "Freccia",
   "Visual_Label": "Etichetta",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Unità visualizzate",
   "Visual_Nodes": "Nodi",
   "Visual_Image": "Immagine",
+  "Visual_Options": "Opzioni",
   "Visual_DefaultImage": "Immagine predefinita",
   "Visual_ImageUrl": "URL immagine",
   "Visual_ImageExtension": "Estensione di immagine",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Lunghezza massima del nome",
   "Visual_ForceGraph_HighlightLinks": "Evidenzia tutti i collegamenti raggiungibili",
   "Visual_Description_Label": "Visualizza peso nei collegamenti",
-  "Visual_Description_Thickness": "Lo spessore dei collegamenti rappresenta il peso"
+  "Visual_Description_Thickness": "Lo spessore dei collegamenti rappresenta il peso",
+  "Visual_Short_Description": "Diagramma force layout con tracciato curvo. Utile per visualizzare le connessioni tra entità",
+  "Visual_Long_Description": "Poter visualizzare la relazione tra gli elementi, la ponderazione della relazione e il flusso spesso consente spesso di portare alla luce aspetti che diversamente non sono molto evidenti. Semplici numeri e grafici di base non sono sufficienti per scoprire e raccontare la storia dei dati. Servono nuove tecniche di visualizzazione pensate per il complesso mondo delle relazioni. In tal senso Force-Directed Graph è la soluzione ideale per tali scenari.\nQuesto oggetto visivo personalizzato consente di implementare un diagramma force layout D3 con tracciati curvi. Lo spessore del percorso rappresenta il peso della relazione tra i nodi.\nDal momento che la relazione e l'interconnessione tra set di entità estesi possono essere molto complesse, l'oggetto visivo posiziona i nodi in modo tale da ridurre al minimo gli attraversamenti, rendendo l'esperienza di esplorazione facile e divertente. L'oggetto visivo produce anche un layout gradevole nel complesso per set di dati estesi. Gli utenti possono inoltre regolare il layout manualmente trascinando i nodi.\nDal punto di vista teorico sono necessarie due dimensioni e una misura (per la ponderazione) da usare con questo oggetto visivo, anche se quest'ultimo funziona ugualmente con una sola colonna.\nOggetto visivo open source. Il codice sorgente è disponibile su GitHub all'indirizzo https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

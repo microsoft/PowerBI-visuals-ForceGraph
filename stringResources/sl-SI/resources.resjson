@@ -8,8 +8,10 @@
   "Visual_Animations": "Animacije",
   "Visual_Show": "Pokaži",
   "Visual_DataLabels": "Oznake podatkov",
-  "Visual_Fill": "Zapolni",
+  "Visual_Fill": "Barva polnila",
+  "Visual_Stroke": "Barva poteze",
   "Visual_TextSize": "Velikost besedila",
+  "Visual_Font": "Pisava",
   "Visual_Intersection": "Presek",
   "Visual_Arrow": "Puščica",
   "Visual_Label": "Oznaka",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Enote prikaza",
   "Visual_Nodes": "Vozlišča",
   "Visual_Image": "Slika",
+  "Visual_Options": "Možnosti",
   "Visual_DefaultImage": "Privzeta slika",
   "Visual_ImageUrl": "URL slike",
   "Visual_ImageExtension": "Pripona slike",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Največja možna dolžina imena",
   "Visual_ForceGraph_HighlightLinks": "Označi vse dosegljive povezave",
   "Visual_Description_Label": "Prikaži težo v povezavah",
-  "Visual_Description_Thickness": "Debelina povezave predstavlja težo"
+  "Visual_Description_Thickness": "Debelina povezave predstavlja težo",
+  "Visual_Short_Description": "Usmerjeni diagram postavitve z ukrivljeno potjo. Uporaben za prikaz povezav med entitetami",
+  "Visual_Long_Description": "S ponazoritvijo odnosov med elementi ter pomena odnosov in poteka lahko običajno prikažete vpoglede, ki običajno niso takoj vidni. Preproste številke in osnovni grafikoni niso dovolj za ponazoritev take vrste podatkov. Potrebujemo nove tehnike za ponazoritev teh zapletenih odnosov – usmerjeni graf je idealna rešitev za te vrste scenarijev.\nTa ponazoritev po meri vključuje D3-diagram postavitve z ukrivljenimi potmi. Debelina poti predstavlja pomembnost odnosov med vozlišči.\nKer so odnosi in medsebojne povezave med velikimi nabori entitet lahko zelo zapleteni, ponazoritev postavi vozlišča tako, da vključuje čim presečišč, zaradi česar je izkušnja ponazoritve preprosta in zabavna. Ponazoritev prav tako ustvari pregledno postavitev večjih naborov podatkov. Uporabniki lahko postavitev prilagodijo tudi ročno tako, da preprosto premikajo vozlišča.\nZa izdelavo popolne ponazoritve potrebujete dve dimenziji in meritev (za pomembnost). Lahko pa uporabite tudi en stolpec.\nTo je odprtokodna ponazoritev. Kodo lahko pridobite na spletnem mestu storitve GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

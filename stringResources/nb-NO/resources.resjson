@@ -8,8 +8,10 @@
   "Visual_Animations": "Animasjoner",
   "Visual_Show": "Vis",
   "Visual_DataLabels": "Dataetiketter",
-  "Visual_Fill": "Fyll",
+  "Visual_Fill": "Fyllfarge",
+  "Visual_Stroke": "Strøkfarge",
   "Visual_TextSize": "Tekststørrelse",
+  "Visual_Font": "Skrift",
   "Visual_Intersection": "Skjæringspunkt",
   "Visual_Arrow": "Pil",
   "Visual_Label": "Etikett",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Visningsenheter",
   "Visual_Nodes": "Noder",
   "Visual_Image": "Bilde",
+  "Visual_Options": "Alternativer",
   "Visual_DefaultImage": "Standardavbildning",
   "Visual_ImageUrl": "Nettadresse for bilde",
   "Visual_ImageExtension": "Avbildningsutvidelse",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Maks navnelengde",
   "Visual_ForceGraph_HighlightLinks": "Merk alle koblinger som kan nås",
   "Visual_Description_Label": "Viser vekten på koblinger",
-  "Visual_Description_Thickness": "Tykkelse på koblinger representerer vekt"
+  "Visual_Description_Thickness": "Tykkelse på koblinger representerer vekt",
+  "Visual_Short_Description": "Fremtving oppsett-diagram med buet bane. Nyttige for å vise forbindelser mellom enheter",
+  "Visual_Long_Description": "Mulighet for å visualisere relasjonen mellom elementer samt vekte relasjonen og flyten, kan ofte bidra til å hente frem skjulte innsikter, innsikter som ellers ikke ville vært særlig tydelige. Enkle tall og grunnleggende diagrammer vil ikke være nok til at man kan oppdage og fortelle slike datahistorier. Vi trenger nye visualiseringsteknikker for en kompleks verden av relasjoner, og kraftstyrt diagram (Force-Directed Graph) er førstevalget i slike scenarioer.\nDette tilpassede visualobjektet implementerer et D3-diagram med fremtvunget oppsett med buede baner. Tykkelsen på banen representerer vektingen av relasjonen mellom nodene.\nEttersom relasjonen og sammenhengen mellom store sett av entiteter kan være svært kompleks, plasserer visualobjektet nodene med færrest mulig krysninger, for å gjøre utforskningsopplevelsen enkel og morsom. Visualobjektet produserer også et oppsett som er behagelig å se på når man har store datasett. Brukere kan også justere oppsettet manuelt ved ganske enkelt å dra nodene rundt.\nIdeelt sett trenger du å bruke to dimensjoner og ett mål (for vektingen) med dette visualobjektet. Det vil imidlertid også fungere med bare én kolonne.\nDette er et visualobjekt med åpen kildekode. Koden fra GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

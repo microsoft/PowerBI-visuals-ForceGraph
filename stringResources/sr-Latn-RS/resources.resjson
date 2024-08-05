@@ -8,8 +8,10 @@
   "Visual_Animations": "Animacije",
   "Visual_Show": "Prikaži",
   "Visual_DataLabels": "Oznake podataka",
-  "Visual_Fill": "Popuni",
+  "Visual_Fill": "Boja popune",
+  "Visual_Stroke": "Boja poteza",
   "Visual_TextSize": "Veličina teksta",
+  "Visual_Font": "Font",
   "Visual_Intersection": "Presek",
   "Visual_Arrow": "Strelica",
   "Visual_Label": "Oznaka",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Jedinice za prikaz",
   "Visual_Nodes": "Čvorovi",
   "Visual_Image": "Slika",
+  "Visual_Options": "Opcije",
   "Visual_DefaultImage": "Podrazumevana slika",
   "Visual_ImageUrl": "Url slike",
   "Visual_ImageExtension": "Oznaka tipa datoteke slike",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Maksimalna dužina imena",
   "Visual_ForceGraph_HighlightLinks": "Istakni sve dostupne veze",
   "Visual_Description_Label": "Prikazuje stepen važnosti u vezama",
-  "Visual_Description_Thickness": "Debljina veza predstavlja stepen važnosti"
+  "Visual_Description_Thickness": "Debljina veza predstavlja stepen važnosti",
+  "Visual_Short_Description": "Nametnite dijagram rasporeda uz zakrivljenu putanju. Korisno za prikazivanje veza između entiteta",
+  "Visual_Long_Description": "Mogućnost vizuelizacije odnosa između stavki, stepen važnosti odnosa i tok često stavljaju neuočene uvide u prvi plan jer oni inače ne bi bili tako očigledni. Jednostavni brojevi i osnovni grafikoni neće biti dovoljni za otkrivanje i prepričavanje takvih priča o podacima. Potrebne su nam nove tehnike vizuelizacije za složeni svet odnosa, a silom usmereni grafikon teži ka prednjem planu za takve scenarije.\nOvaj prilagođeni vizuelni element primenjuje D3 silom usmereni dijagram sa zakrivljenim putanjama. Debljina putanje predstavlja stepen važnosti odnosa između čvorova.\nPošto odnos i međusobna povezanost između velikih skupova entiteta mogu biti veoma složeni, vizuelni element postavlja čvorove na takav način da postoji što manje ukrštanja, što iskustvo sa istraživanjem čini jednostavnim i zabavnim. Vizuelni element takođe proizvodi raspored koji je sveukupno prijatan za oči kada su u pitanju veliki skupovi podataka. Korisnici takođe mogu ručno da prilagode raspored tako što će jednostavno prevlačiti čvorove unaokolo.\nU najboljem slučaju će vam biti potrebne dve dimenzije i jedna mera (za stepen važnosti) za korišćenje uz ovaj vizuelni element. Ali ovo funkcioniše i samo sa jednom kolonom.\nOvo je open source vizuelni element. Preuzmite kôd iz usluge GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

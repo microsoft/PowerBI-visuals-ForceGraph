@@ -8,8 +8,10 @@
   "Visual_Animations": "Animazioak",
   "Visual_Show": "Erakutsi",
   "Visual_DataLabels": "Datuen etiketak",
-  "Visual_Fill": "Bete",
+  "Visual_Fill": "Betetze-kolorea",
+  "Visual_Stroke": "Trazuaren kolorea",
   "Visual_TextSize": "Testu-tamaina",
+  "Visual_Font": "Letra-tipoa",
   "Visual_Intersection": "Ebakidura",
   "Visual_Arrow": "Gezia",
   "Visual_Label": "Etiketa",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Bistaratze-unitateak",
   "Visual_Nodes": "Nodoak",
   "Visual_Image": "Irudia",
+  "Visual_Options": "Aukerak",
   "Visual_DefaultImage": "Irudi lehenetsia",
   "Visual_ImageUrl": "Irudiaren URLa",
   "Visual_ImageExtension": "Irudien luzapena",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Izenen gehienezko luzera",
   "Visual_ForceGraph_HighlightLinks": "Nabarmendu esteka eskuragarri guztiak",
   "Visual_Description_Label": "Pisua bistatzen du esteketan",
-  "Visual_Description_Thickness": "Esteken lodierak pisua adierazten du"
+  "Visual_Description_Thickness": "Esteken lodierak pisua adierazten du",
+  "Visual_Short_Description": "Diseinu behartuko diagrama, ibilbide kurbatuarekin. Entitateen arteko konexioak erakusteko balio du.",
+  "Visual_Long_Description": "Elementuen arteko erlazioa, erlazioaren pisua eta fluxua bistaratuta, xehetasun ezezagunak ateratzen dira argira, bestela oso argiak izango ez litzatekeen moduan. Zenbaki arruntak eta oinarrizko diagramak erabiltzea ez da nahikoa datuek adierazten duten guztia aurkitzeko. Datuak bistaratzeko teknika berriak behar ditugu erlazioen mundu konplexurako, eta Force-Directed Graph elementu bisualarekin menderatuta izango dituzu egoera horiek.\nElementu bisual pertsonalizatu honek D3 indarrezko diseinudun diagrama bat inplementatzen du ibilbide kurbatuekin. Ibilbidearen lodierak nodoen arteko erlazioaren pisua adierazten du.\nEntitate multzo handien arteko erlazioa eta interkonexioa oso konplexua izan daitekeenez, elementu bisualak ahalik eta gurutzapen gutxien erabiltzen ditu nodoen artean, datuak erraz esploratu ahal izateko. Gainera, elementu bisualak sortutako diseinua oso ikuserraza da datu multzo handietarako ere. Diseinua eskuz doi daiteke nodoak arrastatuta.\nAhal izanez gero, bi dimentsio eta neurri bat (pisua kalkulatzeko) beharko zenituzke elementu bisual hau erabiltzeko. Hala ere, zutabe bakar gisa ere erabil daiteke.\nKode irekikoa da elementu bisual hau. Eskuratu kodea GitHub-en: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

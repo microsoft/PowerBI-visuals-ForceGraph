@@ -8,8 +8,10 @@
   "Visual_Animations": "アニメーション",
   "Visual_Show": "表示",
   "Visual_DataLabels": "データ ラベル",
-  "Visual_Fill": "フィル",
+  "Visual_Fill": "塗りつぶしの色",
+  "Visual_Stroke": "ストロークの色",
   "Visual_TextSize": "テキスト サイズ",
+  "Visual_Font": "フォント",
   "Visual_Intersection": "共通部分",
   "Visual_Arrow": "矢印",
   "Visual_Label": "ラベル",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "表示単位",
   "Visual_Nodes": "ノード",
   "Visual_Image": "イメージ",
+  "Visual_Options": "オプション​​",
   "Visual_DefaultImage": "既定イメージ",
   "Visual_ImageUrl": "画像の URL",
   "Visual_ImageExtension": "イメージの拡張子",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "名前の最大長",
   "Visual_ForceGraph_HighlightLinks": "到達可能リンクすべてを強調表示",
   "Visual_Description_Label": "リンクの重みを表示します",
-  "Visual_Description_Thickness": "リンクの太さは重みを表します"
+  "Visual_Description_Thickness": "リンクの太さは重みを表します",
+  "Visual_Short_Description": "曲線軌道を使用したレイアウト ダイアグラムを強制します。エンティティ間の接続を示すのに役立ちます",
+  "Visual_Long_Description": "項目間の関係と、その関係の重みとフローを視覚化できると、他の方法ではあまりはっきりしない膨大な量の分析情報がしばしば明らかになります。単純な数字と基本的なグラフでは、このようなデータ ストーリーを発見したり表現したりできません。複雑な関係の世界を視覚化する新しい技法が必要だったため、Force-Directed グラフがそのようなシナリオとして脚光を浴びています。\nこのカスタムの視覚エフェクトは、弧を描くパスを使って D3 フォース レイアウト ダイアグラムを実装します。パスの太さは、ノード間の関係の重みを表します。\n大量のエンティティ セット間の関係と相互接続は非常に複雑なものになることがあるため、この視覚エフェクトでは、各ノードをなるべく交差しないように配置することにより、簡単かつ興味深い調査方法を実現しています。また、この視覚エフェクトでは、大規模なデータセット全体から目で見て楽しいレイアウトを生成することもできます。ユーザーは、ノードをドラッグして移動するだけで、レイアウトを手動で調整することもできます\nこの視覚エフェクトを使用するケースとして理想的なのは、2 つのディメンションと 1 つのメジャー (重み) がある場合です。ただし、1 つの列のみでも機能します。\nこれは、オープンソースの視覚エフェクトです。コードは GitHub から取得します : https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

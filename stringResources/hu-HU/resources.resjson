@@ -8,8 +8,10 @@
   "Visual_Animations": "Animációk",
   "Visual_Show": "Megjelenítés",
   "Visual_DataLabels": "Adatfeliratok",
-  "Visual_Fill": "Kitöltés",
+  "Visual_Fill": "Kitöltési szín",
+  "Visual_Stroke": "Ecsetvonás színe",
   "Visual_TextSize": "Szöveg mérete",
+  "Visual_Font": "Betűtípus",
   "Visual_Intersection": "Metszéspont",
   "Visual_Arrow": "Nyíl",
   "Visual_Label": "Címke",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Megjelenítési egységek",
   "Visual_Nodes": "Csomópontok",
   "Visual_Image": "Kép",
+  "Visual_Options": "Beállítások",
   "Visual_DefaultImage": "Alapértelmezett kép",
   "Visual_ImageUrl": "Kép URL-címe",
   "Visual_ImageExtension": "Kép kiterjesztése",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Név max. hossza",
   "Visual_ForceGraph_HighlightLinks": "Az összes elérhető hivatkozás kiemelése",
   "Visual_Description_Label": "A hivatkozásokon megjeleníti a súlyozást",
-  "Visual_Description_Thickness": "A hivatkozások vékonysága a súlyozást jelöli"
+  "Visual_Description_Thickness": "A hivatkozások vékonysága a súlyozást jelöli",
+  "Visual_Short_Description": "Ívelt vonalas elrendezés kikényszerítése a diagramon. Az entitások közötti kapcsolatok megjelenítésekor hasznos",
+  "Visual_Long_Description": "Az elemek közötti kapcsolatoknak, a kapcsolatok súlyozásának és a folyamatnak a megjelenítésével gyakran olyan implicit megállapítások kerülnek napvilágra, amelyek máskülönben nem lennének észrevehetők. Az ilyen adattörténetek felderítéséhez és elmeséléséhez a számok és a normál diagramok nem elegendőek. A kapcsolatok összetett világának megjelenítéséhez új vizualizációs módszerekre van szükség, és az erőegyensúlyos diagram adja magát az ilyen helyzetekhez.\nEz az egyedi vizualizáció egy D3 erőelrendezési diagram ívelt útvonalakkal – az útvonalak vastagsága a csomópontok közötti kapcsolat súlyát jelöli.\nMivel a nagyméretű entitáshalmazok kapcsolatai és összefüggései rendkívül összetettek lehetnek, a vizualizáció a csomópontok elrendezésében törekszik elkerülni a kereszteződéseket, így javítva az áttekinthetőséget és növelve az értelmezés élményét. A vizualizáció emellett az elrendezést úgy alakítja ki, hogy az jól áttekinthető legyen a nagyobb adatkészletek esetében is. A felhasználó manuálisan tovább módosíthatja az elrendezést a csomópontok húzásával.\nIdeális esetben ennek a vizualizációnak a használatához két dimenzió szükséges, valamint egy mérték (a súlyozáshoz), de akár egyetlen oszloppal is használható.\nEz egy nyílt forráskódú vizualizáció. A kód letölthető a GitHubról: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }
