@@ -8,8 +8,10 @@
   "Visual_Animations": "Animácie",
   "Visual_Show": "Zobraziť",
   "Visual_DataLabels": "Označenia údajov",
-  "Visual_Fill": "Vyplniť",
+  "Visual_Fill": "Farba výplne",
+  "Visual_Stroke": "Farba ťahu štetca",
   "Visual_TextSize": "Veľkosť textu",
+  "Visual_Font": "Písmo",
   "Visual_Intersection": "Prienik",
   "Visual_Arrow": "Šípka",
   "Visual_Label": "Označenie",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Zobrazené jednotky",
   "Visual_Nodes": "Uzly",
   "Visual_Image": "Obrázok",
+  "Visual_Options": "Možnosti",
   "Visual_DefaultImage": "Predvolený obrázok",
   "Visual_ImageUrl": "URL adresa obrázka",
   "Visual_ImageExtension": "Rozšírenie obrázka",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Maximálna dĺžka názvu",
   "Visual_ForceGraph_HighlightLinks": "Zvýrazniť všetky dostupné prepojenia",
   "Visual_Description_Label": "Zobrazí váhu na prepojeniach",
-  "Visual_Description_Thickness": "Hrúbka prepojení predstavuje váhu"
+  "Visual_Description_Thickness": "Hrúbka prepojení predstavuje váhu",
+  "Visual_Short_Description": "Diagram s rozložením zobrazujúcim pôsobiace sily so zakrivenou cestou. Užitočné na zobrazenie prepojení medzi entitami.",
+  "Visual_Long_Description": "Schopnosť vizualizovať vzťah medzi položkami, váženie vzťahu a jeho smer často prinášajú neznáme poznatky, ktoré inak nie sú veľmi evidentné. Jednoduché čísla a základné grafy nestačia na objavovanie a rozprávanie takýchto údajových príbehov. Potrebujeme nové vizualizačné techniky pre komplexný svet vzťahov a graf riadený pôsobiacimi silami je pre takéto scenáre ideálny.\nTáto vlastná vizualizácia implementuje diagram rozloženia s D3 silami so zakrivenými cestami. Hrúbka cesty predstavuje váhu vzťahu medzi uzlami.\nVzhľadom na to, že vzťah a prepojenie medzi veľkou množinou entít môžu byť veľmi zložité, vizuál umiestňuje uzly takým spôsobom, aby sa zobrazilo čo najmenej krížení a skúmanie grafu bolo jednoduché a zábavné. Vizuál tiež poskytuje rozloženie, ktoré je pri používaní veľkých množín údajov prehľadné a dobre sa v ňom orientuje. Používatelia môžu tiež nastaviť rozloženie ručne jednoduchým potiahnutím uzlov myšou.\nV ideálnom prípade potrebujete dva rozmery a jednu mieru (pre váhu), ktoré sa budú používať s týmto vizuálom. Vizuál ale funguje aj iba s jedným stĺpcom.\nTento vizuál je typu open-source. Kód získate na stránke GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

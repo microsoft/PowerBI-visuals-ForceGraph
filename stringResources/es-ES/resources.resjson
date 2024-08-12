@@ -8,8 +8,10 @@
   "Visual_Animations": "Animaciones",
   "Visual_Show": "Mostrar",
   "Visual_DataLabels": "Etiquetas de datos",
-  "Visual_Fill": "Rellenar",
+  "Visual_Fill": "Color de relleno",
+  "Visual_Stroke": "Color de trazo",
   "Visual_TextSize": "Tamaño del texto",
+  "Visual_Font": "Fuente",
   "Visual_Intersection": "Intersección",
   "Visual_Arrow": "Flecha",
   "Visual_Label": "Etiqueta",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Mostrar unidades",
   "Visual_Nodes": "Nodos",
   "Visual_Image": "Imagen",
+  "Visual_Options": "Opciones",
   "Visual_DefaultImage": "Imagen predeterminada",
   "Visual_ImageUrl": "Dirección URL de la imagen",
   "Visual_ImageExtension": "Extensión de imagen",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Longitud de nombre máxima",
   "Visual_ForceGraph_HighlightLinks": "Resaltar todos los vínculos accesibles",
   "Visual_Description_Label": "Mostar peso en los vínculos",
-  "Visual_Description_Thickness": "El grosor de los vínculos representa el peso."
+  "Visual_Description_Thickness": "El grosor de los vínculos representa el peso.",
+  "Visual_Short_Description": "Diagrama de diseño de fuerza con trazado curvo. Esto es útil para mostrar conexiones entre entidades.",
+  "Visual_Long_Description": "La capacidad de visualizar las relaciones entre los elementos, la ponderación de la relación y el flujo permite, con frecuencia, ver información oculta y darle protagonismo (algo que, de otra forma, no sería muy evidente). Los números sencillos y los gráficos básicos no serán suficientes para descubrir y contar esas historias de datos. Necesitamos nuevas técnicas de visualización para el mundo complejo de la relación, y el gráfico dirigido por fuerzas se muestra al frente en esos escenarios.\nEste objeto visual personalizado implementa un diagrama de diseño de fuerza de D3 con trazados curvos. El grosor del trazado representa la ponderación de la relación entre los nodos.\nComo la relación y la interconexión entre conjuntos amplios de entidades puede ser muy compleja, el objeto visual coloca los nodos para que se muestre el número mínimo de cruces con el fin de que la experiencia de exploración sea fácil y divertida. El objeto visual también produce el diseño, que es atractivo para conjuntos de datos de gran tamaño. Los usuarios también pueden ajustar el diseño de forma manual simplemente arrastrando los nodos.\nDe forma ideal, se necesitarían dos dimensiones y una medida (para la ponderación) para usarlas con este objeto visual. Pero también funciona con solo una columna.\nEste es un objeto visual de código abierto. Descargue el código desde GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

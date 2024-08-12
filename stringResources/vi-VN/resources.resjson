@@ -8,8 +8,10 @@
   "Visual_Animations": "Hoạt ảnh",
   "Visual_Show": "Hiện",
   "Visual_DataLabels": "Các nhãn dữ liệu",
-  "Visual_Fill": "Điền",
+  "Visual_Fill": "Tô màu",
+  "Visual_Stroke": "Màu nét",
   "Visual_TextSize": "Kích thước Văn bản",
+  "Visual_Font": "Phông chữ",
   "Visual_Intersection": "Giao điểm",
   "Visual_Arrow": "Mũi tên",
   "Visual_Label": "Nhãn",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Đơn vị hiển thị",
   "Visual_Nodes": "Nút",
   "Visual_Image": "Hình ảnh",
+  "Visual_Options": "Tùy chọn",
   "Visual_DefaultImage": "Hình ảnh mặc định",
   "Visual_ImageUrl": "Url hình ảnh",
   "Visual_ImageExtension": "Phần mở rộng hình ảnh",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Độ dài tên tối đa",
   "Visual_ForceGraph_HighlightLinks": "Đánh dấu tất cả các liên kết có thể truy cập",
   "Visual_Description_Label": "Trọng số hiển thị trên các liên kết",
-  "Visual_Description_Thickness": "Trọng số thể hiện độ dày liên kết"
+  "Visual_Description_Thickness": "Trọng số thể hiện độ dày liên kết",
+  "Visual_Short_Description": "Sơ đồ bố cục dạng lực với các đường cong. Dạng sơ đồ này phù hợp để hiển thị mối quan hệ giữa các thực thể",
+  "Visual_Long_Description": "Khả năng trực quan hóa mối quan hệ giữa các mục, trọng số của mối quan hệ và lưu lượng khiến thông tin chi tiết chuyên sâu chưa công bố trở nên nổi bật, những thông tin này không phải là thông tin hiển nhiên. Các biểu đồ cơ bản và số đơn giản sẽ không đủ để khám phá cũng như kể câu chuyện bằng dữ liệu này. Chúng tôi cần có các kỹ thuật trực quan hóa mới cho kiểu quan hệ phức tạp này và dạng Biểu đồ theo hướng lực này hoàn toàn phù hợp với tình huống như vậy.\nHình ảnh tùy chỉnh này bổ sung cho sơ đồ bố cục lực D3 bằng các đường cong. Độ dày của đường cong thể hiện trọng số của mối quan hệ giữa các nút.\nDo mối quan hệ và sự tương kết giữa một tập hợp thực thể có quy mô lớn có thể rất phức tạp, nên hình ảnh định vị các nút sao cho có ít chỗ giao cắt nhau nhất có thể để trải nghiệm khám phá trở nên dễ dàng và thú vị. Hình ảnh cũng tạo ra bố cục hài hòa cho tập dữ liệu lớn. Người dùng cũng có thể dễ dàng điều chỉnh bố cục theo cách thủ công bằng cách kéo các nút qua lại.\nMột điều lý tưởng là, bạn sẽ cần hai kích thước và một giá trị đo (cho trọng số) để sử dụng cùng hình ảnh này. Tuy nhiên, tính năng này cũng hoạt động ngay khi chỉ có một cột.\nĐây là hình ảnh nguồn mở. Hãy truy cập vào liên kết sau để nhận mã: GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

@@ -8,8 +8,10 @@
   "Visual_Animations": "Animasyonlar",
   "Visual_Show": "Göster",
   "Visual_DataLabels": "Veri etiketleri",
-  "Visual_Fill": "Doldur",
+  "Visual_Fill": "Dolgu rengi",
+  "Visual_Stroke": "Vuruş rengi",
   "Visual_TextSize": "Metin Boyutu",
+  "Visual_Font": "Yazı Tipi",
   "Visual_Intersection": "Kesişim",
   "Visual_Arrow": "Ok",
   "Visual_Label": "Etiket",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Görüntüleme birimleri",
   "Visual_Nodes": "Düğümler",
   "Visual_Image": "Görüntü",
+  "Visual_Options": "Seçenekler",
   "Visual_DefaultImage": "Varsayılan görüntü",
   "Visual_ImageUrl": "Resim url'si",
   "Visual_ImageExtension": "Resim uzantısı",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "En fazla ad uzunluğu",
   "Visual_ForceGraph_HighlightLinks": "Tüm erişilebilir bağlantıları vurgula",
   "Visual_Description_Label": "Bağlantılar üzerinde ağırlığı görüntüler",
-  "Visual_Description_Thickness": "Bağlantıların kalınlığı ağırlığı temsil eder"
+  "Visual_Description_Thickness": "Bağlantıların kalınlığı ağırlığı temsil eder",
+  "Visual_Short_Description": "Eğimli bir yolu olan kuvvet düzeni şeması. Varlıklar arasındaki bağlantıları göstermek için yararlıdır",
+  "Visual_Long_Description": "Öğeler arasındaki ilişkileri, ilişkinin ağırlığını ve akışı görselleştirme olanağı çoğu kez daha önce dile getirilmemiş ve kolaylıkla görülemeyen içgörüleri ortaya çıkarır. Basit sayılar ve temel grafikler bu veri öykülerini keşfetmek ve anlatmak için yeterli değildir. İlişkilerin karmaşık dünyası için yeni görselleştirme tekniklerine ihtiyacımız vardır ve Kuvvet Yönlendirmeli Grafik bu senaryolarda öne çıkmaktadır.\nBu özel görsel, bir D3 kuvvet düzeni şemasını eğimli yollarla uygular. Yolun kalınlığı, düğümler arasındaki ilişkinin ağırlığını temsil eder.\nİlişki ve büyük sayıdaki varlık arasındaki bağlantılar çok karmaşık olabileceğinden görsel, düğümleri olabildiğince az kesişme olacak şekilde yerleştirerek keşfetme deneyimini kolay ve eğlenceli hale getirir. Görsel ayrıca büyük veri kümeleri için göze hoş görünen bir düzen sunar. Kullanıcılar, düğümleri taşıyarak düzeni el ile ayarlayabilir.\nBu görseli kullanmak için ideal olarak iki boyuta ve (ağırlık için) bir ölçüye ihtiyacınız vardır. Ancak görsel tek bir sütunla da sonuç verir.\nBu, açık kaynaklı bir görseldir. Kodu GitHub'dan alabilirsiniz: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

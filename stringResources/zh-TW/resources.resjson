@@ -8,8 +8,10 @@
   "Visual_Animations": "動畫",
   "Visual_Show": "顯示",
   "Visual_DataLabels": "資料標籤",
-  "Visual_Fill": "填滿",
+  "Visual_Fill": "填滿色彩",
+  "Visual_Stroke": "筆觸色彩",
   "Visual_TextSize": "文字大小",
+  "Visual_Font": "字型",
   "Visual_Intersection": "交集",
   "Visual_Arrow": "箭號",
   "Visual_Label": "標籤",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "顯示單位",
   "Visual_Nodes": "節點",
   "Visual_Image": "影像",
+  "Visual_Options": "選項",
   "Visual_DefaultImage": "預設影像",
   "Visual_ImageUrl": "影像 URL",
   "Visual_ImageExtension": "影像副檔名",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "名稱長度上限",
   "Visual_ForceGraph_HighlightLinks": "將所有可連線的連結反白顯示",
   "Visual_Description_Label": "顯示連結寬度",
-  "Visual_Description_Thickness": "表示寬度的連結寬度"
+  "Visual_Description_Thickness": "表示寬度的連結寬度",
+  "Visual_Short_Description": "使用曲徑的力配置圖。適合用於顯示實體之間的連接",
+  "Visual_Long_Description": "以圖像呈現項目之間的關聯、關聯的比重及流向，這樣的功能往往能帶眾人忽視的見解進入焦點，否則就會很不明顯。簡單的數字及基本的圖表不足以找出並說明這樣的資料故事。在複雜的關聯領域中，我們需要新的視覺效果技術，而適合這類案例的力導向圖便躋身最前線。\n這個自訂視覺效果以曲徑實作 D3 力配置圖表。路徑的粗細代表節點之間關係的比重。\n由於一組大型實體之間的關聯與相互關聯相當複雜，因此視覺效果會盡可能以交叉最少的方式安排節點位置，讓探索體驗簡單又有趣。這個視覺效果也會為大型資料集產生賞心悅目的配置。使用者只要輕鬆地四處拖曳節點，即可手動調整配置。\n理想情況是在使用這種視覺效果時，搭配兩個維度和一個量值 (以呈現比重)，但即使只有一個欄位也能運作。\n這是開放原始碼視覺效果。從 GitHub 取得程式碼: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

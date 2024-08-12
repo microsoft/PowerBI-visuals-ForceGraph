@@ -8,8 +8,10 @@
   "Visual_Animations": "Animaties",
   "Visual_Show": "Weergeven",
   "Visual_DataLabels": "Gegevenslabels",
-  "Visual_Fill": "Opvullen",
+  "Visual_Fill": "Opvulkleur",
+  "Visual_Stroke": "Kleur van kwaststreek",
   "Visual_TextSize": "Tekengrootte",
+  "Visual_Font": "Lettertype",
   "Visual_Intersection": "Doorsnede",
   "Visual_Arrow": "Pijl",
   "Visual_Label": "Label",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Weergave-eenheden",
   "Visual_Nodes": "Knooppunten",
   "Visual_Image": "Afbeelding",
+  "Visual_Options": "Opties",
   "Visual_DefaultImage": "Standaardafbeelding",
   "Visual_ImageUrl": "URL van afbeelding",
   "Visual_ImageExtension": "Afbeedingsextensie",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Maximumlengte van de naam",
   "Visual_ForceGraph_HighlightLinks": "Alle bereikbare koppelingen markeren",
   "Visual_Description_Label": "Hiermee wordt het gewicht van koppelingen weergegeven",
-  "Visual_Description_Thickness": "De dikt van koppelingen geeft het gewicht aan"
+  "Visual_Description_Thickness": "De dikt van koppelingen geeft het gewicht aan",
+  "Visual_Short_Description": "Diagram met kromme paden waarvan de lay-out wordt bepaald door aantrekkende en afstotende krachten. Dit diagram kan worden gebruikt om verbindingen tussen entiteiten weer te geven",
+  "Visual_Long_Description": "De mogelijkheid om de relatie tussen items, het gewicht van de relatie en de stroom weer te geven, brengt vaak nieuwe feiten aan het licht die niet voor de hand liggen. Met eenvoudige getallen en standaarddiagrammen kunnen dergelijke inzichten over gegevens niet worden blootgelegd en Force-Directed Graph biedt in zulke situaties uitkomst.\nIn deze aangepaste visual wordt een 3D-diagram met kromme paden geïmplementeerd waarvan de lay-out wordt bepaald door aantrekkende en afstotende krachten. De dikte van het pad geeft het gewicht van de relatie tussen de knooppunten aan.\nOmdat de relatie en onderlinge verbindingen tussen grote groepen entiteiten zeer complex kan zijn, worden de knooppunten in de visual zo geplaatst dat er zo weinig mogelijk kruisingen voorkomen. Op die manier is het eenvoudig en aangenaam om het diagram te bekijken. De visual genereert ook de lay-out waarin grote gegevenssets op overzichtelijke wijze in beeld worden gebracht. Gebruikers kunnen de lay-out ook handmatig aanpassen door de knooppunten te verslepen.\nU kunt deze visual het beste gebruiken met twee dimensies en één meetwaarde (voor het gewicht). U kunt het echter ook met slechts één kolom gebruiken.\nDit is een open source visual. U kunt de code op GitHub ophalen: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }
