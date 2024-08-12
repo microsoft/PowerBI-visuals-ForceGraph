@@ -33,6 +33,7 @@ import FormattingSettingsModel = formattingSettings.Model;
 import FormattingSettingsGroup = formattingSettings.Group;
 
 import ISandboxExtendedColorPalette = powerbi.extensibility.ISandboxExtendedColorPalette;
+import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import IEnumMember = powerbi.IEnumMember;
 
 export class ForceGraphSettings extends FormattingSettingsModel {
@@ -51,6 +52,16 @@ export class ForceGraphSettings extends FormattingSettingsModel {
             this.nodes.optionGroup.fillColor.value = colorPalette.foreground;
             this.nodes.optionGroup.strokeColor.value = colorPalette.background;   
         }
+    }
+
+    public setLocalizedOptions(localizationManager: ILocalizationManager): void{
+        this.setLocalizedDisplayName(colorLinkOptions, localizationManager);
+    }
+
+    private setLocalizedDisplayName(options: IEnumMemberWithDisplayNameKey[], localizationManager: ILocalizationManager): void{
+        options.forEach(option => {
+            option.displayName = localizationManager.getDisplayName(option.key);
+        });
     }
 }
 
