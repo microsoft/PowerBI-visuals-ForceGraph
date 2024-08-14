@@ -79,6 +79,7 @@ import IViewport = powerbi.IViewport;
 import IColorPalette = powerbi.extensibility.IColorPalette;
 import IVisual = powerbi.extensibility.visual.IVisual;
 import IVisualEventService = powerbi.extensibility.IVisualEventService;
+import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 
 import DataView = powerbi.DataView;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
@@ -169,6 +170,7 @@ export class ForceGraph implements IVisual {
     private eventService: IVisualEventService;
     private settings: ForceGraphSettings;
     private formattingSettingsService: FormattingSettingsService;
+    private localizationManager: ILocalizationManager;
 
     private static substractMargin(viewport: IViewport, margin: IMargin): IViewport {
         return {
@@ -231,8 +233,8 @@ export class ForceGraph implements IVisual {
         const root: Selection<any> = d3Select(options.element);
         this.telemetry = new ExternalLinksTelemetry(this.host.telemetry);
 
-        const localizationManager = this.host.createLocalizationManager();
-        this.formattingSettingsService = new FormattingSettingsService(localizationManager);
+        this.localizationManager = this.host.createLocalizationManager();
+        this.formattingSettingsService = new FormattingSettingsService(this.localizationManager);
 
         this.colorPalette = options.host.colorPalette;
         this.colorHelper = new ColorHelper(this.colorPalette);
@@ -588,6 +590,7 @@ export class ForceGraph implements IVisual {
     }
 
     public getFormattingModel(): powerbi.visuals.FormattingModel {
+        this.settings.setLocalizedOptions(this.localizationManager);
         const model = this.formattingSettingsService.buildFormattingModel(this.settings);
         return model;
     }
