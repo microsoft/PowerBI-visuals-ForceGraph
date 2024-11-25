@@ -275,7 +275,7 @@ export class ForceGraph implements IVisual {
         const scale: d3ScaleLinearType<number, number> = d3ScaleLinear()
             .domain([
                 this.data.minFiles,
-                this.data.maxFiles
+                this.data.maxFiles || ForceGraph.MaxRangeValue
             ])
             .rangeRound([
                 ForceGraph.MinRangeValue,
