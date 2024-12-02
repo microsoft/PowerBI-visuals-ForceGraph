@@ -439,11 +439,11 @@ describe("ForceGraph", () => {
                 visualBuilder.updateFlushAllD3Transitions(dataViewKN);
 
                 visualBuilder.nodeKeydown("William", keyboardSingleSelectionEvent);
-                expect(visualBuilder.selectedNodes.length).toBe(1);
+                expect(visualBuilder.selectedNodes.length).toBe(2);
                 expect(visualBuilder.selectedLinks.length).toBe(1);
 
                 visualBuilder.nodeKeydown("Brazil", keyboardSingleSelectionEvent);
-                expect(visualBuilder.selectedNodes.length).toBe(1);
+                expect(visualBuilder.selectedNodes.length).toBe(4);
                 expect(visualBuilder.selectedLinks.length).toBe(3);
             }
 
@@ -454,7 +454,7 @@ describe("ForceGraph", () => {
                 // multiselect second node
                 visualBuilder.nodeKeydown("Brazil", keyboardMultiselectionEvent);
 
-                expect(visualBuilder.selectedNodes.length).toBe(2);
+                expect(visualBuilder.selectedNodes.length).toBe(4);
                 expect(visualBuilder.selectedLinks.length).toBe(3);
             }
         });
@@ -471,7 +471,7 @@ describe("ForceGraph", () => {
                 visualBuilder.nodeClick("William");
 
                 renderTimeout(() => {
-                    expect(visualBuilder.selectedNodes?.length).toBe(1);
+                    expect(visualBuilder.selectedNodes?.length).toBe(2);
                     expect(visualBuilder.selectedLinks?.length).toBe(1);
                     done();
                 });
@@ -499,12 +499,12 @@ describe("ForceGraph", () => {
         function checkMultiselection(eventType: number, done: DoneFn): void {
             visualBuilder.nodeClick("William");
             renderTimeout(() => {
-                expect(visualBuilder.selectedNodes?.length).toBe(1);
+                expect(visualBuilder.selectedNodes?.length).toBe(2);
                 expect(visualBuilder.selectedLinks?.length).toBe(1);
 
                 visualBuilder.nodeClick("Olivia", eventType);
                 renderTimeout(() => {
-                    expect(visualBuilder.selectedNodes?.length).toBe(2);
+                    expect(visualBuilder.selectedNodes?.length).toBe(4);
                     expect(visualBuilder.selectedLinks?.length).toBe(2);
                     done();
                 });

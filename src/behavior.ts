@@ -5,7 +5,7 @@ import ISelectionId = powerbi.visuals.ISelectionId;
 import { Selection as d3Selection } from "d3-selection";
 type Selection<T> = d3Selection<any, T, any, any>;
 
-import { ForceGraphNode, ForceGraphLink, ForceGraphBehaviorOptions } from "./dataInterfaces";
+import { ForceGraphNode, ForceGraphLink, ForceGraphBehaviorOptions, ISelectableDataPoint } from "./dataInterfaces";
 
 export class ForceGraphBehavior {
     static DimmedOpacity: number = 0.4;
@@ -17,6 +17,7 @@ export class ForceGraphBehavior {
     private selectionManager: ISelectionManager;
     private nodeDataPoints: ForceGraphNode[];
     private nodesSelection: Selection<ForceGraphNode>;
+    private nodeLabelsSelection: Selection<ForceGraphNode>;
     private linkDataPoints: ForceGraphLink[];
     private linksSelection: Selection<ForceGraphLink>;
     private clearCatcher: Selection<any>;
@@ -28,27 +29,20 @@ export class ForceGraphBehavior {
         this.selectionManager.registerOnSelectCallback(this.onSelectCallback.bind(this));
     }
 
-    private onSelectCallback(bookmarkIds ?: ISelectionId[]){
-        const selectedIds: ISelectionId[] = <ISelectionId[]>this.selectionManager.getSelectionIds();
-        this.setSelectedToNodeDataPoints(bookmarkIds || selectedIds);
-        this.setSelectedToLinkDataPoints();
+    private onSelectCallback(selectionIds?: ISelectionId[]){
+        this.applySelectionStateToData(selectionIds);
         this.renderSelection();
     }
 
-    private setSelectedToNodeDataPoints(ids: ISelectionId[]): void{
-        this.nodeDataPoints.forEach((dataPoint: ForceGraphNode) => {
-            dataPoint.selected = false;
-            ids.forEach(bookmarkSelection => {
-                if (bookmarkSelection.equals(dataPoint.identity)) {
-                    dataPoint.selected = true;
-                }
-            });
-        });
+    private applySelectionStateToData(selectionIds?: ISelectionId[]): void{
+        const selectedIds: ISelectionId[] = <ISelectionId[]>this.selectionManager.getSelectionIds();
+        this.setSelectedToDataPoints(this.nodeDataPoints, selectionIds || selectedIds);
+        this.setSelectedToDataPoints(this.linkDataPoints, selectionIds || selectedIds);
     }
 
-    private setSelectedToLinkDataPoints(): void{
-        this.linkDataPoints.forEach((dataPoint: ForceGraphLink) => {
-            dataPoint.selected = dataPoint.source.selected || dataPoint.target.selected;
+    private setSelectedToDataPoints(dataPoints: ForceGraphNode[] | ForceGraphLink[], ids: ISelectionId[]): void{
+        dataPoints.forEach((dataPoint: ForceGraphNode | ForceGraphLink) => {
+            dataPoint.selected = ids.some((id=> id.equals(dataPoint.identity)));
         });
     }
     
@@ -57,6 +51,7 @@ export class ForceGraphBehavior {
         this.linksSelection = options.links;
         this.nodeDataPoints = options.nodes.data();
         this.nodesSelection = options.nodes;
+        this.nodeLabelsSelection = options.nodes.select(".nodelabel");
         this.clearCatcher = options.clearCatcher;
         this.fadeNode = fadeNode;
 
@@ -69,6 +64,8 @@ export class ForceGraphBehavior {
 
         this.bindMouseEvents(this.nodesSelection);
         this.bindKeyboardEvent(this.nodesSelection);
+
+        this.applySelectionStateToData();
     }
 
     private bindContextMenuEvent(elements: Selection<any>): void {
@@ -85,30 +82,52 @@ export class ForceGraphBehavior {
     }
 
     private bindClickEvent(elements: Selection<any>): void {
-        elements.on("click", (event: PointerEvent, dataPoint: ForceGraphNode | undefined) => {
-            const isMultiSelection: boolean = event.ctrlKey || event.metaKey || event.shiftKey;
-            if (dataPoint){
-                this.selectionManager.select(dataPoint.identity, isMultiSelection);
-                event.stopPropagation();
+        elements.on("click", (event: PointerEvent, node: ForceGraphNode | undefined) => {
+            if (node){
+               this.handleSelection(node, event);
             }
             else {
                 this.selectionManager.clear();
             }
+
             this.onSelectCallback();
-        })
+            event.stopPropagation();
+        });
+    }
+
+    private handleSelection(node: ForceGraphNode, event: PointerEvent | KeyboardEvent): void {
+        const isMultiSelection: boolean = event.ctrlKey || event.metaKey || event.shiftKey;
+
+        const getSelectionIds: (dataPoints: ISelectableDataPoint[]) => ISelectionId[] = dataPoints => dataPoints.map((dataPoint: ISelectableDataPoint) => dataPoint.identity);
+        const nodeSelectableDataPoints: ISelectableDataPoint[] = [...node.links, node];
+        const nodeSelectionIds: ISelectionId[] = Array.from(getSelectionIds(nodeSelectableDataPoints));
+        
+        const notSelectedDataPoints: ISelectableDataPoint[] = nodeSelectableDataPoints.filter((dataPoint: ISelectableDataPoint) => !dataPoint.selected);
+        const notSelectedIds: ISelectionId[] = getSelectionIds(notSelectedDataPoints);
+        const isSelection: boolean = !!notSelectedIds.length;
+
+        const selectedIds: ISelectionId[] = <ISelectionId[]>this.selectionManager.getSelectionIds();
+        const selectionManagerHasUniqIds: boolean = selectedIds.some(selectedId => !nodeSelectionIds.some(selectionId => selectionId.equals(selectedId)));
+
+        if (isSelection && isMultiSelection){
+            this.selectionManager.select(notSelectedIds, true);
+        }
+        else {
+            const shouldUseMultiselect: boolean = (isMultiSelection || !selectionManagerHasUniqIds) && !isSelection; 
+            this.selectionManager.select(nodeSelectionIds, shouldUseMultiselect);
+        }
     }
 
     private bindKeyboardEvent(elements: Selection<any>): void {
-        elements.on("keydown", (event : KeyboardEvent, dataPoint: ForceGraphNode) => {
+        elements.on("keydown", (event : KeyboardEvent, node: ForceGraphNode) => {
             if (event.code !== "Enter" && event.code !== "Space") {
                 return;
             }
 
-            const isMultiSelection: boolean = event.ctrlKey || event.metaKey || event.shiftKey;
-            this.selectionManager.select(dataPoint.identity, isMultiSelection);
+            this.handleSelection(node, event);
+            this.onSelectCallback();
 
             event.stopPropagation();
-            this.onSelectCallback();
         });
     }
 
@@ -128,11 +147,13 @@ export class ForceGraphBehavior {
     public renderSelection(){
         const dataPointHasSelection: boolean = this.nodeDataPoints.some((dataPoint: ForceGraphNode) => dataPoint.selected);
 
-        this.nodesSelection.style("stroke-opacity", (dataPoint: ForceGraphNode) => this.getOpacity(dataPoint.selected, dataPointHasSelection));
-        this.nodesSelection.style("fill-opacity", (dataPoint: ForceGraphNode) => this.getOpacity(dataPoint.selected, dataPointHasSelection));
-        this.linksSelection.style("stroke-opacity", (dataPoint: ForceGraphLink) => this.getOpacity(dataPoint.selected, dataPointHasSelection));
-
         this.nodesSelection.attr("aria-selected", (node: ForceGraphNode) => node.selected);
+        this.nodesSelection.style("fill-opacity", (dataPoint: ForceGraphNode) => this.getOpacity(dataPoint.selected || dataPoint.links.some(link => link.selected), dataPointHasSelection));
+        this.nodesSelection.style("stroke-opacity", (dataPoint: ForceGraphNode) => this.getOpacity(dataPoint.selected, dataPointHasSelection));
+        
+        this.linksSelection.style("stroke-opacity", (dataPoint: ForceGraphLink) => this.getOpacity(dataPoint.selected, dataPointHasSelection));
+        
+        this.nodeLabelsSelection.classed("selected", (dataPoint: ForceGraphNode) => dataPoint.selected && dataPointHasSelection);
     }
 
     private getOpacity(selected: boolean, hasSelection: boolean): number {

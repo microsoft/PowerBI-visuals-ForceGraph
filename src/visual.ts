@@ -161,6 +161,7 @@ export class ForceGraph implements IVisual {
     private static LinkLabelHolderSelector: ClassAndSelector = createClassAndSelector("linklabelholder");
     private static LinkLabelSelector: ClassAndSelector = createClassAndSelector("linklabel");
     private static NodeSelector: ClassAndSelector = createClassAndSelector("node");
+    private static NodeLabelsSelector: ClassAndSelector = createClassAndSelector("nodelabel");
     private static NoAnimationLimit: number = 200;
 
     private telemetry: ExternalLinksTelemetry;
@@ -399,6 +400,7 @@ export class ForceGraph implements IVisual {
                     adj: {},
                     weight: 0,
                     selected: false,
+                    links: [],
                     identity: host.createSelectionIdBuilder()
                         .withCategory(categorical.Source, i)
                         .withMeasure(<string>categorical.Source.values[i])
@@ -414,6 +416,7 @@ export class ForceGraph implements IVisual {
                     adj: {},
                     weight: 0,
                     selected: false,
+                    links: [],
                     identity: host.createSelectionIdBuilder()
                         .withCategory(categorical.Target, i)
                         .withMeasure(<string>categorical.Target.values[i])
@@ -449,7 +452,13 @@ export class ForceGraph implements IVisual {
                 formattedWeight: weight && weightFormatter.format(weight),
                 linkType: linkType || ForceGraph.DefaultLinkType,
                 tooltipInfo: tooltipInfo,
-                selected: false
+                selected: false,
+                identity: host.createSelectionIdBuilder()
+                    .withCategory(categorical.Source, i)
+                    .withMeasure(<string>categorical.Source.values[i])
+                    .withCategory(categorical.Target, i)
+                    .withMeasure(<string>categorical.Target.values[i])
+                    .createSelectionId()
             };
 
             if (metadata.LinkType && !linkDataPoints[linkType]) {
@@ -473,6 +482,8 @@ export class ForceGraph implements IVisual {
             }
 
             links.push(link);
+            sourceNode.links.push(link);
+            targetNode.links.push(link);
         }
 
         // calculate nodes weight based on number of links
@@ -774,7 +785,6 @@ export class ForceGraph implements IVisual {
                 .style("outline", `solid 0px ${this.colorHelper.getHighContrastColor("foreground", "black")}`)
                 .style("border-radius", "2px")
                 .attr("tabindex", 0)
-                .attr("aria-selected", "false")
                 .attr('aria-label', (node: ForceGraphNode) => `${node.name}`);
 
         } else {
@@ -795,7 +805,6 @@ export class ForceGraph implements IVisual {
                     return `${radius}px`
                 })
                 .attr("tabindex", 0)
-                .attr("aria-selected", "false")
                 .attr('aria-label', (node: ForceGraphNode) => `${node.name}`);
         }
     }
@@ -806,6 +815,7 @@ export class ForceGraph implements IVisual {
         }
 
         this.nodes.append("text")
+            .classed(ForceGraph.NodeLabelsSelector.className, true)
             .attr("x", ForceGraph.DefaultLabelX)
             .attr("dy", ForceGraph.DefaultLabelDy)
             .style("fill", settings.labels.color.value.value)
