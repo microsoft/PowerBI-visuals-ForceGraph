@@ -325,5 +325,14 @@
             }
         }
     },
-    "supportsKeyboardFocus": true
+    "supportsKeyboardFocus": true,
+    "tooltips": {
+        "supportedTypes": {
+            "default": true,
+            "canvas": true
+        },
+        "roles": [
+            "tooltips"
+        ]
+    }
 }

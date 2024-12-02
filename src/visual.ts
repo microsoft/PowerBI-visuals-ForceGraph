@@ -659,7 +659,8 @@ export class ForceGraph implements IVisual {
         //link tooltips
         this.tooltipServiceWrapper.addTooltip(
             this.paths,
-            (data: ForceGraphLink) => data.tooltipInfo
+            (data: ForceGraphLink) => data.tooltipInfo,
+            (data: ForceGraphLink) => data.identity
         );
     }
 
