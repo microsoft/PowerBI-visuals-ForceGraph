@@ -100,8 +100,8 @@ export class ForceGraphBehavior {
 
         const getSelectionIds: (dataPoints: ISelectableDataPoint[]) => ISelectionId[] = dataPoints => dataPoints.map((dataPoint: ISelectableDataPoint) => dataPoint.identity);
         const nodeSelectableDataPoints: ISelectableDataPoint[] = [...node.links, node];
-        const nodeSelectionIds: ISelectionId[] = Array.from(getSelectionIds(nodeSelectableDataPoints));
-        
+        const nodeSelectionIds: ISelectionId[] = getSelectionIds(nodeSelectableDataPoints);
+
         const notSelectedDataPoints: ISelectableDataPoint[] = nodeSelectableDataPoints.filter((dataPoint: ISelectableDataPoint) => !dataPoint.selected);
         const notSelectedIds: ISelectionId[] = getSelectionIds(notSelectedDataPoints);
         const isSelection: boolean = !!notSelectedIds.length;
