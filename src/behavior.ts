@@ -34,10 +34,10 @@ export class ForceGraphBehavior {
         this.renderSelection();
     }
 
-    private applySelectionStateToData(selectionIds?: ISelectionId[]): void{
-        const selectedIds: ISelectionId[] = <ISelectionId[]>this.selectionManager.getSelectionIds();
-        this.setSelectedToDataPoints(this.nodeDataPoints, selectionIds || selectedIds);
-        this.setSelectedToDataPoints(this.linkDataPoints, selectionIds || selectedIds);
+    private applySelectionStateToData(newSelectionIds?: ISelectionId[]): void{
+        const selectionIds: ISelectionId[] = newSelectionIds ?? <ISelectionId[]>this.selectionManager.getSelectionIds();
+        this.setSelectedToDataPoints(this.nodeDataPoints, selectionIds);
+        this.setSelectedToDataPoints(this.linkDataPoints, selectionIds);
     }
 
     private setSelectedToDataPoints(dataPoints: ForceGraphNode[] | ForceGraphLink[], ids: ISelectionId[]): void{
