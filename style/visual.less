@@ -29,10 +29,11 @@
  * We compile it as a less file in order to wrap the external CSS rules.
  */
 .forceGraph {
+    cursor: default;
+
     path.link {
         fill: none;
         stroke: #bbb;
-        cursor: pointer;
     }
 
     circle {
@@ -65,6 +66,10 @@
         font: 12px sans-serif;
         pointer-events: none;
         z-index: 99;
+
+        &.nodelabel.selected {
+            font-weight: bold !important;
+        }
     }
 
     .hiddenLabel text{

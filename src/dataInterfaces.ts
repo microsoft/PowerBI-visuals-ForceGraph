@@ -37,17 +37,21 @@ type Selection<T> = d3Selection<any, T, any, any>;
 
 import { ForceGraphSettings } from "./settings";
 
-export interface ForceGraphNode extends Node {
+export interface ISelectableDataPoint {
+    selected: boolean;
+    identity: ISelectionId;
+}
+
+export interface ForceGraphNode extends Node, ISelectableDataPoint {
     name: string;
     image: string;
     adj: { [i: string]: number };
-    selected: boolean;
+    links: ForceGraphLink[];
     x?: number;
     y?: number;
     isDrag?: boolean;
     isOver?: boolean;
     hideLabel?: boolean;
-    identity: ISelectionId;
     weight?: number;
 }
 
@@ -62,13 +66,12 @@ export interface ForceGraphNodes {
     [i: string]: ForceGraphNode;
 }
 
-export interface ForceGraphLink extends TooltipEnabledDataPoint {
+export interface ForceGraphLink extends TooltipEnabledDataPoint, ISelectableDataPoint {
     source: ForceGraphNode;
     target: ForceGraphNode;
     weight: number;
     formattedWeight: string;
     linkType: string;
-    selected: boolean;
 }
 
 export interface ForceGraphData {

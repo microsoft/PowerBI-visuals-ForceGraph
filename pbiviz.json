@@ -1,10 +1,10 @@
 {
   "visual": {
     "name": "forceGraph",
-    "displayName": "Force-Directed Graph 3.0.0.0",
+    "displayName": "Force-Directed Graph 3.0.1.0",
     "guid": "ForceGraph1449359463895",
     "visualClassName": "ForceGraph",
-    "version": "3.0.0.0",
+    "version": "3.0.1.0",
     "description": "This custom visual implements a D3 force layout diagram with curved path. The thickness of the path also represents the weight of the relationship between the nodes.",
     "supportUrl": "https://community.powerbi.com",
     "gitHubUrl": "https://github.com/Microsoft/PowerBI-visuals-ForceGraph"

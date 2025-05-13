@@ -1,3 +1,8 @@
+## 3.0.1.0
+* Updated selection logic
+* Added report page tooltip
+* Updated dependencies
+
 ## 3.0.0.0
 * Updated powerbi-visuals-api to 5.10.0
 * Updated dependencies and fixed vulnerabilities
