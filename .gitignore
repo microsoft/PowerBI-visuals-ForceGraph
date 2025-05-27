@@ -6,6 +6,7 @@ typings
 .api
 *.log
 /coverage
+/reportAssets
 
 .idea/*
 
