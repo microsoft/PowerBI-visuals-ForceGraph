@@ -84,14 +84,14 @@ export class ForceGraphBehavior {
     private bindClickEvent(elements: Selection<any>): void {
         elements.on("click", (event: PointerEvent, node: ForceGraphNode | undefined) => {
             if (node){
-               this.handleSelection(node, event);
+                this.handleSelection(node, event);
+                event.stopPropagation();
             }
             else {
                 this.selectionManager.clear();
             }
 
             this.onSelectCallback();
-            event.stopPropagation();
         });
     }
 

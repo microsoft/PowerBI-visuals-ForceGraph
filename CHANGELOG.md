@@ -1,3 +1,9 @@
+## 3.0.2.0
+
+### Fixes
+* Fixed default animation value to true
+* Fixed stopPropagation on click event
+
 ## 3.0.1.0
 * Updated selection logic
 * Added report page tooltip
