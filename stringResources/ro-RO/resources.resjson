@@ -8,8 +8,10 @@
   "Visual_Animations": "Animații",
   "Visual_Show": "Afişare",
   "Visual_DataLabels": "Etichete de date",
-  "Visual_Fill": "Completare",
+  "Visual_Fill": "Culoare de umplere",
+  "Visual_Stroke": "Culoarea urmei de culoare",
   "Visual_TextSize": "Dimensiune text",
+  "Visual_Font": "Font",
   "Visual_Intersection": "Intersecție",
   "Visual_Arrow": "Săgeată",
   "Visual_Label": "Etichetă",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Afișare unități",
   "Visual_Nodes": "Noduri",
   "Visual_Image": "Imagine",
+  "Visual_Options": "Opțiuni",
   "Visual_DefaultImage": "Imagine implicită",
   "Visual_ImageUrl": "URL imagine",
   "Visual_ImageExtension": "Extensie imagine",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Lungime maximă nume",
   "Visual_ForceGraph_HighlightLinks": "Se evidențiază toate linkurile accesibile",
   "Visual_Description_Label": "Afișează ponderea pe legături",
-  "Visual_Description_Thickness": "Grosimea legăturilor reprezintă ponderea"
+  "Visual_Description_Thickness": "Grosimea legăturilor reprezintă ponderea",
+  "Visual_Short_Description": "Impuneți aspectul diagramei cu o cale curbată. Este utilă pentru a afișa conexiunile dintre entități",
+  "Visual_Long_Description": "Capacitatea de a vizualiza relația dintre elemente, ponderarea relației și fluxul scoate adesea la lumină detalii neștiute, care altfel nu ar fi foarte evidente. Numerele simple și diagramele de bază nu ar fi suficiente pentru a descoperi și a spune astfel de povești despre date. Avem nevoie de noi tehnici de vizualizare pentru lumea complexă a relațiilor și graficul direcționat de forță face față cu brio în astfel de scenarii.\nAcest element vizual particularizat implementează o diagramă cu aspect de forță 3D, cu căi curbate. Grosimea căii ilustrează ponderea relației dintre noduri.\nDeoarece relațiile și interconexiunile între seturi mari de entități ar putea fi foarte complexe, elementul vizual poziționează nodurile în așa fel încât să existe cât mai puține traversări posibil, făcând experiența de explorare simplă și distractivă. De asemenea, elementul vizual generează pentru seturile mari de date un aspect care este de obicei unul plăcut. De asemenea, utilizatorii pot ajusta manual aspectul, glisând pur și simplu nodurile în jur.\nÎn mod ideal, v-ar trebui două dimensiuni și o măsură (pentru ponderare) pe care să le utilizați cu acest element vizual. Dar funcționează și cu o singură coloană.\nAcesta este un element vizual open source. Obțineți codul de la GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

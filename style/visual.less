@@ -28,13 +28,12 @@
  * Imports styles of tooltipmanager.
  * We compile it as a less file in order to wrap the external CSS rules.
  */
-@import (less) "node_modules/powerbi-visuals-utils-formattingutils/lib/index.css";
-
 .forceGraph {
+    cursor: default;
+
     path.link {
         fill: none;
         stroke: #bbb;
-        cursor: pointer;
     }
 
     circle {
@@ -42,12 +41,35 @@
         stroke: #fff;
         stroke-width: 1.5px;
         cursor: pointer;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:focus-visible {
+            outline-width: 4px !important;
+            stroke-width: 4px;
+        }
+    }
+
+    image {
+        &:focus {
+            outline: none;
+        }
+
+        &:focus-visible {
+            outline-width: 4px !important;
+        }
     }
 
     text {
         font: 12px sans-serif;
         pointer-events: none;
         z-index: 99;
+
+        &.nodelabel.selected {
+            font-weight: bold !important;
+        }
     }
 
     .hiddenLabel text{

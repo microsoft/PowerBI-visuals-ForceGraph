@@ -8,8 +8,10 @@
   "Visual_Animations": "Animatsioonid",
   "Visual_Show": "Kuva",
   "Visual_DataLabels": "Andmesildid",
-  "Visual_Fill": "Täida",
+  "Visual_Fill": "Täitevärv",
+  "Visual_Stroke": "Joone värv",
   "Visual_TextSize": "Teksti suurus",
+  "Visual_Font": "Font",
   "Visual_Intersection": "Lõikepunkt",
   "Visual_Arrow": "Nool",
   "Visual_Label": "Silt",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Kuva ühikud",
   "Visual_Nodes": "Sõlmpunktid",
   "Visual_Image": "Pilt",
+  "Visual_Options": "Suvandid",
   "Visual_DefaultImage": "Vaikepilt",
   "Visual_ImageUrl": "Pildi URL",
   "Visual_ImageExtension": "Pildi laiend",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Nime max pikkus",
   "Visual_ForceGraph_HighlightLinks": "Tõsta kõik kättesaadavad lingid esile",
   "Visual_Description_Label": "Kuvab kaalu linkidel",
-  "Visual_Description_Thickness": "Linkide jämedus tähistab kaalu"
+  "Visual_Description_Thickness": "Linkide jämedus tähistab kaalu",
+  "Visual_Short_Description": "Kaarja suunaga jõustatud paigutusega diagramm. Kasulik olemitevaheliste ühenduste kuvamiseks",
+  "Visual_Long_Description": "Võimalus visualiseerida üksustevahelist seost ja seose ning voo osakaalu toob tihtipeale avalikkuse ette sellised ülevaated, mis ei ole muidu väga ilmsed. Lihtsad numbrid ja tavalised diagrammid ei ole selliste andmelugude tuvastamiseks ning edastamiseks piisavad. Seoste keerulise maailma tarbeks vajame uusi visualiseerimistehnikaid ja Force-Directed Graph tuleb selliste stsenaariumite korral esiplaanile.\nSee kohandatud visuaal rakendab kaardus teedega D3 jõustatud paigutusega diagrammi. Tee paksus esindab sõlmedevahelise seose kaalu.\nKuna suurte üksustekogumite vahelised seosed ja ühendused võivad olla väga keerukad, paigutab visuaal sõlmed sellisel viisil, et ristumisi oleks võimalikult vähe, mis muudab avastamiskogemuse hõlpsaks ning lõbusaks. Visuaal pakub ka paigutust, mis on suurte andmekogumite puhul silmale hästi hoomatav. Kasutajad saavad paigutust sõlmede lohistamise kaudu ka käsitsi muuta.\nIdeaalis oleks visuaaliga kasutamiseks vaja kahte dimensiooni ja ühte mõõtu (osakaalu jaoks). Kuid see töötab ka vaid ühe veeruga.\nSee on avatud lähtekoodiga visuaal. Hankige kood GitHubist: https://github.com/Microsoft/PowerBI-visuals-ForceGraph."
 }

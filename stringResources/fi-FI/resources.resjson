@@ -8,8 +8,10 @@
   "Visual_Animations": "Animaatiot",
   "Visual_Show": "Näytä",
   "Visual_DataLabels": "Arvopisteiden otsikot",
-  "Visual_Fill": "Täyttö",
+  "Visual_Fill": "Täyttöväri",
+  "Visual_Stroke": "Viivan väri",
   "Visual_TextSize": "Tekstin koko",
+  "Visual_Font": "Fontti",
   "Visual_Intersection": "Leikkaus",
   "Visual_Arrow": "Nuoli",
   "Visual_Label": "Tarra",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Näytön yksiköt",
   "Visual_Nodes": "Solmut",
   "Visual_Image": "Kuva",
+  "Visual_Options": "Asetukset",
   "Visual_DefaultImage": "Oletuskuva",
   "Visual_ImageUrl": "Kuvan URL-osoite",
   "Visual_ImageExtension": "Kuvan tunniste",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Suurin nimen pituus",
   "Visual_ForceGraph_HighlightLinks": "Korosta kaikki tavoitettavissa olevat linkit",
   "Visual_Description_Label": "Näyttää painotuksen linkeissä",
-  "Visual_Description_Thickness": "Linkkien paksuus edustaa painotusta"
+  "Visual_Description_Thickness": "Linkkien paksuus edustaa painotusta",
+  "Visual_Short_Description": "Pakota asettelukaavio käyrän polun mukaiseksi. Tästä on hyötyä entiteettien välisten yhteyksien näyttämiseen",
+  "Visual_Long_Description": "Kyky visualisoida kohteiden välinen suhde, suhteen painoarvo ja työnkulku tuovat usein valokeilaan kertomattomat merkitykselliset tiedot, jotka eivät muutoin olisi kovin selkeitä. Yksinkertaiset luvut ja peruskaaviot eivät riitä kyseisten tietotarinoiden löytämiseen ja kertomiseen. Tarvitsemme uusia visualisointitekniikoita monimutkaiselle suhdemaailmalle, ja Force-Directed Graph on erinomainen tällaisille skenaarioille.\nTämä mukautettu visualisointi toteuttaa pakotetun D3-asettelukaavion, jossa on kaarevia polkuja. Polun paksuus ilmaisee solmujen välisen suheen painoarvon.\nKoska suhde ja yhteenliittäminen suuren entiteettien joukon välillä voi olla hyvin monimutkainen, visualisointi sijoittaa solmut niin, että risteymiä on mahdollisimman vähän, mikä tekee tutkimiskokemuksesta helpon ja hauskan. Visualisointi tarjoaa myös suurille tietojoukoille asettelun, joka miellyttää silmää. Käyttäjät voivat myös säätää asettelua manuaalisesti yksinkertaisesti vetämällä solmuja paikasta toiseen.\nIhanteellisessa tilanteessa tarvitsisit kaksi dimensiota ja yhden mittayksikön (painoarvoa varten) käytettäviksi tämän visualisoinnin kanssa. Tämä kuitenkin toimii myös vain yhden sarakkeen kanssa.\nTämä on avoimeen lähdekoodiin perustuva visualisointi. Hanki koodi GitHubista: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

@@ -1,9 +1,9 @@
 # PowerBI-visuals-ForceGraph
-[![Build Status](https://travis-ci.org/Microsoft/PowerBI-visuals-ForceGraph.svg?branch=master)](https://travis-ci.org/Microsoft/PowerBI-visuals-ForceGraph) [![Coverage Status](https://coveralls.io/repos/github/Microsoft/PowerBI-visuals-ForceGraph/badge.svg?branch=master)](https://coveralls.io/github/Microsoft/PowerBI-visuals-ForceGraph?branch=master) [![Build Status](https://dev.azure.com/customvisuals/public/_apis/build/status/Microsoft.powerbi-visuals-chord)](https://dev.azure.com/customvisuals/public/_build/latest?definitionId=6)
+[![Build Status](https://github.com/microsoft/PowerBI-visuals-ForceGraph/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/microsoft/PowerBI-visuals-ForceGraph/actions/workflows/build.yml)
 
 > The new version of Force Graph based on the new DevTools/API
 
-![ForceGraph chart screenshot](https://github.com/microsoft/PowerBI-visuals-ForceGraph/blob/master/assets/screenshot.png)
+![ForceGraph chart screenshot](assets/screenshot.png)
 # Overview
 
 The ability to visualize the relationship between items, the weightage of the relationship and the flow often brings out the untold insights into limelight, which are otherwise not very evident. Simple numbers and basic charts won’t be enough to discover and tell such data stories. We need new visualization techniques for the complex world of relationship and Force-Directed Graph thrives to the forefront for such scenarios.

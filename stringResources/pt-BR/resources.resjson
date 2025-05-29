@@ -8,8 +8,10 @@
   "Visual_Animations": "Animações",
   "Visual_Show": "Exibir",
   "Visual_DataLabels": "Rótulos de dados",
-  "Visual_Fill": "Preencher",
+  "Visual_Fill": "Cor de preenchimento",
+  "Visual_Stroke": "Cor do traço",
   "Visual_TextSize": "Tamanho do texto",
+  "Visual_Font": "Fonte",
   "Visual_Intersection": "Interseção",
   "Visual_Arrow": "Seta",
   "Visual_Label": "Rótulo",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Exibir Unidades",
   "Visual_Nodes": "Nós",
   "Visual_Image": "Imagem",
+  "Visual_Options": "Opções",
   "Visual_DefaultImage": "Imagem padrão",
   "Visual_ImageUrl": "Url da imagem",
   "Visual_ImageExtension": "Extensão da imagem",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Comprimento de nome máximo",
   "Visual_ForceGraph_HighlightLinks": "Destacar todos os links alcançáveis",
   "Visual_Description_Label": "Exibe o peso nos links",
-  "Visual_Description_Thickness": "A espessura dos links representa peso"
+  "Visual_Description_Thickness": "A espessura dos links representa peso",
+  "Visual_Short_Description": "Diagrama de layout de forças com caminho curvado. Útil para mostrar conexões entre entidades",
+  "Visual_Long_Description": "A capacidade de visualizar o relacionamento entre os itens, a ponderação do relacionamento e o fluxo geralmente traz à luz os insights velados, que caso contrário não são muito evidentes. Números simples e gráficos básicos não serão suficientes para descobrir essas narrativas de dados e contá-las. Precisamos de novas técnicas de visualização para o mundo complexo do relacionamento, e o Gráfico Direcionado por Força é a primeira opção para esses cenários.\nEsse visual personalizado implementa um diagrama de layout de força D3 com caminhos curvados. A espessura do caminho representa o peso da relação entre os nós.\nJá que o relacionamento e a interconexão entre um grande conjunto de entidades podem ser muito complexos, o visual posiciona os nós de forma que haja o mínimo de cruzamentos possível, tornando a experiência de exploração fácil e divertida. O visual também produz o layout, que em termos gerais tem aparência agradável para grandes conjuntos de dados. Os usuários também podem ajustar o layout manualmente arrastando os nós ao redor.\nIdealmente, você precisaria de duas dimensões e uma medida (para a ponderação) para usar com esse visual. Mas isso também funciona apenas com uma coluna.\nEsse é um visual de código aberto. Obtenha o código do GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

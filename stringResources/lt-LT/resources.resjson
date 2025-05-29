@@ -8,8 +8,10 @@
   "Visual_Animations": "Animacijos",
   "Visual_Show": "Rodyti",
   "Visual_DataLabels": "Duomenų žymos",
-  "Visual_Fill": "Užpildyti",
+  "Visual_Fill": "Užpildo spalva",
+  "Visual_Stroke": "Brūkšnio spalva",
   "Visual_TextSize": "Teksto dydis",
+  "Visual_Font": "Šriftas",
   "Visual_Intersection": "Sankirta",
   "Visual_Arrow": "Rodyklė",
   "Visual_Label": "Žyma",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Rodomi vienetai",
   "Visual_Nodes": "Mazgai",
   "Visual_Image": "Vaizdas",
+  "Visual_Options": "Parinktys",
   "Visual_DefaultImage": "Numatytasis vaizdas",
   "Visual_ImageUrl": "Vaizdo URL",
   "Visual_ImageExtension": "Vaizdo plėtinys",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Maksimalus pavadinimo ilgis",
   "Visual_ForceGraph_HighlightLinks": "Žymėti visus pasiekiamus saitus",
   "Visual_Description_Label": "Rodoma saitų svertinė vertė",
-  "Visual_Description_Thickness": "Saitų storis nurodo svertinę vertę"
+  "Visual_Description_Thickness": "Saitų storis nurodo svertinę vertę",
+  "Visual_Short_Description": "Jėgų maketo diagrama su lenktais keliais. Naudinga norint parodyti ryšius tarp objektų",
+  "Visual_Long_Description": "Galimybė vizualizuoti ryšius tarp elementų, ryšio svarbą ir srautą dažnai atskleidžia nenumanomų įžvalgų, kurios paprastai nėra labai akivaizdžios. Norint atrasti tokių duomenų istorijų ir jas papasakoti, paprastų skaičių ir diagramų nepakaks. Sudėtingam ryšių pasauliui perteikti reikia naujų vizualizavimo metodų ir tokiose situacijose centre atsiduria jėgų kreipiamas grafas.\nŠiame vaizdiniame elemente įdiegta D3 jėgų maketo diagrama ir lenkti keliai. Kelio storis perteikia ryšio tarp mazgų svarbą.\nKadangi tarpusavio ryšys tarp didelių objektų rinkinių gali būti labai sudėtingas, vaizdinis elementas mazgus išdėsto taip, kad būtų kuo mažiau sankirtų ir grafą tyrinėti būtų lengva bei smagu. Šis vaizdinis elementas taip pat sukuria maketą, į kurį, jį naudojant su dideliais duomenų rinkiniais, malonu žiūrėti. Vartotojai maketą taip pat gali reguliuoti rankiniu būdu, tiesiog vilkdami mazgus.\nIdealiu atveju su šiuo vaizdiniu elementu reikėtų naudoti dvi dimensijas ir vieną matą (svarbai). Tačiau jis taip pat veikia tik su vienu stulpeliu.\nTai yra atvirojo kodo vaizdinis elementas. Šį kodą galite gauti iš „GitHub“: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

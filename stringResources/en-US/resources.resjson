@@ -8,8 +8,10 @@
 	"Visual_Animations": "Animations",
 	"Visual_Show": "Show",
 	"Visual_DataLabels": "Data labels",
-	"Visual_Fill": "Fill",
+	"Visual_Fill": "Fill color",
+	"Visual_Stroke": "Stroke color",
 	"Visual_TextSize": "Text Size",
+	"Visual_Font" : "Font",
 	"Visual_Intersection": "Intersection",
 	"Visual_Arrow": "Arrow",
 	"Visual_Label": "Label",
@@ -18,6 +20,7 @@
 	"Visual_DisplayUnits": "Display Units",
 	"Visual_Nodes": "Nodes",
 	"Visual_Image": "Image",
+	"Visual_Options": "Options",
 	"Visual_DefaultImage": "Default image",
 	"Visual_ImageUrl": "Image url",
 	"Visual_ImageExtension": "Image extension",
@@ -32,5 +35,7 @@
 	"Visual_ForceGraph_MaxNameLength": "Max name length",
 	"Visual_ForceGraph_HighlightLinks": "Highlight all reachable links",
 	"Visual_Description_Label": "Displays weight on links",
-	"Visual_Description_Thickness": "Thickenss of links represents weight"
+	"Visual_Description_Thickness": "Thickenss of links represents weight",
+	"Visual_Short_Description": "Force layout diagram with curved path. Useful to show connections between entities",
+    "Visual_Long_Description": "The ability to visualize the relationship between items, the weightage of the relationship and the flow often brings out the untold insights into limelight, which are otherwise not very evident. Simple numbers and basic charts won’t be enough to discover and tell such data stories. We need new visualization techniques for the complex world of relationship and Force-Directed Graph thrives to the forefront for such scenarios.\nThis custom visual implements a D3 force layout diagram with curved paths. The thickness of the path represents the weight of the relationship between the nodes.\nSince the relationship and interconnection between large set of entities could be very complex, the visual positions the nodes in such a way that there are few crossings as possible, making the exploration experience easy, fun. The visual also produces the layout which is overall pleasing to the eyes for large data sets. Users can also adjust the layout manually by simply dragging the nodes around.\nIdeally you would need two dimensions and one measure (for the weightage) to use with this visual. But this also works just with a single column.\nThis is an open source visual. Get the code from GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

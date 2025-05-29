@@ -8,8 +8,10 @@
   "Visual_Animations": "动画",
   "Visual_Show": "显示",
   "Visual_DataLabels": "数据标签",
-  "Visual_Fill": "填充",
+  "Visual_Fill": "填充颜色",
+  "Visual_Stroke": "笔划颜色",
   "Visual_TextSize": "文本大小",
+  "Visual_Font": "字体",
   "Visual_Intersection": "交点",
   "Visual_Arrow": "箭头",
   "Visual_Label": "标签",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "显示单位",
   "Visual_Nodes": "节点",
   "Visual_Image": "图像",
+  "Visual_Options": "选项",
   "Visual_DefaultImage": "默认图像",
   "Visual_ImageUrl": "图像 URL",
   "Visual_ImageExtension": "图像扩展名",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "最大名称长度",
   "Visual_ForceGraph_HighlightLinks": "突出显示所有可以访问的链接",
   "Visual_Description_Label": "对链接显示权重",
-  "Visual_Description_Thickness": "链接厚度表示权重"
+  "Visual_Description_Thickness": "链接厚度表示权重",
+  "Visual_Short_Description": "具有曲线路径的力布局关系图。用于显示实体之间的连接",
+  "Visual_Long_Description": "直观显示项目之间关系、关系权重和箭头这一功能通常能让隐藏的见解凸显出来(这些见解原本较不容易发现)。简单的数字和基本图表不足以发现和说明此类数据情景。我们需要新的可视化技术来处理复杂的关系世界，并为这些方案广泛采用力导向图。\n这个自定义的视觉对象实现了具有曲线路径的 D3 力布局关系图。路径的厚度表示节点之间关系的权重。\n由于大型实体集之间的关系和互连可能非常复杂，此视觉对象以尽可能少交叉的方式定位节点，使浏览体验轻松、有趣。此视觉对象还会生成使大型数据集整体赏心悦目的布局。用户还可以通过拖动周围的节点这样简单的操作来手动调整布局。\n理想情况下，需要两个维度和一个度量值(对于权重)来与此视觉对象一起使用。但是，这也适用于单列。\n这是一个开放源代码视觉对象。从 GitHub 获取代码: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

@@ -8,8 +8,10 @@
   "Visual_Animations": "Animacje",
   "Visual_Show": "Pokaż",
   "Visual_DataLabels": "Etykiety danych",
-  "Visual_Fill": "Wypełnienie",
+  "Visual_Fill": "Kolor wypełnienia",
+  "Visual_Stroke": "Kolor pociągnięcia",
   "Visual_TextSize": "Rozmiar tekstu",
+  "Visual_Font": "Czcionka",
   "Visual_Intersection": "Część wspólna",
   "Visual_Arrow": "Strzałka",
   "Visual_Label": "Etykieta",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Jednostki wyświetlania",
   "Visual_Nodes": "Węzły",
   "Visual_Image": "Obraz",
+  "Visual_Options": "Opcje",
   "Visual_DefaultImage": "Obraz domyślny",
   "Visual_ImageUrl": "Adres URL obrazu",
   "Visual_ImageExtension": "Rozszerzenie obrazu",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Maksymalna długość nazwy",
   "Visual_ForceGraph_HighlightLinks": "Wyróżnij wszystkie osiągalne linki",
   "Visual_Description_Label": "Wyświetla wagę linków",
-  "Visual_Description_Thickness": "Grubość linków reprezentuje wagę"
+  "Visual_Description_Thickness": "Grubość linków reprezentuje wagę",
+  "Visual_Short_Description": "Diagram wymuszania układu przy użyciu zakrzywionej ścieżki. Umożliwia wyświetlanie połączeń między jednostkami",
+  "Visual_Long_Description": "Możliwość wizualizacji relacji między elementami, wagi relacji oraz przepływu często wydobywa na światło dzienne szczegółowe informacje, które w innych sytuacjach nie są oczywiste. Proste liczby i podstawowe wykresy nie wystarczą do odnajdowania danych i opowiadania ich historii. Potrzebujemy nowych technik wizualizacji w świecie złożonych relacji, a wykres kierowany wysuwa się na przód jako rozwiązanie w przypadku takich scenariuszy.\nTa niestandardowa wizualizacja implementuje diagram wymuszania układu D3 ze ścieżkami zakrzywionymi. Szerokość ścieżki reprezentuje wagę relacji między węzłami.\nPonieważ relacja i wzajemne połączenia w ramach dużego zestawu jednostek mogą być bardzo złożone, wizualizacja rozmieszcza węzły w taki sposób, aby liczba przecięć była minimalna, przez co eksplorowanie staje się łatwe i zabawne. Wizualizacja tworzy również układ, co w przypadku dużych zestawów danych jest atrakcyjnym wizualnie rozwiązaniem. Użytkownicy mogą też dostosować układ ręcznie, odpowiednio przeciągając węzły.\nIdealnym rozwiązaniem jest użycie dwóch wymiarów i jednej miary (na potrzeby wagi) w tej wizualizacji. Ale działa ona także z jedną kolumną.\nJest to wizualizacja typu open source. Pobierz kod z usługi GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

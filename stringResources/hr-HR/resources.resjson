@@ -8,8 +8,10 @@
   "Visual_Animations": "Animacije",
   "Visual_Show": "Pokaži",
   "Visual_DataLabels": "Oznake podataka",
-  "Visual_Fill": "Ispuna",
+  "Visual_Fill": "Boja ispune",
+  "Visual_Stroke": "Boja poteza",
   "Visual_TextSize": "Veličina teksta",
+  "Visual_Font": "Font",
   "Visual_Intersection": "Presjek",
   "Visual_Arrow": "Strelica",
   "Visual_Label": "Oznaka",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Jedinice za prikaz",
   "Visual_Nodes": "Čvorovi",
   "Visual_Image": "Slika",
+  "Visual_Options": "Mogućnosti",
   "Visual_DefaultImage": "Zadana slika",
   "Visual_ImageUrl": "URL slike",
   "Visual_ImageExtension": "Proširenje slike",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Maksimalna duljina naziva",
   "Visual_ForceGraph_HighlightLinks": "Istakni sve veze kojima se može pristupiti",
   "Visual_Description_Label": "Prikazuje težinu na vezama",
-  "Visual_Description_Thickness": "Debljina veze predstavlja težinu"
+  "Visual_Description_Thickness": "Debljina veze predstavlja težinu",
+  "Visual_Short_Description": "Dijagram prisilnog izgleda sa zakrivljenom putanjom. Koristan je za prikaz veza između entiteta",
+  "Visual_Long_Description": "Mogućnost vizualizacije odnosa između stavki, ponderiranja odnosa i toka često omogućuje dobivanje uvida koji inače nisu očiti. Jednostavni brojevi i osnovni grafikoni neće biti dovoljni za otkrivanje i prijenos takvih značenja podataka. Potrebni su nam novi vizualizacijski postupci za složeni svijet odnosa i prisilno usmjereni grafikon najprimjereniji je za takve scenarije.\nTaj prilagođeni vizual implementira D3 prisilni izgled grafikona sa zakrivljenim putanjama. Debljina putanje predstavlja ponder odnosa između čvorova.\nBudući da međuodnos i međusobna povezanost u velikom skupu entiteta mogu biti vrlo složeni, vizual čvorove postavlja tako da ima što manje presijecanja, pa je istraživanje jednostavno i zabavno. Uz to, vizual stvara izgled koji je u cijelosti vizualno atraktivan za velike skupove podataka. Korisnici mogu i ručno prilagoditi izgled jednostavnim povlačenjem ručica.\nU idealnom su vam slučaju za korištenje vizuala potrebne dvije dimenzije i jedna mjera (za ponderiranje). No funkcionira i samo s jednim stupcem.\nTo je vizual otvorenog koda. Kod preuzmite sa servisa GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

@@ -8,8 +8,10 @@
   "Visual_Animations": "Animacións",
   "Visual_Show": "Mostrar",
   "Visual_DataLabels": "Etiquetas de datos",
-  "Visual_Fill": "Encher",
+  "Visual_Fill": "Cor do enchemento",
+  "Visual_Stroke": "Cor do trazo",
   "Visual_TextSize": "Tamaño do texto",
+  "Visual_Font": "Tipo de letra",
   "Visual_Intersection": "Intersección",
   "Visual_Arrow": "Frecha",
   "Visual_Label": "Etiqueta",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Mostrar unidades",
   "Visual_Nodes": "Nós",
   "Visual_Image": "Imaxe",
+  "Visual_Options": "Opcións",
   "Visual_DefaultImage": "Imaxe predefinida",
   "Visual_ImageUrl": "URL da imaxe",
   "Visual_ImageExtension": "Extensión de imaxe",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Lonxitude máxima do nome",
   "Visual_ForceGraph_HighlightLinks": "Realzar todas as ligazóns ás que se pode acceder",
   "Visual_Description_Label": "Mostra o tamaño nas ligazóns",
-  "Visual_Description_Thickness": "O grosor das ligazóns representa o tamaño"
+  "Visual_Description_Thickness": "O grosor das ligazóns representa o tamaño",
+  "Visual_Short_Description": "Diagrama de deseño de forza cun camiño curvo. É útil para mostrar conexións entre entidades.",
+  "Visual_Long_Description": "A capacidade de visualizar a relación entre elementos, a importancia da relación e o fluxo adoitan darlle protagonismo á información que non se contara, que, doutro xeito, non sería moi evidente. Os números sinxelos e as gráficas básicas non serán suficiente para descubrir e narrar esas historias dos datos. Precisamos novas técnicas de visualización para o mundo complexo das relacións, e Force-Directed Graph destaca neses escenarios.\nEste elemento visual personalizado incorpora un diagrama de deseño de forza de D3 con camiños curvos. O grosor do camiño representa a importancia da relación entre os nós.\nXa que a relación e interconexión entre grandes conxuntos de entidades pode ser moi complexa, o elemento visual coloca os nós de xeito que haxa o menor número de cruces posible, de forma que a experiencia de exploración é sinxela e divertida. O elemento visual tamén produce o deseño, que é atractivo para os conxuntos de datos de gran tamaño. Os usuarios tamén poden axustar o deseño de xeito manual simplemente ao arrastrar os nós polo espazo.\nO ideal é que teña dúas dimensións e unha medida (para a importancia) para usar con este elemento visual, pero tamén funciona cunha única columna.\nEste é un elemento visual de código aberto. Obteña o código en GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

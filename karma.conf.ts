@@ -34,14 +34,13 @@ const testRecursivePath = "test/visualTest.ts";
 const srcOriginalRecursivePath = "src/**/*.ts";
 const coverageFolder = "coverage";
 
-process.env.CHROME_BIN = require("puppeteer").executablePath();
+process.env.CHROME_BIN = require("playwright-chromium").chromium.executablePath();
 
-import { Config, ConfigOptions } from "karma";
-
-module.exports = (config: Config) => {
-    config.set(<ConfigOptions>{
+module.exports = (config) => {
+    config.set({
         browserNoActivityTimeout: 100000,
         browsers: ["ChromeHeadless"],
+        singleRun: true,
         colors: true,
         frameworks: ["jasmine"],
         reporters: [
@@ -79,7 +78,6 @@ module.exports = (config: Config) => {
             fixWebpackSourcePaths: true,
             verbose: false
         },
-        singleRun: true,
         plugins: [
             "karma-coverage",
             "karma-typescript",
@@ -91,8 +89,6 @@ module.exports = (config: Config) => {
             "karma-coverage-istanbul-reporter"
         ],
         files: [
-            "node_modules/jquery/dist/jquery.min.js",
-            "node_modules/jasmine-jquery/lib/jasmine-jquery.js",
             testRecursivePath,
             {
                 pattern: srcOriginalRecursivePath,

@@ -27,7 +27,7 @@
 import powerbi from "powerbi-visuals-api";
 
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
-import { VisualBuilderBase } from "powerbi-visuals-utils-testutils";
+import { ClickEventType, VisualBuilderBase, d3Click } from "powerbi-visuals-utils-testutils";
 
 import { ForceGraph as VisualClass } from "./../src/visual";
 
@@ -40,35 +40,88 @@ export class VisualBuilder extends VisualBuilderBase<VisualClass> {
         return new VisualClass(options);
     }
 
-    public get mainElement() {
-        return this.element.find("g.chartContainer");
+    public get svgElement(): SVGElement | null {
+        return this.element.querySelector("svg.forceGraph");
     }
 
-    public get linkLabels() {
-        return this.mainElement.children("g.linklabelholder");
+    public get mainElement(): HTMLElement | null {
+        return this.element.querySelector("g.chartContainer");
     }
 
-    public get nodes() {
-        return this.mainElement.children("g.node");
+    public get linkLabels() : NodeListOf<HTMLElement> | undefined {
+        return this.mainElement?.querySelectorAll("g.linklabelholder");
     }
 
-    public get images() {
-        return this.nodes.children("image");
+    public get nodes(): NodeListOf<HTMLElement> | undefined {
+        return this.mainElement?.querySelectorAll("g.node");
     }
 
-    public get circles() {
-        return this.nodes.children("circle");
+    public get selectedNodes(): Element[] {
+        return Array.from(this.nodes).filter((element: HTMLElement) => {
+            const appliedOpacity: number = parseFloat(element.style.fillOpacity);
+            return appliedOpacity === 1;
+        });
     }
 
-    public get nodeTexts() {
-        return this.nodes.children("text");
+    public get links(): NodeListOf<HTMLElement> | undefined {
+        return this.mainElement?.querySelectorAll("path.link");
     }
 
-    public get linkLabelsText() {
-        return this.linkLabels.children("text.linklabel");
+    public get selectedLinks(): Element[] {
+        return Array.from(this.links).filter((element: HTMLElement) => {
+            const appliedOpacity: number = parseFloat(element.style.strokeOpacity);
+            return appliedOpacity === 1;
+        });
     }
 
-    public get linkLabelsTextPath() {
-        return this.linkLabelsText.children("textpath");
+    public get images(): NodeListOf<SVGElement> | undefined {
+        return this.mainElement?.querySelectorAll("image");
+    }
+
+    public get circles(): NodeListOf<SVGElement> | undefined {
+        return this.mainElement?.querySelectorAll("circle");
+    }
+
+    public get nodeTexts(): NodeListOf<HTMLElement> | undefined {
+        return this.mainElement?.querySelectorAll("g.node text");
+    }
+
+    public get linkLabelsText(): NodeListOf<HTMLElement> | undefined {
+        return this.mainElement?.querySelectorAll("text.linklabel");
+    }
+
+    public get linkLabelsTextPath(): NodeListOf<SVGElement> | undefined {
+        return this.mainElement?.querySelectorAll("text.linklabel textpath");
+    }
+
+    public nodeClick(text: string, eventType: ClickEventType = ClickEventType.Default): void{
+        const circle: SVGElement | undefined = Array.from(this.circles)
+            .find((element: SVGElement) => {
+                return element.ariaLabel === text;
+            });
+    
+        if (!circle) {
+            return;
+        }
+    
+        d3Click(
+            circle,
+            parseFloat(<string>circle?.getAttribute("x")),
+            parseFloat(<string>circle?.getAttribute("y")),
+            eventType
+        );
+    }
+
+    public nodeKeydown(text: string, keyboardEvent: KeyboardEvent) {
+        const circle: SVGElement | undefined = Array.from(this.circles)
+        .find((element: SVGElement) => {
+            return element.ariaLabel === text;
+        });
+
+        if (!circle) {
+            return;
+        }
+
+        circle.dispatchEvent(keyboardEvent);
     }
 }

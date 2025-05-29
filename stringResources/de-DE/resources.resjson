@@ -8,8 +8,10 @@
   "Visual_Animations": "Animationen",
   "Visual_Show": "Anzeigen",
   "Visual_DataLabels": "Datenbeschriftungen",
-  "Visual_Fill": "Ausfüllen",
+  "Visual_Fill": "Füllfarbe",
+  "Visual_Stroke": "Strichfarbe",
   "Visual_TextSize": "Textgröße",
+  "Visual_Font": "Schriftart",
   "Visual_Intersection": "Schnittmenge",
   "Visual_Arrow": "Pfeil",
   "Visual_Label": "Bezeichnung",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Anzeigeeinheiten",
   "Visual_Nodes": "Knoten",
   "Visual_Image": "Image",
+  "Visual_Options": "Optionen",
   "Visual_DefaultImage": "Standardbild",
   "Visual_ImageUrl": "Bild-URL",
   "Visual_ImageExtension": "Bilderweiterung",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Maximale Länge für Namen",
   "Visual_ForceGraph_HighlightLinks": "Alle erreichbaren Links hervorheben",
   "Visual_Description_Label": "Hiermit wird die Gewichtung für Verbindungslinien angezeigt.",
-  "Visual_Description_Thickness": "Stärke der Verbindungslinien repräsentiert Gewichtung"
+  "Visual_Description_Thickness": "Stärke der Verbindungslinien repräsentiert Gewichtung",
+  "Visual_Short_Description": "Hiermit erzwingen Sie ein Layoutdiagramm mit gekrümmten Pfad. Dies eignet sich gut zum Anzeigen von Verbindungen zwischen Entitäten.",
+  "Visual_Long_Description": "Die Möglichkeit, die Beziehung zwischen Elementen, die Gewichtung der Beziehung sowie den Datenfluss zu visualisieren, rückt häufig Erkenntnisse in den Fokus, die sonst nicht auffallen und zuvor nie entdeckt wurden. Einfache Zahlen und Diagramme reichen nicht aus, um solche verborgenen Erkenntnisse aufzudecken und die Daten in den richtigen Zusammenhang zu bringen. Für die komplexe Welt der Beziehungen sind neue Visualisierungstechniken erforderlich, und kräftebasierte Diagramme sind für solche Szenarien geradezu prädestiniert.\nDieses benutzerdefinierte Visual implementiert ein kräftebasiertes 3D-Layout mit gekrümmten Pfaden. Die Stärke eines Pfads repräsentiert das Gewicht der Beziehung zwischen den Knoten.\nDa die Beziehungen und Verknüpfungen zwischen großen Mengen an Entitäten sehr komplex sein können, positioniert das Visual die Knoten so, dass sich so wenig Pfade wie möglich kreuzen – so lassen sich die Ergebnisse einer Analyse sehr einfach überblicken. Insbesondere bei großen Datasets sorgt das Visual für ein optisch attraktives Layout. Benutzer können das Layout auch anpassen, indem sie ganz einfach die Knoten an andere Positionen ziehen.\nIm Idealfall benötigen Sie für dieses Visual zwei Dimensionen und einen Messwert (für die Gewichtung), es funktioniert aber auch mit einer einzigen Spalte.\nDies ist ein Open Source-Visual. Rufen Sie den Code aus GitHub ab: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }
