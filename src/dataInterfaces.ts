@@ -24,25 +24,35 @@
  *  THE SOFTWARE.
  */
 
-import Node = d3.layout.force.Node;
+import { SimulationNodeDatum as Node } from "d3-force";
 import powerbi from "powerbi-visuals-api";
+import ISelectionId = powerbi.visuals.ISelectionId;
 
 import { TooltipEnabledDataPoint } from "powerbi-visuals-utils-tooltiputils";
 import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
 import IValueFormatter = vf.IValueFormatter;
 
+import { Selection as d3Selection } from "d3-selection";
+type Selection<T> = d3Selection<any, T, any, any>;
+
 import { ForceGraphSettings } from "./settings";
 
-export interface ForceGraphNode extends Node {
+export interface ISelectableDataPoint {
+    selected: boolean;
+    identity: ISelectionId;
+}
+
+export interface ForceGraphNode extends Node, ISelectableDataPoint {
     name: string;
     image: string;
     adj: { [i: string]: number };
+    links: ForceGraphLink[];
     x?: number;
     y?: number;
     isDrag?: boolean;
     isOver?: boolean;
     hideLabel?: boolean;
-    identity: powerbi.visuals.ISelectionId;
+    weight?: number;
 }
 
 export interface ITextRect {
@@ -56,7 +66,7 @@ export interface ForceGraphNodes {
     [i: string]: ForceGraphNode;
 }
 
-export interface ForceGraphLink extends TooltipEnabledDataPoint {
+export interface ForceGraphLink extends TooltipEnabledDataPoint, ISelectableDataPoint {
     source: ForceGraphNode;
     target: ForceGraphNode;
     weight: number;
@@ -70,12 +80,26 @@ export interface ForceGraphData {
     minFiles: number;
     maxFiles: number;
     linkedByName: LinkedByName;
-    linkTypes: {};
+    linkTypes: LinkTypes;
     settings: ForceGraphSettings;
     formatter: IValueFormatter;
+}
+
+export interface LinkType {
+    color: string;
+    label: string;
+}
+
+export interface LinkTypes {
+    [linkType: string]: LinkType;
 }
 
 export interface LinkedByName {
     [linkName: string]: number;
 }
 
+export interface ForceGraphBehaviorOptions {
+    nodes: Selection<ForceGraphNode>;
+    links: Selection<ForceGraphLink>;
+    clearCatcher: Selection<any>;
+}

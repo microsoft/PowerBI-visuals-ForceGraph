@@ -8,8 +8,10 @@
   "Visual_Animations": "Animeringar",
   "Visual_Show": "Visa",
   "Visual_DataLabels": "Dataetiketter",
-  "Visual_Fill": "Fyll",
+  "Visual_Fill": "Fyllningsfärg",
+  "Visual_Stroke": "Streckfärg",
   "Visual_TextSize": "Textstorlek",
+  "Visual_Font": "Teckensnitt",
   "Visual_Intersection": "Snitt",
   "Visual_Arrow": "Pil",
   "Visual_Label": "Etikett",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Visningsenheter",
   "Visual_Nodes": "Noder",
   "Visual_Image": "Bild",
+  "Visual_Options": "Alternativ",
   "Visual_DefaultImage": "Standardbild",
   "Visual_ImageUrl": "Bild-URL",
   "Visual_ImageExtension": "Bildtillägg",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Maxlängd för namnet",
   "Visual_ForceGraph_HighlightLinks": "Markera alla länkar som är nåbara",
   "Visual_Description_Label": "Visar vikten för länkar",
-  "Visual_Description_Thickness": "Länkarnas tjocklek representerar vikt"
+  "Visual_Description_Thickness": "Länkarnas tjocklek representerar vikt",
+  "Visual_Short_Description": "Tvinga layoutdiagram med en böjd linje. Användbar för att visa anslutningar mellan entiteter",
+  "Visual_Long_Description": "Möjligheten att visualisera relationen mellan objekt, relationens viktning och flöde, kan ofta ge oförutsedda insikter, vilka kanske inte är uppenbara. Enkla tal och grundläggande diagram räcker inte till för att identifiera och berätta den typen av historier om dina data. Vi behöver nya visualiseringsmetoder för den komplexa världen av relationer och Force-Directed Graph är utmärkt för just den typen av scenarier.\nDet här anpassade visuella objektet implementerar ett D3 force layoutdiagram med en kurvad linje. Tjockleken på linjen representerar vikten i relationen mellan noderna.\nEftersom relationen och sambandet mellan stora mängder av entiteter kan vara väldigt komplex, placerar det visuella objektet noderna på ett sådant sätt att det finns så få korsade linjer som möjligt, vilket gör det enkelt och roligt att utforska. Det visuella objektet skapar även layouten som är generellt sett bra för stora datamängder. Användare kan även justera layouten manuellt genom att dra runt noderna.\nHelst behöver du två dimensioner och ett mått (för viktning) med det här visuella objektet. Men det fungerar också bara med en enda kolumn.\nDet här är ett visuellt objekt med öppen källkod. Hämta koden från GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

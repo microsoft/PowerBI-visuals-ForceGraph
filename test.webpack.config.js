@@ -15,7 +15,7 @@ module.exports = {
                 enforce: 'post',
                 include: /(src)/,
                 exclude: /(node_modules|resources\/js\/vendor)/,
-                loader: 'istanbul-instrumenter-loader',
+                loader: 'coverage-istanbul-loader',
                 options: { esModules: true }
             },
             {
@@ -34,7 +34,9 @@ module.exports = {
                     {
                         loader: 'less-loader',
                         options: {
-                            paths: [path.resolve(__dirname, 'node_modules')]
+                            lessOptions: {
+                                root: [path.resolve(__dirname, 'node_modules')]
+                            }
                         }
                     }
                 ]

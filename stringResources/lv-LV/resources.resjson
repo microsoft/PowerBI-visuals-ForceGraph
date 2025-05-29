@@ -8,8 +8,10 @@
   "Visual_Animations": "Animācijas",
   "Visual_Show": "Rādīt",
   "Visual_DataLabels": "Datu etiķetes",
-  "Visual_Fill": "Aizpildīt",
+  "Visual_Fill": "Aizpildījuma krāsa",
+  "Visual_Stroke": "Vilkuma krāsa",
   "Visual_TextSize": "Teksta lielums",
+  "Visual_Font": "Fonts",
   "Visual_Intersection": "Krustošanās",
   "Visual_Arrow": "Bulta",
   "Visual_Label": "Etiķete",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Rādāmās vienības",
   "Visual_Nodes": "Mezgli",
   "Visual_Image": "Attēls",
+  "Visual_Options": "Opcijas",
   "Visual_DefaultImage": "Noklusējuma attēls",
   "Visual_ImageUrl": "Attēla URL",
   "Visual_ImageExtension": "Attēla paplašinājums",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Maksimālais nosaukuma garums",
   "Visual_ForceGraph_HighlightLinks": "Iezīmēt visas sasniedzamās saites",
   "Visual_Description_Label": "Parāda svarīgumu, izmantojot saiti",
-  "Visual_Description_Thickness": "Saites biezums norāda svarīgumu"
+  "Visual_Description_Thickness": "Saites biezums norāda svarīgumu",
+  "Visual_Short_Description": "Uzspiesta izkārtojuma diagramma ar līkni. Ļauj parādīt saistības starp entītijām.",
+  "Visual_Long_Description": "Iespēja vizualizēt relāciju starp vienumiem, relācijas svaru un plūsmu bieži izceļ ieskatus, ko citādi varētu nepamanīt. Ar vienkāršiem skaitļiem un pamata diagrammām nepietiek, lai atklātu un izstāstītu šādus datu stāstus. Mums ir nepieciešamas jaunas vizualizācijas metodes sarežģītajai relāciju pasaulei, un Force-Directed Graph virza vajadzīgos risinājumus.\nŠajos pielāgotajos vizuālajos datos ir ieviesta D3 tīkla izkārtojuma diagramma ar līknēm. Līknes biezums norāda relācijas svaru starp mezgliem.\nTā kā relācija un savstarpējā saistība starp lielām entītiju kopām var būt ļoti sarežģīta, vizuālie dati novieto mezglus tā, lai būtu pēc iespējas mazāk krustpunktu un izpēte būtu vienkārša un aizraujoša. Vizuālie dati arī izveido izkārtojumu tā, lai tas būtu pievilcīgs lielu datu kopu gadījumā. Lietotāji var arī manuāli pielāgot izkārtojumu, velkot mezglus uz vajadzīgo vietu.\nIdeālā situācijā šādiem vizuālajiem datiem būtu jāizmanto divas dimensijas un viens mērs (svaram). Taču šo diagrammu var izmantot arī tad, ja ir tikai viena kolonna.\nŠie ir atklātā pirmkoda vizuālie dati. Iegūstiet kodu no GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

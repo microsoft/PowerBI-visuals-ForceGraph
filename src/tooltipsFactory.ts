@@ -30,10 +30,9 @@ import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 
 import { dataRoleHelper as DataRoleHelperModule } from "powerbi-visuals-utils-dataviewutils";
-import hasRole = DataRoleHelperModule.DataRoleHelper.hasRole;
+import hasRole = DataRoleHelperModule.hasRole;
 
-import { valueFormatter as vf } from "powerbi-visuals-utils-formattingutils";
-import valueFormatter = vf.valueFormatter;
+import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
 
 export interface ForceGraphTooltipInputObject {
     [propertyName: string]: any;
@@ -44,17 +43,16 @@ export class ForceGraphTooltipsFactory {
         inputObject: ForceGraphTooltipInputObject,
         dataViewMetadataColumns: DataViewMetadataColumn[]): VisualTooltipDataItem[] {
 
-        let tooltips: VisualTooltipDataItem[] = [];
+        const tooltips: VisualTooltipDataItem[] = [];
 
         if (!inputObject) {
             return tooltips;
         }
 
-        for (let propertyName in inputObject) {
-            let column: DataViewMetadataColumn,
-                value: string;
+        for (const propertyName in inputObject) {
+            let value: string;
 
-            column = ForceGraphMetadataRoleHelper.getColumnByRoleName(
+            const column: DataViewMetadataColumn = ForceGraphMetadataRoleHelper.getColumnByRoleName(
                 dataViewMetadataColumns,
                 propertyName);
 

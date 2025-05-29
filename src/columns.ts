@@ -25,7 +25,8 @@
  */
 
 import powerbi from "powerbi-visuals-api";
-import * as _ from "lodash";
+import mapValues from "lodash.mapvalues";
+import isEmpty from "lodash.isempty";
 
 import DataView = powerbi.DataView;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
@@ -36,9 +37,9 @@ import DataViewValueColumns = powerbi.DataViewValueColumns;
 
 export class ForceGraphColumns<T> {
     public static getMetadataColumns(dataView: DataView): ForceGraphColumns<DataViewMetadataColumn> {
-        let columns: DataViewMetadataColumn[] = dataView && dataView.metadata && dataView.metadata.columns;
+        const columns: DataViewMetadataColumn[] = dataView && dataView.metadata && dataView.metadata.columns;
 
-        return columns && _.mapValues(
+        return columns && mapValues(
             new ForceGraphColumns<DataViewMetadataColumn>(),
             (n, i) => columns.filter(x => x.roles && x.roles[i])[0]);
     }
@@ -48,7 +49,7 @@ export class ForceGraphColumns<T> {
         const categories: DataViewCategoryColumn[] = categorical && categorical.categories || [];
         const values: DataViewValueColumns = categorical && categorical.values || <DataViewValueColumns>[];
 
-        return categorical && _.mapValues(
+        return categorical && mapValues(
             new this<DataViewCategoryColumn & DataViewValueColumn[] & DataViewValueColumns>(),
             (n, i) => {
                 let result: any = categories.filter(x => x.source.roles && x.source.roles[i])[0];
@@ -59,7 +60,7 @@ export class ForceGraphColumns<T> {
 
                 if (!result) {
                     result = values.filter(x => x.source.roles && x.source.roles[i]);
-                    if (_.isEmpty(result)) {
+                    if (isEmpty(result)) {
                         result = undefined;
                     }
                 }

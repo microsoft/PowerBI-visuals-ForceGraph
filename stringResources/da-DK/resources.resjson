@@ -8,8 +8,10 @@
   "Visual_Animations": "Animationer",
   "Visual_Show": "Vis",
   "Visual_DataLabels": "Datamærkater",
-  "Visual_Fill": "Udfyldning",
+  "Visual_Fill": "Udfyldningsfarve",
+  "Visual_Stroke": "Farve på penselstrøg",
   "Visual_TextSize": "Tekststørrelse",
+  "Visual_Font": "Skrifttype",
   "Visual_Intersection": "Skæringspunkt",
   "Visual_Arrow": "Pil",
   "Visual_Label": "Etiket",
@@ -18,6 +20,7 @@
   "Visual_DisplayUnits": "Vis enheder",
   "Visual_Nodes": "Noder",
   "Visual_Image": "Billede",
+  "Visual_Options": "Indstillinger",
   "Visual_DefaultImage": "Standardbillede",
   "Visual_ImageUrl": "URL-adresse for billede",
   "Visual_ImageExtension": "Billedfiltype",
@@ -32,5 +35,7 @@
   "Visual_ForceGraph_MaxNameLength": "Maks. længde på navn",
   "Visual_ForceGraph_HighlightLinks": "Fremhæv alle tilgængelige links",
   "Visual_Description_Label": "Viser vægt på links",
-  "Visual_Description_Thickness": "Tykkelse for links repræsenterer vægt"
+  "Visual_Description_Thickness": "Tykkelse for links repræsenterer vægt",
+  "Visual_Short_Description": "Gennemtving Layoutdiagram med kurvet sti. God til at vise forbindelser mellem enheder",
+  "Visual_Long_Description": "Muligheden for at visualisere forholdet mellem elementer, vægtningen af relationen og flowet sætter ofte de ufortalte indsigter, som ellers ikke meget klart, i rampelyset. Simple tal og grundlæggende diagrammer er ikke nok til at opdage og fortælle de historier, som disse data fortæller. Vi har brug for nye visuelle teknikker til den komplekse verden af relationer, og kraftstyrede grafer bringer sådanne scenarier helt frem i lyset.\nDenne brugerdefinerede visualisering implementerer et D3 kraftlayoutdiagram med buede kurver. Tykkelsen af banen repræsenterer vægten af forholdet mellem nodepunkterne.\nDa relationerne og de indbyrdes forbindelser mellem store sæt af enheder kan være meget komplekse, placerer visualiseringen nodepunkterne på en sådan måde, at der er så få sporkrydsninger som muligt, hvilket gør udforskningsoplevelsen nem og sjov. Visualiseringen producerer også layoutet, som overordnet er en fryd for øjet ved store datasæt. Brugeren kan også justere layoutet manuelt ved blot at trække nodepunkterne omkring.\nIdeelt skal du have to dimensioner og én måling (til vægtning) for at bruge denne visualisering. Men dette fungerer også kun sammen med en enkelt kolonne.\nDette er en visualisering med åben kildekode. Koden fra GitHub: https://github.com/Microsoft/PowerBI-visuals-ForceGraph"
 }

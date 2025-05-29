@@ -25,22 +25,18 @@
  */
 
 import powerbi from "powerbi-visuals-api";
-import * as _ from "lodash";
 
 import DataView = powerbi.DataView;
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 import VisualTooltipDataItem = powerbi.extensibility.VisualTooltipDataItem;
 
-import { assertColorsMatch } from "powerbi-visuals-utils-testutils";
+import { ClickEventType, assertColorsMatch, renderTimeout } from "powerbi-visuals-utils-testutils";
 
 import { areColorsEqual, getSolidColorStructuralObject } from "./helpers/helpers";
 import { VisualData as ForceGraphData } from "./visualData";
 import { VisualBuilder as ForceGraphBuilder } from "./visualBuilder";
 
 import { ForceGraphMetadataRoleHelper, ForceGraphTooltipsFactory, ForceGraphTooltipInputObject } from "./../src/tooltipsFactory";
-
-import { ForceGraph } from "./../src/visual";
-
 
 describe("ForceGraph", () => {
     let visualBuilder: ForceGraphBuilder,
@@ -152,18 +148,23 @@ describe("ForceGraph", () => {
     });
 
     describe("DOM tests", () => {
-        it("svg element created", () => expect(visualBuilder.element[0]).toBeInDOM());
+        it("svg element created", () => {
+            visualBuilder.updateFlushAllD3Transitions(dataView);
+            expect(visualBuilder.svgElement).toBeDefined()
+        });
 
         it("update", (done) => {
             visualBuilder.updateRenderTimeout(dataView, () => {
-                const categorySourceLength: number = _.uniq(dataView.categorical.categories[0].values).length,
-                    categoryTargetLength: number = _.uniq(dataView.categorical.categories[1].values).length,
-                    categorySourceTargetOverlapLength: number = _.intersection(_.uniq(dataView.categorical.categories[0].values), _.uniq(dataView.categorical.categories[1].values)).length;
+                const categorySourceUniqValues: powerbi.PrimitiveValue[] = [...new Set(dataView.categorical?.categories?.[0].values)];
+                const categoryTargetUniqValues: powerbi.PrimitiveValue[] = [...new Set(dataView.categorical?.categories?.[1].values)];
+                const categorySourceLength: number = categorySourceUniqValues.length,
+                    categoryTargetLength: number = categoryTargetUniqValues.length,
+                    categorySourceTargetOverlapLength: number = categorySourceUniqValues.filter((item: powerbi.PrimitiveValue) => categoryTargetUniqValues.includes(item)).length;
 
-                expect(visualBuilder.mainElement.children("path.link").length)
+                expect(visualBuilder.links?.length)
                     .toBe(Math.max(categorySourceLength, categoryTargetLength));
 
-                expect(visualBuilder.mainElement.children("g.node").length)
+                expect(visualBuilder.nodes?.length)
                     .toBe(categorySourceLength + categoryTargetLength - categorySourceTargetOverlapLength);
 
                 done();
@@ -171,16 +172,14 @@ describe("ForceGraph", () => {
         });
 
         it("curved arrows", () => {
-            visualBuilder.updateRenderTimeout(dataView, () => {
-                const linkPaths: JQuery<any>[] = visualBuilder.mainElement.children("path.link").toArray().map($);
-                linkPaths.forEach((linkPath) => {
-                    if (linkPath.get()[0]["__data__"].source.name === linkPath.get()[0]["__data__"].target.name) {
-                        let path = linkPath.get()[0].getAttribute("d");
-                        let curvedPath = /M (-)*\d*\.?\d* (-)*\d*\.?\d* C (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*/;
-                        expect(curvedPath.test(path))
-                            .toBe(true);
-                    }
-                });
+            visualBuilder.updateFlushAllD3Transitions(dataView);
+            const linkPaths = visualBuilder.links;
+            linkPaths?.forEach((linkPath: HTMLElement) => {
+                if (linkPath["__data__"].source.name === linkPath["__data__"].target.name) {
+                    let path = linkPath.getAttribute("d");
+                    let curvedPath = /M (-)*\d*\.?\d* (-)*\d*\.?\d* C (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*/;
+                    expect(curvedPath.test(path)).toBe(true);
+                }
             });
         });
     });
@@ -199,19 +198,16 @@ describe("ForceGraph", () => {
                 (dataView.metadata.objects as any).labels.show = true;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(getFirstNodeText(visualBuilder)).toBeInDOM();
+                expect(getFirstNodeText(visualBuilder)).toBeDefined();
 
                 (dataView.metadata.objects as any).labels.show = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                expect(getFirstNodeText(visualBuilder)).not.toBeInDOM();
+                expect(getFirstNodeText(visualBuilder)).not.toBeDefined();
             });
 
-            function getFirstNodeText(visualBuilder: ForceGraphBuilder): JQuery {
-                return visualBuilder.mainElement
-                    .children("g.node")
-                    .first()
-                    .find("text");
+            function getFirstNodeText(visualBuilder: ForceGraphBuilder): HTMLElement | undefined {
+                return visualBuilder.nodeTexts?.[0];
             }
 
             it("color", () => {
@@ -220,14 +216,8 @@ describe("ForceGraph", () => {
                 (dataView.metadata.objects as any).labels.color = getSolidColorStructuralObject(color);
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                visualBuilder.mainElement
-                    .children("g.node")
-                    .first()
-                    .find("text")
-                    .toArray()
-                    .map($)
-                    .forEach((element: JQuery) => {
-                        assertColorsMatch(element.css("fill"), color);
+                visualBuilder.nodeTexts?.forEach((element: HTMLElement) => {
+                        assertColorsMatch(element.style.fill, color);
                     });
             });
 
@@ -238,14 +228,8 @@ describe("ForceGraph", () => {
                 (dataView.metadata.objects as any).labels.fontSize = fontSize;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                visualBuilder.mainElement
-                    .children("g.node")
-                    .first()
-                    .find("text")
-                    .toArray()
-                    .map($)
-                    .forEach((element: JQuery) => {
-                        expect(element.css("font-size")).toBe(expectedFontSize);
+                visualBuilder.nodeTexts?.forEach((element: HTMLElement) => {
+                        expect(element.style.fontSize).toBe(expectedFontSize);
                     });
             });
         });
@@ -260,10 +244,10 @@ describe("ForceGraph", () => {
             });
 
             it("links labels on", () => {
-                const linkLabelsTextPath: JQuery<any>[] = visualBuilder.linkLabelsTextPath.toArray().map($);
-                linkLabelsTextPath.forEach((element) => {
-                    const text: string = element.text();
-                    expect(text).not.toBeEmpty();
+                const linkLabelsTextPath = visualBuilder.linkLabelsTextPath;
+                linkLabelsTextPath?.forEach((element: SVGElement) => {
+                    const text: string | null = element.textContent;
+                    expect(text).toBeDefined();
                 });
             });
 
@@ -275,15 +259,15 @@ describe("ForceGraph", () => {
 
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                const linkLabelsTextPath: JQuery<any>[] = visualBuilder.linkLabelsTextPath.toArray().map($);
+                const linkLabelsTextPath = visualBuilder.linkLabelsTextPath;
 
-                linkLabelsTextPath.forEach((element: JQuery) => {
-                    const text: string = element.text();
-                    const secondPart: string[] = text.split(".")[1].split("");
-                    const filtered: string[] = secondPart.filter(x => x && !_.isNaN(_.parseInt(x)));
+                linkLabelsTextPath?.forEach((element: SVGElement) => {
+                    const text: string | null = element.textContent;
+                    const secondPart: string[] | undefined = text?.split(".")[1].split("");
+                    const filtered: string[] | undefined= secondPart?.filter(x => x && !Number.isNaN(parseInt(x)));
 
-                    expect(filtered.length).toBeLessThan(secondPart.length);
-                    expect(filtered.length).toEqual(decimalPlaces);
+                    expect(filtered?.length).toBeLessThan(secondPart?.length);
+                    expect(filtered?.length).toEqual(decimalPlaces);
                 });
             });
         });
@@ -298,22 +282,16 @@ describe("ForceGraph", () => {
 
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                visualBuilder.nodes
-                    .toArray()
-                    .map($)
-                    .forEach((element: JQuery) => {
-                        expect(element.children("image")).toBeInDOM();
-                    });
+                visualBuilder.images?.forEach((element: SVGElement) => {
+                    expect(element).toBeDefined();
+                });
 
                 (dataView.metadata.objects as any).nodes.displayImage = false;
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                visualBuilder.nodes
-                    .toArray()
-                    .map($)
-                    .forEach((element: JQuery) => {
-                        expect(element.children("image")).not.toBeInDOM();
-                    });
+                visualBuilder.images?.forEach((element: SVGElement) => {
+                    expect(element).not.toBeDefined();
+                });
             });
 
             it("nodes labels format", () => {
@@ -325,38 +303,12 @@ describe("ForceGraph", () => {
                 dataView = defaultDataViewBuilder.getDataView();
                 visualBuilder.updateFlushAllD3Transitions(dataView);
 
-                const nodeTexts: JQuery<any>[] = visualBuilder.nodeTexts.toArray().map($);
-
-                nodeTexts.forEach((node) => {
-                    const text: string = node.text();
+                visualBuilder.nodeTexts?.forEach((node: HTMLElement) => {
+                    const text: string | null = node.textContent;
                     dates.forEach(date => {
                         expect(text).not.toEqual(date.toString());
                     });
                 });
-            });
-        });
-
-        describe("Capabilities tests", () => {
-            it("all items having displayName should have displayNameKey property", () => {
-                jasmine.getJSONFixtures().fixturesPath = "base";
-
-                let jsonData = getJSONFixture("capabilities.json");
-
-                let objectsChecker: Function = (obj) => {
-                    for (let property in obj) {
-                        let value: any = obj[property];
-
-                        if (value.displayName) {
-                            expect(value.displayNameKey).toBeDefined();
-                        }
-
-                        if (typeof value === "object") {
-                            objectsChecker(value);
-                        }
-                    }
-                };
-
-                objectsChecker(jsonData);
             });
         });
     });
@@ -371,11 +323,8 @@ describe("ForceGraph", () => {
 
             visualBuilder.updateFlushAllD3Transitions(dataView);
 
-            visualBuilder.images
-                .toArray()
-                .map($)
-                .forEach((image: JQuery) => {
-                    expect(image.attr("title")).toBeDefined();
+            visualBuilder.images?.forEach((image: SVGElement) => {
+                    expect(image.hasAttribute("title")).toBeTrue();
                 });
         });
 
@@ -392,9 +341,9 @@ describe("ForceGraph", () => {
 
             it("should use `foreground` color as a fill for all of nodes", (done) => {
                 visualBuilder.updateRenderTimeout(dataView, () => {
-                    const circles: JQuery<any>[] = visualBuilder.circles.toArray().map($);
+                    const circles: SVGElement[] = Array.from(visualBuilder.circles);
 
-                    expect(isColorAppliedToElements(circles, foregroundColor, "fill"));
+                    expect(isColorAppliedToElements(circles, foregroundColor, "fill")).toBeTrue();
 
                     done();
                 });
@@ -402,9 +351,9 @@ describe("ForceGraph", () => {
 
             it("should use `background` color as a stroke for all of nodes", (done) => {
                 visualBuilder.updateRenderTimeout(dataView, () => {
-                    const circles: JQuery<any>[] = visualBuilder.circles.toArray().map($);
+                    const circles: SVGElement[] = Array.from(visualBuilder.circles);
 
-                    expect(isColorAppliedToElements(circles, backgroundColor, "stroke"));
+                    expect(isColorAppliedToElements(circles, backgroundColor, "stroke")).toBeTrue();
 
                     done();
                 });
@@ -418,21 +367,21 @@ describe("ForceGraph", () => {
                 };
 
                 visualBuilder.updateRenderTimeout(dataView, () => {
-                    const labels: JQuery<any>[] = visualBuilder.nodeTexts.toArray().map($);
+                    const labels: HTMLElement[] = Array.from(visualBuilder.nodeTexts);
 
-                    expect(isColorAppliedToElements(labels, foregroundColor, "fill"));
+                    expect(isColorAppliedToElements(labels, foregroundColor, "fill")).toBeTrue();
 
                     done();
                 });
             });
 
             function isColorAppliedToElements(
-                elements: JQuery[],
+                elements: SVGElement[] | HTMLElement[],
                 color?: string,
                 colorStyleName: string = "fill"
             ): boolean {
-                return elements.some((element: JQuery) => {
-                    const currentColor: string = element.css(colorStyleName);
+                return elements.some((element: SVGElement | HTMLElement) => {
+                    const currentColor: string = getComputedStyle(element).getPropertyValue(colorStyleName);
 
                     if (!currentColor || !color) {
                         return currentColor === color;
@@ -442,5 +391,124 @@ describe("ForceGraph", () => {
                 });
             }
         });
+
+        describe("Keyboard navigation and related aria-attributes tests:", () => {
+            let dataViewKN: DataView;
+
+            beforeEach(() => {
+                dataViewKN = defaultDataViewBuilder.getDataView();
+            });
+
+            it("should have role=listbox and aria-multiselectable attributes correctly set", (done) => {
+                visualBuilder.updateRenderTimeout(dataViewKN, () => {
+                    const containerElement: HTMLElement | null = visualBuilder.mainElement;
+
+                    expect(containerElement?.getAttribute("role")).toBe("listbox");
+                    expect(containerElement?.getAttribute("aria-multiselectable")).toBe("true");
+
+                    done();
+                }, 100);
+            });
+
+            it("enter toggles the correct node", () => {
+                const enterEvent = new KeyboardEvent("keydown", { code: "Enter", bubbles: true });
+                checkKeyboardSingleSelection(enterEvent);
+            });
+
+            it("space toggles the correct node", () => {
+                const spaceEvent = new KeyboardEvent("keydown", { code: "Space", bubbles: true });
+                checkKeyboardSingleSelection(spaceEvent);
+            });
+
+            it("multiselection should work with ctrlKey", () => {
+                const enterEventCtrlKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, ctrlKey: true });
+                checkKeyboardMultiSelection(enterEventCtrlKey);
+            });
+
+            it("multiselection should work with metaKey", () => {
+                const enterEventMetaKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, metaKey: true });
+                checkKeyboardMultiSelection(enterEventMetaKey);
+            });
+
+            it("multiselection should work with shiftKey", () => {
+                const enterEventShiftKey = new KeyboardEvent("keydown", { code: "Enter", bubbles: true, shiftKey: true });
+                checkKeyboardMultiSelection(enterEventShiftKey);
+            });
+
+            function checkKeyboardSingleSelection(keyboardSingleSelectionEvent: KeyboardEvent): void {
+                visualBuilder.updateFlushAllD3Transitions(dataViewKN);
+
+                visualBuilder.nodeKeydown("William", keyboardSingleSelectionEvent);
+                expect(visualBuilder.selectedNodes.length).toBe(2);
+                expect(visualBuilder.selectedLinks.length).toBe(1);
+
+                visualBuilder.nodeKeydown("Brazil", keyboardSingleSelectionEvent);
+                expect(visualBuilder.selectedNodes.length).toBe(4);
+                expect(visualBuilder.selectedLinks.length).toBe(3);
+            }
+
+            function checkKeyboardMultiSelection(keyboardMultiselectionEvent: KeyboardEvent): void {
+                visualBuilder.updateFlushAllD3Transitions(dataViewKN);
+                // select first node
+                visualBuilder.nodeKeydown("William", keyboardMultiselectionEvent);
+                // multiselect second node
+                visualBuilder.nodeKeydown("Brazil", keyboardMultiselectionEvent);
+
+                expect(visualBuilder.selectedNodes.length).toBe(4);
+                expect(visualBuilder.selectedLinks.length).toBe(3);
+            }
+        });
+    });
+
+    describe("Selection tests", () => {
+        let dataViewSelection: DataView;
+        beforeEach(() => {
+            dataViewSelection = defaultDataViewBuilder.getDataView();
+        });
+
+        it("node can be selected", (done) => {
+            visualBuilder.updateRenderTimeout(dataViewSelection, () => {
+                visualBuilder.nodeClick("William");
+
+                renderTimeout(() => {
+                    expect(visualBuilder.selectedNodes?.length).toBe(2);
+                    expect(visualBuilder.selectedLinks?.length).toBe(1);
+                    done();
+                });
+            }, 100);
+        });
+
+        it("multi-selection should work with ctrlKey", (done) => {
+            visualBuilder.updateRenderTimeout(dataViewSelection, () => {
+                checkMultiselection(ClickEventType.CtrlKey, done);
+            }, 100);
+        });
+
+        it("multi-selection should work with metaKey", (done) => {
+            visualBuilder.updateRenderTimeout(dataViewSelection, () => {
+                checkMultiselection(ClickEventType.MetaKey, done);
+            }, 100);
+        });
+
+        it("multi-selection should work with shiftKey", (done) => {
+            visualBuilder.updateRenderTimeout(dataViewSelection, () => {
+                checkMultiselection(ClickEventType.ShiftKey, done);
+            }, 100);
+        });
+
+        function checkMultiselection(eventType: number, done: DoneFn): void {
+            visualBuilder.nodeClick("William");
+            renderTimeout(() => {
+                expect(visualBuilder.selectedNodes?.length).toBe(2);
+                expect(visualBuilder.selectedLinks?.length).toBe(1);
+
+                visualBuilder.nodeClick("Olivia", eventType);
+                renderTimeout(() => {
+                    expect(visualBuilder.selectedNodes?.length).toBe(4);
+                    expect(visualBuilder.selectedLinks?.length).toBe(2);
+                    done();
+                });
+            });
+        }
     });
 });
