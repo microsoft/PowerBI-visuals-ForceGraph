@@ -37,6 +37,7 @@ import { VisualData as ForceGraphData } from "./visualData";
 import { VisualBuilder as ForceGraphBuilder } from "./visualBuilder";
 
 import { ForceGraphMetadataRoleHelper, ForceGraphTooltipsFactory, ForceGraphTooltipInputObject } from "./../src/tooltipsFactory";
+import { LinkColorType } from "./../src/settings";
 
 describe("ForceGraph", () => {
     let visualBuilder: ForceGraphBuilder,
@@ -180,6 +181,79 @@ describe("ForceGraph", () => {
                     let curvedPath = /M (-)*\d*\.?\d* (-)*\d*\.?\d* C (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*, (-)*\d*\.?\d* (-)*\d*\.?\d*/;
                     expect(curvedPath.test(path)).toBe(true);
                 }
+            });
+        });
+    });
+
+    describe("Interactive link highlighting", () => {
+        const highlightColor: string = "#f00";
+        const defaultLinkColor: string = "#bbb";
+        const hoverOpacity: string = "0.4";
+        const defaultOpacity: string = "1";
+
+        function dispatchLinkEvent(link: HTMLElement, eventName: string): void {
+            link.dispatchEvent(new MouseEvent(eventName, { bubbles: true }));
+        }
+
+        it("highlights the hovered link and fades the others on mouseover", () => {
+            dataView.metadata.objects = {
+                links: {
+                    colorLink: LinkColorType.Interactive
+                }
+            };
+
+            visualBuilder.updateFlushAllD3Transitions(dataView);
+
+            const links: HTMLElement[] = Array.from(visualBuilder.links ?? []);
+            expect(links.length).toBeGreaterThan(1);
+
+            const hoveredLink: HTMLElement = links[0];
+            dispatchLinkEvent(hoveredLink, "mouseover");
+
+            expect(hoveredLink.style.strokeOpacity).toBe(defaultOpacity);
+            assertColorsMatch(hoveredLink.style.stroke, highlightColor);
+
+            links.slice(1).forEach((link: HTMLElement) => {
+                expect(link.style.strokeOpacity).toBe(hoverOpacity);
+                assertColorsMatch(link.style.stroke, defaultLinkColor);
+            });
+        });
+
+        it("resets link styles on mouseout", () => {
+            dataView.metadata.objects = {
+                links: {
+                    colorLink: LinkColorType.Interactive
+                }
+            };
+
+            visualBuilder.updateFlushAllD3Transitions(dataView);
+
+            const links: HTMLElement[] = Array.from(visualBuilder.links ?? []);
+            const hoveredLink: HTMLElement = links[0];
+
+            dispatchLinkEvent(hoveredLink, "mouseover");
+            dispatchLinkEvent(hoveredLink, "mouseout");
+
+            links.forEach((link: HTMLElement) => {
+                expect(link.style.strokeOpacity).toBe(defaultOpacity);
+                assertColorsMatch(link.style.stroke, defaultLinkColor);
+            });
+        });
+
+        it("does not fade links when color mode is not Interactive", () => {
+            dataView.metadata.objects = {
+                links: {
+                    colorLink: LinkColorType.ByWeight
+                }
+            };
+
+            visualBuilder.updateFlushAllD3Transitions(dataView);
+
+            const links: HTMLElement[] = Array.from(visualBuilder.links ?? []);
+            dispatchLinkEvent(links[0], "mouseover");
+
+            links.forEach((link: HTMLElement) => {
+                expect(link.style.strokeOpacity).not.toBe(hoverOpacity);
             });
         });
     });

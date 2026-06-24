@@ -1,3 +1,9 @@
+## 3.0.3.0
+
+### Fixes
+* Fixed link highlighting on hover in interactive color mode
+* Removed invalid tooltips role reference from capabilities
+
 ## 3.0.2.0
 
 ### Fixes

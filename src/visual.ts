@@ -641,15 +641,17 @@ export class ForceGraph implements IVisual {
                     return this.getLinkColor(link, this.colorPalette, this.colorHelper);
                 }
             })
-            .on("mouseover", () => {
-                return this.fadePath(
+            .on("mouseover", (event: MouseEvent, hoveredLink: ForceGraphLink) => {
+                this.fadePath(
+                    hoveredLink,
                     ForceGraph.HoverOpacity,
-                    this.colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkHighlightColor),//gray
+                    this.colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkHighlightColor),
                     this.colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor)
                 );
             })
-            .on("mouseout", () => {
-                return this.fadePath(
+            .on("mouseout", (event: MouseEvent, hoveredLink: ForceGraphLink) => {
+                this.fadePath(
+                    hoveredLink,
                     ForceGraph.DefaultOpacity,
                     this.colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor),
                     this.colorHelper.getHighContrastColor("foreground", ForceGraph.DefaultLinkColor)
@@ -986,26 +988,25 @@ export class ForceGraph implements IVisual {
     }
 
     private fadePath(
+        hoveredLink: ForceGraphLink,
         opacity: number,
         highlightColor: string,
         defaultHighlightColor: string
-    ): (link: ForceGraphLink) => void {
+    ): void {
         if (this.settings.links.linkOptions.colorLink.value.value !== LinkColorType.Interactive) {
             return;
         }
 
-        return () => {
-            this.paths.style("stroke-opacity", (link: ForceGraphLink) => {
-                return link.source === link.source && link.target === link.target
-                    ? ForceGraph.DefaultOpacity
-                    : opacity;
-            })
-                .style("stroke", (link: ForceGraphLink) => {
-                    return link.source === link.source && link.target === link.target
-                        ? highlightColor
-                        : defaultHighlightColor;
-                });
-        };
+        this.paths.style("stroke-opacity", (link: ForceGraphLink) => {
+            return link === hoveredLink
+                ? ForceGraph.DefaultOpacity
+                : opacity;
+        })
+            .style("stroke", (link: ForceGraphLink) => {
+                return link === hoveredLink
+                    ? highlightColor
+                    : defaultHighlightColor;
+            });
     }
 
     private isReachable(a: ForceGraphNode, b: ForceGraphNode): boolean {
